@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Wrench } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const signupSchema = z.object({
@@ -58,16 +58,15 @@ export default function Signup() {
   return (
     <div className="min-h-screen w-full flex">
         {/* Left Side - Branding */}
-        <div className="hidden lg:flex w-1/2 bg-slate-900 flex-col justify-between p-12 text-white">
+        <div className="hidden lg:flex w-1/2 bg-slate-900 flex-col p-12 text-white relative">
             <div>
-                <div className="flex items-center gap-2 text-2xl font-bold">
-                    <Wrench className="h-8 w-8 text-orange-500" />
-                    <span>Metralis</span>
-                </div>
+                <img src="/metralis-white-logo.png" alt="Metralis" className="h-24" />
             </div>
-            <div className="space-y-4 max-w-lg">
-                <h1 className="text-4xl font-bold leading-tight">Join the Future of Manufacturing.</h1>
-                <p className="text-slate-400 text-lg">Create an account to start managing your factory smarter, faster, and better.</p>
+            <div className="flex-1 flex items-center">
+                <div className="space-y-4 max-w-lg">
+                    <h1 className="text-4xl font-bold leading-tight">Join the Future of Manufacturing.</h1>
+                    <p className="text-slate-400 text-lg">Create an account to start managing your factory smarter, faster, and better.</p>
+                </div>
             </div>
             <div className="text-sm text-slate-500">
                 © 2024 Metralis Inc. All rights reserved.
