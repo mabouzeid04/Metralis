@@ -1,0 +1,56 @@
+import { Badge } from "@/components/ui/badge"
+
+export type StatusType = 
+  | 'running' | 'up' | 'completed' | 'success' | 'closed'
+  | 'maintenance' | 'warning' | 'in_progress' | 'pending'
+  | 'down' | 'error' | 'failed' | 'critical' | 'retired' 
+  | 'idle' | 'open' | 'draft'
+
+interface StatusBadgeProps {
+  status: string
+  className?: string
+}
+
+export function StatusBadge({ status, className }: StatusBadgeProps) {
+  const normalizedStatus = status.toLowerCase().replace(' ', '_') as StatusType
+  
+  let variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" = "secondary"
+  
+  switch (normalizedStatus) {
+    case 'running':
+    case 'up':
+    case 'completed':
+    case 'success':
+    case 'closed':
+      variant = "success"
+      break
+    case 'maintenance':
+    case 'warning':
+    case 'in_progress':
+    case 'pending':
+      variant = "warning"
+      break
+    case 'down':
+    case 'error':
+    case 'failed':
+    case 'critical':
+    case 'retired':
+      variant = "destructive"
+      break
+    case 'open':
+      variant = "default"
+      break
+    case 'idle':
+    case 'draft':
+    default:
+      variant = "secondary"
+      break
+  }
+
+  return (
+    <Badge variant={variant} className={className}>
+      {status.replace('_', ' ')}
+    </Badge>
+  )
+}
+

@@ -598,16 +598,15 @@ updated_at: TIMESTAMP
 
 ### 4.5 File Storage
 
-**MVP Approach:**
-- Store files in `uploads/` directory
-- Organize by type: `uploads/documents/{document_id}/{filename}`
-- Store file metadata in database
-- Serve files via API endpoint (with auth check)
+**Current Implementation:**
+- S3-compatible storage (MinIO for dev, AWS/Supabase in prod)
+- Object keys `documents/{uuid}-{filename}` stored in DB (metadata lives in `documents` table)
+- API streams files directly from S3 (auth protected `/documents/:id/file`)
 
-**Future-Ready:**
-- Abstract file storage interface
-- Easy to swap for S3/cloud storage
-- Support for future document processing pipeline
+**Future Enhancements:**
+- Virus scanning & file size quotas
+- Lifecycle rules (archival/deletion)
+- Document processing pipeline (chunking/embeddings)
 
 ---
 
@@ -1716,7 +1715,7 @@ When implementing multi-tenancy:
 - ✅ Empty states (no data messages) (P1)
 - ⚠️ Advanced filters UI (P2)
 - ⚠️ Keyboard shortcuts (P2)
-- ⚠️ Dark mode (P2)
+
 
 #### P2 - Nice to Have (Build Last / Defer)
 

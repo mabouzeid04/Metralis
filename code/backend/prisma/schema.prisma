@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  TECHNICIAN
+}
+
+enum MachineStatus {
+  RUNNING
+  DOWN
+  MAINTENANCE
+  RETIRED
+}
+
+enum MachineCriticality {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum WorkOrderStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING
+  CLOSED
+}
+
+enum WorkOrderType {
+  CORRECTIVE
+  PREVENTIVE
+  INSPECTION
+}
+
+enum WorkOrderPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum DocumentType {
+  MANUAL
+  SOP
+  TROUBLESHOOTING
+  OTHER
+}
+
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  role         UserRole       @default(TECHNICIAN)
+  active       Boolean        @default(true)
+  lastLoginAt  DateTime?
+  preferences  Json?
+  metadata     Json?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  reportedWorkOrders WorkOrder[] @relation("reportedBy")
+  assignedWorkOrders WorkOrder[] @relation("assignedTo")
+  repairActions      RepairAction[]
+  documents          Document[]
+}
+
+model Machine {
+  id             String           @id @default(uuid())
+  name           String
+  code           String?
+  category       String?
+  line           String?
+  area           String?
+  manufacturer   String?
+  model          String?
+  serialNumber   String?
+  commissionedAt DateTime?
+  status         MachineStatus    @default(RUNNING)
+  criticality    MachineCriticality @default(MEDIUM)
+  metadata       Json?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  workOrders WorkOrder[]
+  documents  Document[]
+
+  @@index([name])
+  @@index([status])
+}
+
+model WorkOrder {
+  id              String           @id @default(uuid())
+  machineId       String
+  machine         Machine          @relation(fields: [machineId], references: [id])
+  title           String
+  descriptionRaw  String
+  status          WorkOrderStatus  @default(OPEN)
+  type            WorkOrderType    @default(CORRECTIVE)
+  priority        WorkOrderPriority @default(MEDIUM)
+  reportedAt      DateTime         @default(now())
+  reportedById    String
+  reportedBy      User             @relation("reportedBy", fields: [reportedById], references: [id])
+  assignedToId    String?
+  assignedTo      User?            @relation("assignedTo", fields: [assignedToId], references: [id])
+  startedAt       DateTime?
+  completedAt     DateTime?
+  symptoms        Json?
+  suspectedCause  String?
+  rootCause       String?
+  failureMode     String?
+  environmentContext Json?
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  repairActions RepairAction[]
+  parts        WorkOrderPart[]
+}
+
+model RepairAction {
+  id              String   @id @default(uuid())
+  workOrderId     String
+  workOrder       WorkOrder @relation(fields: [workOrderId], references: [id])
+  performedById   String
+  performedBy     User     @relation(fields: [performedById], references: [id])
+  actions         String
+  partsUsed       Json?
+  adjustments     String?
+  verification    String?
+  success         Boolean
+  failureNote     String?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Part {
+  id           String   @id @default(uuid())
+  name         String
+  category     String?
+  partNumber   String?
+  manufacturer String?
+  cost         Decimal? @db.Decimal(10, 2)
+  description  String?
+  stockQty     Int?     @default(0)
+  minStock     Int?     @default(0)
+  location     String?
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  workOrders WorkOrderPart[]
+}
+
+model WorkOrderPart {
+  id          String    @id @default(uuid())
+  workOrderId String
+  partId      String
+  quantity    Int       @default(1)
+  createdAt   DateTime  @default(now())
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id])
+  part      Part      @relation(fields: [partId], references: [id])
+
+  @@unique([workOrderId, partId])
+}
+
+model Document {
+  id          String       @id @default(uuid())
+  title       String
+  type        DocumentType @default(MANUAL)
+  filePath    String
+  fileSize    Int?
+  mimeType    String?
+  machineId   String?
+  machine     Machine?     @relation(fields: [machineId], references: [id])
+  machineType String?
+  language    String?      @default("en")
+  version     String?
+  metadata    Json?
+  uploadedById String
+  uploadedBy  User        @relation(fields: [uploadedById], references: [id])
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
