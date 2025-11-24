@@ -23,10 +23,7 @@
    - `PORT` (optional, defaults to 4000)
    - `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`
    - Optional `S3_ENDPOINT`/`S3_FORCE_PATH_STYLE` if using a custom endpoint
-4. Run Prisma migrations in your production database:
-   ```bash
-   npx prisma migrate deploy
-   ```
+4. **Migrations run automatically**: The backend automatically runs `prisma migrate deploy` on startup when `DATABASE_URL` points to Supabase (or in production mode). No manual migration step needed!
 
 ## 3. Frontend
 
