@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Wrench } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
 const loginSchema = z.object({
@@ -47,63 +47,89 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="m@example.com" 
-                {...register('email')}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">{errors.email.message}</p>
-              )}
+    <div className="min-h-screen w-full flex">
+        {/* Left Side - Branding */}
+        <div className="hidden lg:flex w-1/2 bg-slate-900 flex-col justify-between p-12 text-white">
+            <div>
+                <div className="flex items-center gap-2 text-2xl font-bold">
+                    <Wrench className="h-8 w-8 text-orange-500" />
+                    <span>Metralis</span>
+                </div>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Link 
-                  to="/forgot-password" 
-                  className="text-sm font-medium text-primary underline-offset-4 hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-              <Input 
-                id="password" 
-                type="password" 
-                {...register('password')}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
-              )}
+            <div className="space-y-4 max-w-lg">
+                <h1 className="text-4xl font-bold leading-tight">Factory Intelligence for the Modern Age.</h1>
+                <p className="text-slate-400 text-lg">Streamline your maintenance operations, track assets, and empower your workforce with our next-gen CMMS.</p>
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
-            {formError && <p className="text-sm text-destructive">{formError}</p>}
-            <Button className="w-full" type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign In
-            </Button>
-            <div className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link to="/signup" className="underline underline-offset-4 hover:text-primary">
-                Sign up
-              </Link>
+            <div className="text-sm text-slate-500">
+                © 2024 Metralis Inc. All rights reserved.
             </div>
-          </CardFooter>
-        </form>
-      </Card>
+        </div>
+
+        {/* Right Side - Form */}
+        <div className="flex-1 flex items-center justify-center bg-background p-8">
+            <Card className="w-full max-w-md border-0 shadow-none sm:border sm:shadow-sm">
+                <CardHeader className="space-y-1 text-center sm:text-left">
+                    <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+                    <CardDescription>
+                        Enter your email to sign in to your account
+                    </CardDescription>
+                </CardHeader>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input 
+                                id="email" 
+                                type="email" 
+                                placeholder="name@example.com" 
+                                className="bg-muted/30"
+                                {...register('email')}
+                            />
+                            {errors.email && (
+                                <p className="text-sm text-destructive">{errors.email.message}</p>
+                            )}
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="password">Password</Label>
+                                <Link 
+                                    to="/forgot-password" 
+                                    className="text-sm font-medium text-primary hover:text-primary/80"
+                                >
+                                    Forgot password?
+                                </Link>
+                            </div>
+                            <Input 
+                                id="password" 
+                                type="password" 
+                                className="bg-muted/30"
+                                {...register('password')}
+                            />
+                            {errors.password && (
+                                <p className="text-sm text-destructive">{errors.password.message}</p>
+                            )}
+                        </div>
+                    </CardContent>
+                    <CardFooter className="flex flex-col gap-4">
+                        {formError && (
+                            <div className="w-full p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+                                {formError}
+                            </div>
+                        )}
+                        <Button className="w-full h-10" type="submit" disabled={isLoading}>
+                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Sign In
+                        </Button>
+                        <div className="text-center text-sm text-muted-foreground">
+                            Don&apos;t have an account?{" "}
+                            <Link to="/signup" className="font-medium text-primary hover:underline underline-offset-4">
+                                Sign up
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </form>
+            </Card>
+        </div>
     </div>
   )
 }
