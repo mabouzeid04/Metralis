@@ -7,6 +7,7 @@ import documentRoutes from "./documents";
 import usersRoutes from "./users";
 import dashboardRoutes from "./dashboard";
 import searchRoutes from "./search";
+import profileRoutes from "./profile";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.use("/documents", documentRoutes);
 router.use("/users", usersRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/search", searchRoutes);
+router.use("/users", profileRoutes);
 
 export default router;
 

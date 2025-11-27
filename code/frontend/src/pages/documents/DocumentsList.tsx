@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Plus, Search, Filter, FileText, Download, Eye } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Plus, Search, Filter, FileText, Download, Eye, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -12,68 +12,97 @@ import {
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { api } from '@/lib/api'
 
-// Mock Data
-const documentsData = [
-  { 
-    id: '1', 
-    title: 'Filler 01 Operation Manual', 
-    type: 'Manual', 
-    file_type: 'PDF',
-    size: '4.2 MB',
-    machine: 'Filler 01',
-    uploaded_by: 'Admin',
-    date: '2023-05-12'
-  },
-  { 
-    id: '2', 
-    title: 'Lube Schedule 2023', 
-    type: 'SOP', 
-    file_type: 'PDF',
-    size: '1.5 MB',
-    machine: 'All',
-    uploaded_by: 'Manager',
-    date: '2023-01-10'
-  },
-  { 
-    id: '3', 
-    title: 'Krones Electrical Schematic', 
-    type: 'Schematic', 
-    file_type: 'DWG',
-    size: '12.8 MB',
-    machine: 'Filler 01',
-    uploaded_by: 'Tech Lead',
-    date: '2023-06-20'
-  },
-  { 
-    id: '4', 
-    title: 'Pump Troubleshooting Guide', 
-    type: 'Guide', 
-    file_type: 'DOCX',
-    size: '0.8 MB',
-    machine: 'Pumps',
-    uploaded_by: 'Admin',
-    date: '2023-08-15'
-  },
-  { 
-    id: '5', 
-    title: 'Safety Procedures v2', 
-    type: 'Policy', 
-    file_type: 'PDF',
-    size: '2.1 MB',
-    machine: 'Plant',
-    uploaded_by: 'Safety Officer',
-    date: '2023-09-01'
-  },
-]
+interface Document {
+  id: string
+  title: string
+  type: string
+  filename: string
+  fileSize: number | null
+  mimeType: string | null
+  createdAt: string
+  machine: {
+    id: string
+    name: string
+  } | null
+  uploadedBy: {
+    id: string
+    name: string
+  } | null
+}
+
+function formatFileSize(bytes: number | null): string {
+  if (!bytes) return '-'
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 export default function DocumentsList() {
+  const [documents, setDocuments] = useState<Document[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredDocs = documentsData.filter(doc => 
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await api.get('/documents')
+        setDocuments(response.data.data || [])
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch documents:', err)
+        setError('Failed to load documents')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDocuments()
+  }, [])
+
+  const handleDownload = async (doc: Document) => {
+    try {
+      const response = await api.get(`/documents/${doc.id}/file`, {
+        responseType: 'blob'
+      })
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', doc.filename)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode?.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('Failed to download document:', err)
+    }
+  }
+
+  const filteredDocs = documents.filter(doc => 
     doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doc.machine.toLowerCase().includes(searchTerm.toLowerCase())
+    (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
   )
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+        <FileText className="h-12 w-12 text-muted-foreground" />
+        <p className="text-muted-foreground">{error}</p>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -105,55 +134,78 @@ export default function DocumentsList() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[30px]"></TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden md:table-cell">Type</TableHead>
-                <TableHead className="hidden md:table-cell">Machine</TableHead>
-                <TableHead className="hidden lg:table-cell">Date</TableHead>
-                <TableHead className="hidden lg:table-cell">Size</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredDocs.map((doc) => (
-                <TableRow key={doc.id}>
-                  <TableCell>
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex flex-col">
-                        <span>{doc.title}</span>
-                        <span className="text-xs text-muted-foreground md:hidden">{doc.type} • {doc.size}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    <Badge variant="outline">{doc.type}</Badge>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">{doc.machine}</TableCell>
-                  <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
-                    {doc.date}
-                  </TableCell>
-                  <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">{doc.size}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" title="View">
-                            <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" title="Download">
-                            <Download className="h-4 w-4" />
-                        </Button>
-                    </div>
-                  </TableCell>
+          {filteredDocs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold">No documents found</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchTerm ? 'Try a different search term' : 'Get started by uploading your first document'}
+              </p>
+              {!searchTerm && (
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> Upload Document
+                </Button>
+              )}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[30px]"></TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead className="hidden md:table-cell">Type</TableHead>
+                  <TableHead className="hidden md:table-cell">Machine</TableHead>
+                  <TableHead className="hidden lg:table-cell">Date</TableHead>
+                  <TableHead className="hidden lg:table-cell">Size</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredDocs.map((doc) => (
+                  <TableRow key={doc.id}>
+                    <TableCell>
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                          <span>{doc.title}</span>
+                          <span className="text-xs text-muted-foreground md:hidden">
+                            {doc.type} • {formatFileSize(doc.fileSize)}
+                          </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Badge variant="outline">{doc.type}</Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">{doc.machine?.name || '-'}</TableCell>
+                    <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
+                      {new Date(doc.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
+                      {formatFileSize(doc.fileSize)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                          <Button variant="ghost" size="icon" title="View">
+                              <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            title="Download"
+                            onClick={() => handleDownload(doc)}
+                          >
+                              <Download className="h-4 w-4" />
+                          </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
   )
 }
-

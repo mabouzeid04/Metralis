@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, Search, Filter } from 'lucide-react'
+import { Plus, Search, Filter, Loader2, ServerOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,22 +13,64 @@ import {
 } from '@/components/ui/table'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { api } from '@/lib/api'
 
-const machinesData = [
-  { id: '1', name: 'Filler 01', code: 'FIL-01', category: 'Filler', status: 'Running', location: 'Line 1', lastMaintenance: '2023-10-15' },
-  { id: '2', name: 'Labeler 02', code: 'LAB-02', category: 'Labeler', status: 'Down', location: 'Line 1', lastMaintenance: '2023-10-20' },
-  { id: '3', name: 'Packer 01', code: 'PAC-01', category: 'Packer', status: 'Maintenance', location: 'Line 2', lastMaintenance: '2023-11-01' },
-  { id: '4', name: 'Palletizer 03', code: 'PAL-03', category: 'Palletizer', status: 'Running', location: 'Line 2', lastMaintenance: '2023-09-10' },
-  { id: '5', name: 'Conveyor Main', code: 'CON-01', category: 'Conveyor', status: 'Running', location: 'Line 1', lastMaintenance: '2023-10-05' },
-]
+interface Machine {
+  id: string
+  name: string
+  code: string | null
+  category: string | null
+  status: string
+  area: string | null
+  line: string | null
+  updatedAt: string
+}
 
 export default function MachinesList() {
+  const [machines, setMachines] = useState<Machine[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredMachines = machinesData.filter(machine => 
+  useEffect(() => {
+    const fetchMachines = async () => {
+      try {
+        const response = await api.get('/machines')
+        setMachines(response.data.data || [])
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch machines:', err)
+        setError('Failed to load machines')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMachines()
+  }, [])
+
+  const filteredMachines = machines.filter(machine => 
     machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    machine.code.toLowerCase().includes(searchTerm.toLowerCase())
+    (machine.code && machine.code.toLowerCase().includes(searchTerm.toLowerCase()))
   )
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+        <ServerOff className="h-12 w-12 text-muted-foreground" />
+        <p className="text-muted-foreground">{error}</p>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -60,45 +102,61 @@ export default function MachinesList() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Status</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Code</TableHead>
-                <TableHead className="hidden md:table-cell">Category</TableHead>
-                <TableHead className="hidden md:table-cell">Location</TableHead>
-                <TableHead className="hidden lg:table-cell">Last Maint.</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredMachines.map((machine) => (
-                <TableRow key={machine.id}>
-                  <TableCell>
-                    <StatusBadge status={machine.status} />
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <Link to={`/machines/${machine.id}`} className="hover:underline">
-                      {machine.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{machine.code}</TableCell>
-                  <TableCell className="hidden md:table-cell">{machine.category}</TableCell>
-                  <TableCell className="hidden md:table-cell">{machine.location}</TableCell>
-                  <TableCell className="hidden lg:table-cell">{machine.lastMaintenance}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link to={`/machines/${machine.id}`}>View</Link>
-                    </Button>
-                  </TableCell>
+          {filteredMachines.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <ServerOff className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold">No machines found</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchTerm ? 'Try a different search term' : 'Get started by adding your first machine'}
+              </p>
+              {!searchTerm && (
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" /> Add Machine
+                </Button>
+              )}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Code</TableHead>
+                  <TableHead className="hidden md:table-cell">Category</TableHead>
+                  <TableHead className="hidden md:table-cell">Location</TableHead>
+                  <TableHead className="hidden lg:table-cell">Last Updated</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredMachines.map((machine) => (
+                  <TableRow key={machine.id}>
+                    <TableCell>
+                      <StatusBadge status={machine.status} />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <Link to={`/machines/${machine.id}`} className="hover:underline">
+                        {machine.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{machine.code || '-'}</TableCell>
+                    <TableCell className="hidden md:table-cell">{machine.category || '-'}</TableCell>
+                    <TableCell className="hidden md:table-cell">{machine.area || machine.line || '-'}</TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      {new Date(machine.updatedAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={`/machines/${machine.id}`}>View</Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
   )
 }
-

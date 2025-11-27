@@ -7,13 +7,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { api } from '@/lib/api'
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation()
 
-  const changeLanguage = (lng: string) => {
+  const changeLanguage = async (lng: string) => {
     i18n.changeLanguage(lng)
     document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr'
+    localStorage.setItem('i18nextLng', lng)
+
+    // Persist to backend preferences
+    try {
+      await api.patch('/users/me/preferences', { language: lng })
+    } catch {
+      // Silently fail - preference is already saved locally
+    }
   }
 
   return (

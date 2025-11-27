@@ -14,6 +14,21 @@ const userSchema = z.object({
   password: z.string().min(8).optional(),
 });
 
+// Public endpoint for all authenticated users - get user list for assignment dropdowns
+router.get("/list", requireAuth, async (_req, res) => {
+  const users = await prisma.user.findMany({
+    where: { active: true },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+    orderBy: { name: "asc" },
+  });
+  return res.json({ data: users });
+});
+
 router.use(requireAuth, requireRole(["ADMIN"]));
 
 router.get("/", async (_req, res) => {

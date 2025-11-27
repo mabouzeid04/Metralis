@@ -12,6 +12,7 @@ import PartsList from '@/pages/parts/PartsList'
 import PartDetail from '@/pages/parts/PartDetail'
 import DocumentsList from '@/pages/documents/DocumentsList'
 import UserManagement from '@/pages/users/UserManagement'
+import Settings from '@/pages/Settings'
 import NotFound from '@/pages/NotFound'
 import { ProtectedRoute, AdminRoute } from '@/components/auth/ProtectedRoute'
 
@@ -41,6 +42,7 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route path="/settings" element={<Settings />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

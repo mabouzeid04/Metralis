@@ -13,6 +13,7 @@ const workOrderSchema = z.object({
   type: z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
   symptoms: z.array(z.string()).optional(),
+  assignedToId: z.string().uuid().nullable().optional(),
 });
 
 router.use(requireAuth);
@@ -86,7 +87,19 @@ router.post("/", async (req, res) => {
     reportedBy: { connect: { id: req.user!.id } },
   };
 
-  const workOrder = await prisma.workOrder.create({ data });
+  // Handle assignment if provided
+  if (parsed.data.assignedToId !== undefined && parsed.data.assignedToId !== null) {
+    data.assignedTo = { connect: { id: parsed.data.assignedToId } };
+  }
+
+  const workOrder = await prisma.workOrder.create({
+    data,
+    include: {
+      machine: true,
+      reportedBy: true,
+      assignedTo: true,
+    },
+  });
 
   return res.status(201).json({ data: workOrder });
 });
@@ -130,9 +143,46 @@ router.patch("/:id/status", async (req, res) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
+  // Get current work order to check current status
+  const currentWorkOrder = await prisma.workOrder.findUnique({
+    where: { id: req.params.id },
+    select: { status: true, startedAt: true, completedAt: true },
+  });
+
+  if (!currentWorkOrder) {
+    return res.status(404).json({ error: { message: "Work order not found" } });
+  }
+
+  const newStatus = parsed.data.status;
+  const updateData: Prisma.WorkOrderUpdateInput = { status: newStatus };
+
+  // Set startedAt when moving to IN_PROGRESS (if not already set)
+  if (newStatus === "IN_PROGRESS" && !currentWorkOrder.startedAt) {
+    updateData.startedAt = new Date();
+  }
+
+  // Set completedAt when moving to CLOSED
+  if (newStatus === "CLOSED") {
+    updateData.completedAt = new Date();
+  } else if (currentWorkOrder.status === "CLOSED") {
+    // Clear completedAt if moving away from CLOSED
+    updateData.completedAt = null;
+  }
+
   const workOrder = await prisma.workOrder.update({
     where: { id: req.params.id },
-    data: { status: parsed.data.status },
+    data: updateData,
+    include: {
+      machine: true,
+      reportedBy: true,
+      assignedTo: true,
+      repairActions: {
+        include: { performedBy: true },
+      },
+      parts: {
+        include: { part: true },
+      },
+    },
   });
 
   return res.json({ data: workOrder });

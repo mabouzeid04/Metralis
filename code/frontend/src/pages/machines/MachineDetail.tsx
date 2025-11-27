@@ -1,51 +1,101 @@
-import { useParams } from 'react-router-dom'
-import { Wrench, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { Wrench, AlertTriangle, CheckCircle2, Loader2, ServerOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Timeline } from '@/components/shared/Timeline'
 import { Badge } from '@/components/ui/badge'
+import { api } from '@/lib/api'
+
+interface Machine {
+  id: string
+  name: string
+  code: string | null
+  category: string | null
+  status: string
+  area: string | null
+  line: string | null
+  manufacturer: string | null
+  model: string | null
+  serialNumber: string | null
+  commissionedAt: string | null
+  createdAt: string
+  updatedAt: string
+  workOrders?: Array<{
+    id: string
+    title: string
+    status: string
+    type: string
+    createdAt: string
+    completedAt: string | null
+  }>
+}
 
 export default function MachineDetail() {
   const { id } = useParams()
-  
-  // Mock Data
-  const machine = {
-    id: id || '1',
-    name: 'Filler 01',
-    code: 'FIL-01',
-    category: 'Filler',
-    status: 'Running',
-    location: 'Line 1',
-    manufacturer: 'Krones',
-    model: 'Variopac Pro',
-    serial: 'SN-2023-9982',
-    installed: '2021-05-15'
+  const [machine, setMachine] = useState<Machine | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchMachine = async () => {
+      if (!id) return
+
+      try {
+        const response = await api.get(`/machines/${id}`)
+        setMachine(response.data.data)
+        setError(null)
+      } catch (err) {
+        console.error('Failed to fetch machine:', err)
+        setError('Failed to load machine details')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchMachine()
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
-  const historyItems = [
-    {
-      id: '1',
-      date: '2023-11-24 09:30',
-      title: 'Preventive Maintenance',
-      description: 'Routine lubrication and belt inspection completed.',
-      icon: <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-    },
-    {
-      id: '2',
-      date: '2023-11-20 14:15',
-      title: 'Unexpected Downtime',
-      description: 'Sensor failure on infeed starwheel. Replaced sensor #42.',
-      icon: <AlertTriangle className="h-5 w-5 text-red-500" />
-    },
-    {
-      id: '3',
-      date: '2023-11-10 08:00',
-      title: 'Work Order Created',
-      description: 'Technician reported unusual vibration.',
-      icon: <Wrench className="h-5 w-5 text-blue-500" />
+  if (error || !machine) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+        <ServerOff className="h-12 w-12 text-muted-foreground" />
+        <p className="text-muted-foreground">{error || 'Machine not found'}</p>
+        <Button asChild>
+          <Link to="/machines">Back to Machines</Link>
+        </Button>
+      </div>
+    )
+  }
+
+  // Build history items from work orders
+  const historyItems = (machine.workOrders || []).map((wo) => {
+    let icon
+    if (wo.status === 'CLOSED') {
+      icon = <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+    } else if (wo.type === 'CORRECTIVE') {
+      icon = <AlertTriangle className="h-5 w-5 text-red-500" />
+    } else {
+      icon = <Wrench className="h-5 w-5 text-blue-500" />
     }
-  ]
+
+    return {
+      id: wo.id,
+      date: new Date(wo.createdAt).toLocaleString(),
+      title: wo.title,
+      description: `${wo.type} - ${wo.status}`,
+      icon
+    }
+  })
 
   return (
     <div className="space-y-6">
@@ -57,12 +107,16 @@ export default function MachineDetail() {
                 <StatusBadge status={machine.status} />
             </div>
             <p className="text-muted-foreground flex items-center gap-2">
-                <span>{machine.code}</span> • <span>{machine.category}</span> • <span>{machine.location}</span>
+                <span>{machine.code || 'No code'}</span> • <span>{machine.category || 'Uncategorized'}</span> • <span>{machine.area || machine.line || 'No location'}</span>
             </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">View Docs</Button>
-          <Button>Create Work Order</Button>
+          <Button variant="outline" asChild>
+            <Link to={`/documents?machine=${machine.id}`}>View Docs</Link>
+          </Button>
+          <Button asChild>
+            <Link to={`/work-orders/new?machine=${machine.id}`}>Create Work Order</Link>
+          </Button>
         </div>
       </div>
 
@@ -75,28 +129,37 @@ export default function MachineDetail() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-2 text-sm">
               <span className="text-muted-foreground">Manufacturer</span>
-              <span className="font-medium text-right">{machine.manufacturer}</span>
+              <span className="font-medium text-right">{machine.manufacturer || '-'}</span>
               
               <span className="text-muted-foreground">Model</span>
-              <span className="font-medium text-right">{machine.model}</span>
+              <span className="font-medium text-right">{machine.model || '-'}</span>
               
               <span className="text-muted-foreground">Serial #</span>
-              <span className="font-medium text-right">{machine.serial}</span>
+              <span className="font-medium text-right">{machine.serialNumber || '-'}</span>
               
-              <span className="text-muted-foreground">Installed</span>
-              <span className="font-medium text-right">{machine.installed}</span>
+              <span className="text-muted-foreground">Commissioned</span>
+              <span className="font-medium text-right">
+                {machine.commissionedAt ? new Date(machine.commissionedAt).toLocaleDateString() : '-'}
+              </span>
             </div>
             
             <div className="pt-4 border-t">
-                <h4 className="text-sm font-medium mb-3">Recent Metrics</h4>
+                <h4 className="text-sm font-medium mb-3">Status</h4>
                 <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Uptime (7d)</span>
-                        <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50">98.5%</Badge>
+                        <span className="text-muted-foreground">Current Status</span>
+                        <Badge variant="outline" className={
+                          machine.status === 'RUNNING' ? 'text-emerald-600 border-emerald-200 bg-emerald-50' :
+                          machine.status === 'DOWN' ? 'text-red-600 border-red-200 bg-red-50' :
+                          machine.status === 'MAINTENANCE' ? 'text-amber-600 border-amber-200 bg-amber-50' :
+                          ''
+                        }>
+                          {machine.status}
+                        </Badge>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">MTBF</span>
-                        <span>142h</span>
+                        <span className="text-muted-foreground">Work Orders</span>
+                        <span>{machine.workOrders?.length || 0}</span>
                     </div>
                 </div>
             </div>
@@ -109,11 +172,17 @@ export default function MachineDetail() {
             <CardTitle className="text-lg">History & Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <Timeline items={historyItems} />
+            {historyItems.length > 0 ? (
+              <Timeline items={historyItems} />
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <Wrench className="h-12 w-12 text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">No work orders yet</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
     </div>
   )
 }
-
