@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: metralis-api
+    env: node
+    buildCommand: cd code/backend && npm install && npm run build
+    startCommand: cd code/backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      # Add these via Render dashboard UI (they're secrets):
+      # - DATABASE_URL
+      # - JWT_SECRET
+      # - S3_BUCKET
+      # - S3_REGION
+      # - S3_ACCESS_KEY
+      # - S3_SECRET_KEY
+      # - S3_ENDPOINT
+      # - S3_FORCE_PATH_STYLE
+      # - FRONTEND_URL (optional, for CORS)
+
