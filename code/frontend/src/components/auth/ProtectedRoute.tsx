@@ -17,6 +17,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" replace />
   }
 
+  if (user.status !== 'APPROVED') {
+    return <Navigate to="/awaiting-approval" replace />
+  }
+
   return <>{children}</>
 }
 
@@ -33,6 +37,10 @@ export function AdminRoute({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return <Navigate to="/login" replace />
+  }
+
+  if (user.status !== 'APPROVED') {
+    return <Navigate to="/awaiting-approval" replace />
   }
 
   if (user.role !== 'ADMIN') {

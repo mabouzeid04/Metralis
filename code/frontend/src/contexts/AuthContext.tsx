@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { api, setAuthToken } from '@/lib/api'
 
@@ -6,7 +6,8 @@ interface AuthUser {
   id: string
   name: string
   email: string
-  role: 'ADMIN' | 'MANAGER' | 'TECHNICIAN'
+  role: 'ADMIN' | 'TECHNICIAN'
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
 }
 
 interface LoginPayload {
@@ -25,15 +26,26 @@ interface AuthContextValue {
   token: string | null
   loading: boolean
   login: (payload: LoginPayload) => Promise<void>
-  signup: (payload: SignupPayload) => Promise<void>
+  signup: (payload: SignupPayload) => Promise<{ status: AuthUser['status'] } | void>
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
-  setUser: (user: AuthUser) => void
+  setUser: (user: AuthUser | null) => void
+  isApproved: boolean
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 const TOKEN_KEY = 'metralis_token'
+
+type ApiErrorShape = {
+  response?: {
+    data?: {
+      error?: {
+        message?: string
+      }
+    }
+  }
+}
 
 const getErrorMessage = (err: unknown) => {
   if (typeof err === 'string') return err
@@ -43,24 +55,27 @@ const getErrorMessage = (err: unknown) => {
   return 'Something went wrong'
 }
 
+const getApiErrorMessage = (err: unknown) =>
+  (err as ApiErrorShape)?.response?.data?.error?.message
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const persistSession = (nextToken: string, nextUser: AuthUser) => {
+  const persistSession = useCallback((nextToken: string, nextUser: AuthUser) => {
     setToken(nextToken)
     setUser(nextUser)
     localStorage.setItem(TOKEN_KEY, nextToken)
     setAuthToken(nextToken)
-  }
+  }, [])
 
-  const clearSession = () => {
+  const clearSession = useCallback(() => {
     setToken(null)
     setUser(null)
     localStorage.removeItem(TOKEN_KEY)
     setAuthToken(null)
-  }
+  }, [])
 
   useEffect(() => {
     const storedToken = localStorage.getItem(TOKEN_KEY)
@@ -81,46 +96,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         clearSession()
       })
       .finally(() => setLoading(false))
-  }, [])
+  }, [clearSession])
 
-  const login = async (payload: LoginPayload) => {
+  const login = useCallback(async (payload: LoginPayload) => {
     try {
       const response = await api.post('/auth/login', payload)
       persistSession(response.data.data.token, response.data.data.user)
     } catch (error) {
-      throw new Error(
-        (error as any)?.response?.data?.error?.message || getErrorMessage(error),
-      )
+      throw new Error(getApiErrorMessage(error) || getErrorMessage(error))
     }
-  }
+  }, [persistSession])
 
-  const signup = async (payload: SignupPayload) => {
+  const signup = useCallback(async (payload: SignupPayload) => {
     try {
       const response = await api.post('/auth/signup', payload)
-      persistSession(response.data.data.token, response.data.data.user)
-    } catch (error) {
-      throw new Error(
-        (error as any)?.response?.data?.error?.message || getErrorMessage(error),
-      )
-    }
-  }
+      const { token: signupToken, user } = response.data.data
 
-  const logout = async () => {
+      if (signupToken && user) {
+        persistSession(signupToken, user)
+        return { status: user.status }
+      }
+
+      // Pending users should not be auto-logged in
+      setUser(null)
+      clearSession()
+      return { status: user?.status ?? 'PENDING' }
+    } catch (error) {
+      throw new Error(getApiErrorMessage(error) || getErrorMessage(error))
+    }
+  }, [clearSession, persistSession])
+
+  const logout = useCallback(async () => {
     try {
       await api.post('/auth/logout').catch(() => undefined)
     } finally {
       clearSession()
     }
-  }
+  }, [clearSession])
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     try {
       const response = await api.get('/auth/me')
       setUser(response.data.data)
     } catch {
       // Silently fail - user might not be authenticated
     }
-  }
+  }, [])
 
   const value = useMemo(
     () => ({
@@ -132,8 +153,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout,
       refreshUser,
       setUser,
+      isApproved: user?.status === 'APPROVED',
     }),
-    [user, token, loading],
+    [user, token, loading, login, signup, logout, refreshUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -11,11 +11,11 @@ interface UserRecord {
   id: string
   name: string
   email: string
-  role: 'ADMIN' | 'MANAGER' | 'TECHNICIAN'
+  role: 'ADMIN' | 'TECHNICIAN'
   createdAt?: string
 }
 
-const roleOptions: UserRecord['role'][] = ['ADMIN', 'MANAGER', 'TECHNICIAN']
+const roleOptions: UserRecord['role'][] = ['ADMIN', 'TECHNICIAN']
 
 const initialFormState = {
   name: '',
@@ -23,6 +23,9 @@ const initialFormState = {
   role: 'TECHNICIAN' as UserRecord['role'],
   password: '',
 }
+
+const getApiErrorMessage = (err: unknown) =>
+  (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message
 
 export default function UserManagement() {
   const [users, setUsers] = useState<UserRecord[]>([])
@@ -39,7 +42,7 @@ export default function UserManagement() {
       setUsers(data.data)
       setError(null)
     } catch (err) {
-      setError((err as any)?.response?.data?.error?.message || 'Failed to load users')
+      setError(getApiErrorMessage(err) || 'Failed to load users')
     } finally {
       setLoading(false)
     }
@@ -64,7 +67,7 @@ export default function UserManagement() {
       setFormState(initialFormState)
       await fetchUsers()
     } catch (err) {
-      setFormError((err as any)?.response?.data?.error?.message || 'Failed to create user')
+      setFormError(getApiErrorMessage(err) || 'Failed to create user')
     } finally {
       setIsSubmitting(false)
     }

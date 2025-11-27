@@ -132,6 +132,9 @@ export default function Settings() {
     loadPreferences()
   }, [i18n])
 
+  const getApiError = (err: unknown) =>
+    (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message
+
   const onProfileSubmit = async (data: ProfileFormValues) => {
     setIsUpdatingProfile(true)
     setProfileError(null)
@@ -142,10 +145,8 @@ export default function Settings() {
       await refreshUser()
       setProfileSuccess(true)
       setTimeout(() => setProfileSuccess(false), 3000)
-    } catch (error: any) {
-      setProfileError(
-        error?.response?.data?.error?.message || 'Failed to update profile'
-      )
+    } catch (error: unknown) {
+      setProfileError(getApiError(error) || 'Failed to update profile')
     } finally {
       setIsUpdatingProfile(false)
     }
@@ -164,10 +165,8 @@ export default function Settings() {
       setPasswordSuccess(true)
       passwordForm.reset()
       setTimeout(() => setPasswordSuccess(false), 3000)
-    } catch (error: any) {
-      setPasswordError(
-        error?.response?.data?.error?.message || 'Failed to change password'
-      )
+    } catch (error: unknown) {
+      setPasswordError(getApiError(error) || 'Failed to change password')
     } finally {
       setIsChangingPassword(false)
     }
@@ -190,8 +189,6 @@ export default function Settings() {
     switch (role) {
       case 'ADMIN':
         return 'destructive'
-      case 'MANAGER':
-        return 'warning'
       default:
         return 'secondary'
     }

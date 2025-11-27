@@ -3,6 +3,8 @@ import AppLayout from '@/components/layout/AppLayout'
 import Dashboard from '@/pages/Dashboard'
 import Login from '@/pages/Login'
 import Signup from '@/pages/Signup'
+import AwaitingApproval from '@/pages/AwaitingApproval'
+import AccessManagement from '@/pages/access/AccessManagement'
 import MachinesList from '@/pages/machines/MachinesList'
 import MachineDetail from '@/pages/machines/MachineDetail'
 import WorkOrdersList from '@/pages/work-orders/WorkOrdersList'
@@ -22,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/awaiting-approval" element={<AwaitingApproval />} />
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
@@ -39,6 +42,14 @@ function App() {
             element={
               <AdminRoute>
                 <UserManagement />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/access"
+            element={
+              <AdminRoute>
+                <AccessManagement />
               </AdminRoute>
             }
           />

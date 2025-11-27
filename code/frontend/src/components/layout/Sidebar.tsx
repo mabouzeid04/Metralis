@@ -6,7 +6,8 @@ import {
   FileText, 
   Package,
   Users,
-  Cog
+  Cog,
+  ShieldCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
@@ -25,7 +26,10 @@ export function Sidebar({ className }: SidebarProps) {
     { to: '/parts', icon: Package, label: 'Parts' },
     { to: '/documents', icon: FileText, label: 'Documents' },
     ...(user?.role === 'ADMIN'
-      ? [{ to: '/users', icon: Users, label: 'Users' }] 
+      ? [
+          { to: '/users', icon: Users, label: 'Users' },
+          { to: '/access', icon: ShieldCheck, label: 'Access' },
+        ]
       : []),
   ]
 

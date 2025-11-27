@@ -11,7 +11,6 @@ const signupSchema = z.object({
   name: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(8),
-  role: z.enum(["ADMIN", "MANAGER", "TECHNICIAN"]).optional(),
 });
 
 router.post("/signup", async (req, res) => {
@@ -21,7 +20,7 @@ router.post("/signup", async (req, res) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
-  const { name, email, password, role } = parsed.data;
+  const { name, email, password } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
@@ -29,27 +28,49 @@ router.post("/signup", async (req, res) => {
   }
 
   const passwordHash = await hashPassword(password);
+  const userCount = await prisma.user.count();
+
+  const assignedRole = userCount === 0 ? "ADMIN" : "TECHNICIAN";
+  const assignedStatus = assignedRole === "ADMIN" ? "APPROVED" : "PENDING";
 
   const user = await prisma.user.create({
-    data: { name, email, passwordHash, role: role || "TECHNICIAN" },
+    data: {
+      name,
+      email,
+      passwordHash,
+      role: assignedRole,
+      status: assignedStatus,
+      approvedAt: assignedStatus === "APPROVED" ? new Date() : null,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+      approvedAt: true,
+    },
   });
 
-  const token = signToken({
-    sub: user.id,
-    email: user.email,
-    role: user.role,
-    name: user.name,
-  });
+  const token =
+    user.status === "APPROVED"
+      ? signToken({
+          sub: user.id,
+          email: user.email,
+          role: user.role,
+          name: user.name,
+          status: user.status,
+        })
+      : null;
 
   return res.status(201).json({
     data: {
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user,
+      message:
+        user.status === "APPROVED"
+          ? null
+          : "Your account is awaiting admin approval. You'll receive access once approved.",
     },
   });
 });
@@ -77,6 +98,19 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ error: { message: "Invalid credentials" } });
   }
 
+  if (user.status !== "APPROVED") {
+    const message =
+      user.status === "PENDING"
+        ? "Your account is awaiting admin approval."
+        : "Your account has been rejected. Please contact an administrator.";
+    return res.status(403).json({
+      error: {
+        message,
+        status: user.status,
+      },
+    });
+  }
+
   await prisma.user.update({
     where: { id: user.id },
     data: { lastLoginAt: new Date() },
@@ -87,6 +121,7 @@ router.post("/login", async (req, res) => {
     email: user.email,
     role: user.role,
     name: user.name,
+    status: user.status,
   });
 
   return res.json({
@@ -97,6 +132,7 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        status: user.status,
       },
     },
   });
@@ -113,6 +149,7 @@ router.get("/me", requireAuth, async (req, res) => {
       id: true,
       name: true,
       email: true,
+      status: true,
       role: true,
       preferences: true,
     },

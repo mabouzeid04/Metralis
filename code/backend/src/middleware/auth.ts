@@ -22,6 +22,7 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
       role: payload.role,
       email: payload.email,
       name: payload.name,
+      status: payload.status,
     };
     return next();
   } catch {

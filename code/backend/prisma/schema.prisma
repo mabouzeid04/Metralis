@@ -13,8 +13,13 @@ datasource db {
 
 enum UserRole {
   ADMIN
-  MANAGER
   TECHNICIAN
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum MachineStatus {
@@ -63,8 +68,14 @@ model User {
   passwordHash String
   name         String
   role         UserRole       @default(TECHNICIAN)
+  status       UserStatus     @default(APPROVED)
   active       Boolean        @default(true)
   lastLoginAt  DateTime?
+  approvedById String?
+  approvedBy   User?          @relation("UserApprovals", fields: [approvedById], references: [id])
+  approvedAt   DateTime?
+  rejectedAt   DateTime?
+  rejectionReason String?
   preferences  Json?
   metadata     Json?
   createdAt    DateTime       @default(now())
@@ -74,6 +85,7 @@ model User {
   assignedWorkOrders WorkOrder[] @relation("assignedTo")
   repairActions      RepairAction[]
   documents          Document[]
+  approvals          User[]        @relation("UserApprovals")
 }
 
 model Machine {

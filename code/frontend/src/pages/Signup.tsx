@@ -27,6 +27,7 @@ export default function Signup() {
   const { signup, user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   
   const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -41,13 +42,19 @@ export default function Signup() {
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true)
     setFormError(null)
+    setSuccessMessage(null)
     try {
-      await signup({
+      const result = await signup({
         name: data.name,
         email: data.email,
         password: data.password,
       })
-      navigate('/')
+      if (result?.status === 'APPROVED') {
+        navigate('/')
+      } else {
+        setSuccessMessage('Thanks! Your technician account request was submitted and is awaiting admin approval.')
+        navigate('/awaiting-approval', { state: { email: data.email } })
+      }
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'Failed to sign up')
     } finally {
@@ -79,7 +86,7 @@ export default function Signup() {
                 <CardHeader className="space-y-1 text-center sm:text-left">
                     <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
                     <CardDescription>
-                        Enter your details below to get started
+                        Technician accounts require admin approval before access is granted.
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -138,6 +145,11 @@ export default function Signup() {
                         {formError && (
                             <div className="w-full p-3 text-sm text-destructive bg-destructive/10 rounded-md">
                                 {formError}
+                            </div>
+                        )}
+                        {successMessage && (
+                            <div className="w-full p-3 text-sm text-emerald-600 bg-emerald-50 rounded-md border border-emerald-100">
+                                {successMessage}
                             </div>
                         )}
                         <Button className="w-full h-10" type="submit" disabled={isLoading}>
