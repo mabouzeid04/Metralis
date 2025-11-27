@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Wrench, AlertTriangle, CheckCircle2, Loader2, ServerOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,6 +7,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Timeline } from '@/components/shared/Timeline'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Machine {
   id: string
@@ -34,9 +35,14 @@ interface Machine {
 
 export default function MachineDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [machine, setMachine] = useState<Machine | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN'
 
   useEffect(() => {
     const fetchMachine = async () => {
@@ -56,6 +62,25 @@ export default function MachineDetail() {
 
     fetchMachine()
   }, [id])
+
+  const handleDelete = async () => {
+    if (!machine || deleting) return
+
+    const confirmed = window.confirm('Delete this machine? This cannot be undone.')
+    if (!confirmed) return
+
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      await api.delete(`/machines/${machine.id}`)
+      navigate('/machines')
+    } catch (err: unknown) {
+      const apiError = err as { response?: { data?: { error?: { message?: string } } } }
+      setDeleteError(apiError?.response?.data?.error?.message || 'Failed to delete machine')
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -110,15 +135,31 @@ export default function MachineDetail() {
                 <span>{machine.code || 'No code'}</span> • <span>{machine.category || 'Uncategorized'}</span> • <span>{machine.area || machine.line || 'No location'}</span>
             </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" asChild>
             <Link to={`/documents?machine=${machine.id}`}>View Docs</Link>
           </Button>
           <Button asChild>
             <Link to={`/work-orders/new?machine=${machine.id}`}>Create Work Order</Link>
           </Button>
+          {isAdmin && (
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={deleting}
+            >
+              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete Machine
+            </Button>
+          )}
         </div>
       </div>
+
+      {deleteError && (
+        <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+          {deleteError}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Machine Info */}

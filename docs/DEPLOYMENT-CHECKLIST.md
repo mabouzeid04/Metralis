@@ -33,6 +33,17 @@ This checklist covers all the manual steps you need to complete after the code c
 - [ ] Your storage endpoint is: `https://[PROJECT-REF].supabase.co/storage/v1/s3`
 - [ ] **Save this**
 
+### 1.5 Enable pgvector + run migrations
+- [ ] Go to **SQL Editor** in Supabase
+- [ ] Run: `create extension if not exists vector;`
+- [ ] In the repo root run: `cd code/backend && ./migrate-supabase.sh "postgresql://postgres:PASSWORD@db.[PROJECT-REF].supabase.co:5432/postgres?sslmode=require"`
+- [ ] Confirm the new table `DocumentChunk` exists (Supabase Table Editor → public schema)
+
+### 1.6 Configure OpenAI embeddings
+- [ ] Create an OpenAI API key with access to `text-embedding-3-small`
+- [ ] Store it somewhere safe—you’ll need it for Render environment variables
+- [ ] (Optional) If you prefer a different embedding model/dimension, update both the DB column definition and `OPENAI_EMBEDDING_DIMENSIONS`
+
 ---
 
 ## ✅ Step 2: Render Backend Setup
@@ -67,6 +78,9 @@ Go to **"Environment Variables"** and add these (click "Add" for each):
 | `S3_ENDPOINT` | `https://[PROJECT-REF].supabase.co/storage/v1/s3` | Step 1.4 |
 | `S3_FORCE_PATH_STYLE` | `true` | - |
 | `FRONTEND_URL` | `https://yourdomain.com` | Your frontend domain (optional, for CORS) |
+| `OPENAI_API_KEY` | `[YOUR OPENAI KEY]` | Step 1.6 |
+| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Step 1.6 |
+| `OPENAI_EMBEDDING_DIMENSIONS` | `1536` | Leave at 1536 unless you change the DB column |
 
 **Important**: Replace all `[PLACEHOLDERS]` with actual values!
 

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireAuth } from "../middleware/auth";
 import { upload, saveDocumentToS3, streamDocumentFromS3 } from "../services/storage";
 import { prisma } from "../lib/prisma";
+import { ingestDocument } from "../services/documentIngestion";
 
 const router = Router();
 
@@ -77,6 +78,10 @@ router.post("/", upload.single("file"), async (req, res) => {
       mimeType: req.file.mimetype,
       uploadedById: req.user!.id,
     },
+  });
+
+  void ingestDocument(doc.id).catch((error) => {
+    console.error("Document ingestion failed", { documentId: doc.id, error });
   });
 
   return res.status(201).json({ data: doc });

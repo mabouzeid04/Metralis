@@ -66,4 +66,42 @@ export const streamDocumentFromS3 = async (key: string, res: Response) => {
   return res.send(Buffer.from(buffer));
 };
 
+const readableToBuffer = async (stream: Readable) => {
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+};
+
+export const downloadDocumentBuffer = async (key: string) => {
+  const object = await s3.send(
+    new GetObjectCommand({
+      Bucket: env.s3.bucket,
+      Key: key,
+    }),
+  );
+
+  const body = object.Body;
+
+  if (!body) {
+    throw new Error("Empty S3 object");
+  }
+
+  if (body instanceof Readable) {
+    return readableToBuffer(body);
+  }
+
+  if (Buffer.isBuffer(body)) {
+    return body;
+  }
+
+  if (typeof (body as any).transformToByteArray === "function") {
+    const arr = await (body as any).transformToByteArray();
+    return Buffer.from(arr);
+  }
+
+  throw new Error("Unsupported S3 body type");
+};
+
 

@@ -5,7 +5,15 @@ dotenv.config({
   path: path.resolve(process.cwd(), ".env"),
 });
 
-const requiredEnv = ["DATABASE_URL", "JWT_SECRET", "S3_BUCKET", "S3_REGION", "S3_ACCESS_KEY", "S3_SECRET_KEY"];
+const requiredEnv = [
+  "DATABASE_URL",
+  "JWT_SECRET",
+  "S3_BUCKET",
+  "S3_REGION",
+  "S3_ACCESS_KEY",
+  "S3_SECRET_KEY",
+  "OPENAI_API_KEY",
+];
 
 requiredEnv.forEach((key) => {
   if (!process.env[key]) {
@@ -25,6 +33,11 @@ export const env = {
     secretKey: process.env.S3_SECRET_KEY as string,
     endpoint: process.env.S3_ENDPOINT,
     forcePathStyle: process.env.S3_FORCE_PATH_STYLE === "true",
+  },
+  embeddings: {
+    apiKey: process.env.OPENAI_API_KEY as string,
+    model: process.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small",
+    dimensions: Number(process.env.OPENAI_EMBEDDING_DIMENSIONS) || 1536,
   },
 };
 

@@ -62,6 +62,13 @@ enum DocumentType {
   OTHER
 }
 
+enum DocumentIngestionStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+  FAILED
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -204,7 +211,27 @@ model Document {
   metadata    Json?
   uploadedById String
   uploadedBy  User        @relation(fields: [uploadedById], references: [id])
+  ingestionStatus DocumentIngestionStatus @default(PENDING)
+  ingestedAt     DateTime?
+  ingestionError String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  chunks DocumentChunk[]
+}
+
+model DocumentChunk {
+  id         String               @id @default(uuid())
+  documentId String
+  document   Document             @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  chunkIndex Int
+  content    String
+  tokens     Int
+  embedding  Unsupported("vector(1536)")
+  metadata   Json?
+  createdAt  DateTime             @default(now())
+
+  @@index([documentId, chunkIndex])
+  @@index([documentId])
 }
 

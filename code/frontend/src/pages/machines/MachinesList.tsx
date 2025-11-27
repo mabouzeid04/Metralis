@@ -14,6 +14,7 @@ import {
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { api } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Machine {
   id: string
@@ -31,6 +32,8 @@ export default function MachinesList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'ADMIN'
 
   useEffect(() => {
     const fetchMachines = async () => {
@@ -79,9 +82,17 @@ export default function MachinesList() {
           <h2 className="text-3xl font-bold tracking-tight">Machines</h2>
           <p className="text-muted-foreground">Manage your factory assets and equipment.</p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" /> Add Machine
-        </Button>
+        {isAdmin ? (
+          <Button className="w-full sm:w-auto" asChild>
+            <Link to="/machines/new">
+              <Plus className="mr-2 h-4 w-4" /> Add Machine
+            </Link>
+          </Button>
+        ) : (
+          <Button className="w-full sm:w-auto" variant="outline" disabled title="Admins only">
+            <Plus className="mr-2 h-4 w-4" /> Add Machine
+          </Button>
+        )}
       </div>
 
       <Card>
@@ -110,9 +121,17 @@ export default function MachinesList() {
                 {searchTerm ? 'Try a different search term' : 'Get started by adding your first machine'}
               </p>
               {!searchTerm && (
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" /> Add Machine
-                </Button>
+                isAdmin ? (
+                  <Button asChild>
+                    <Link to="/machines/new">
+                      <Plus className="mr-2 h-4 w-4" /> Add Machine
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="outline" disabled title="Admins only">
+                    <Plus className="mr-2 h-4 w-4" /> Add Machine
+                  </Button>
+                )
               )}
             </div>
           ) : (

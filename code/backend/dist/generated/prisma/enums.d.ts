@@ -1,0 +1,47 @@
+export declare const UserRole: {
+    readonly ADMIN: "ADMIN";
+    readonly MANAGER: "MANAGER";
+    readonly TECHNICIAN: "TECHNICIAN";
+};
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+export declare const MachineStatus: {
+    readonly RUNNING: "RUNNING";
+    readonly DOWN: "DOWN";
+    readonly MAINTENANCE: "MAINTENANCE";
+    readonly RETIRED: "RETIRED";
+};
+export type MachineStatus = (typeof MachineStatus)[keyof typeof MachineStatus];
+export declare const MachineCriticality: {
+    readonly LOW: "LOW";
+    readonly MEDIUM: "MEDIUM";
+    readonly HIGH: "HIGH";
+};
+export type MachineCriticality = (typeof MachineCriticality)[keyof typeof MachineCriticality];
+export declare const WorkOrderStatus: {
+    readonly OPEN: "OPEN";
+    readonly IN_PROGRESS: "IN_PROGRESS";
+    readonly WAITING: "WAITING";
+    readonly CLOSED: "CLOSED";
+};
+export type WorkOrderStatus = (typeof WorkOrderStatus)[keyof typeof WorkOrderStatus];
+export declare const WorkOrderType: {
+    readonly CORRECTIVE: "CORRECTIVE";
+    readonly PREVENTIVE: "PREVENTIVE";
+    readonly INSPECTION: "INSPECTION";
+};
+export type WorkOrderType = (typeof WorkOrderType)[keyof typeof WorkOrderType];
+export declare const WorkOrderPriority: {
+    readonly LOW: "LOW";
+    readonly MEDIUM: "MEDIUM";
+    readonly HIGH: "HIGH";
+    readonly CRITICAL: "CRITICAL";
+};
+export type WorkOrderPriority = (typeof WorkOrderPriority)[keyof typeof WorkOrderPriority];
+export declare const DocumentType: {
+    readonly MANUAL: "MANUAL";
+    readonly SOP: "SOP";
+    readonly TROUBLESHOOTING: "TROUBLESHOOTING";
+    readonly OTHER: "OTHER";
+};
+export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType];
+//# sourceMappingURL=enums.d.ts.map

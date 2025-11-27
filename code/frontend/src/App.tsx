@@ -6,6 +6,7 @@ import Signup from '@/pages/Signup'
 import AwaitingApproval from '@/pages/AwaitingApproval'
 import AccessManagement from '@/pages/access/AccessManagement'
 import MachinesList from '@/pages/machines/MachinesList'
+import CreateMachine from '@/pages/machines/CreateMachine'
 import MachineDetail from '@/pages/machines/MachineDetail'
 import WorkOrdersList from '@/pages/work-orders/WorkOrdersList'
 import CreateWorkOrder from '@/pages/work-orders/CreateWorkOrder'
@@ -30,6 +31,14 @@ function App() {
         <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/machines" element={<MachinesList />} />
+          <Route
+            path="/machines/new"
+            element={
+              <AdminRoute>
+                <CreateMachine />
+              </AdminRoute>
+            }
+          />
           <Route path="/machines/:id" element={<MachineDetail />} />
           <Route path="/work-orders" element={<WorkOrdersList />} />
           <Route path="/work-orders/new" element={<CreateWorkOrder />} />

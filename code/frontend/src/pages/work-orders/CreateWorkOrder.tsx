@@ -35,20 +35,13 @@ interface UserOption {
   role: string
 }
 
-const mockMachines: Machine[] = [
-  { id: '1', name: 'Filler 01' },
-  { id: '2', name: 'Labeler 02' },
-  { id: '3', name: 'Packer 01' },
-]
-
-const isUUID = (value: string) =>
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
-
 export default function CreateWorkOrder() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
-  const [machines, setMachines] = useState<Machine[]>(mockMachines)
+  const [machines, setMachines] = useState<Machine[]>([])
+  const [loadingMachines, setLoadingMachines] = useState(true)
+  const [machinesError, setMachinesError] = useState<string | null>(null)
   const [users, setUsers] = useState<UserOption[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -62,25 +55,35 @@ export default function CreateWorkOrder() {
     }
   })
 
+  const isMachineSelectDisabled = loadingMachines || !!machinesError || machines.length === 0
+  const isSubmitDisabled = isLoading || isMachineSelectDisabled
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch machines (best effort - fall back to mock data if it fails)
+        setMachinesError(null)
+        setLoadingMachines(true)
+
         try {
           const machinesResponse = await api.get('/machines')
-          if (Array.isArray(machinesResponse.data.data) && machinesResponse.data.data.length) {
-            const remoteMachines = machinesResponse.data.data as Array<{ id: string; name: string }>
-            setMachines(
-              remoteMachines
-                .filter((machine) => Boolean(machine?.id) && Boolean(machine?.name))
-                .map((machine) => ({
-                  id: machine.id,
-                  name: machine.name,
-                })),
-            )
-          }
-        } catch {
-          // Ignore errors and keep mock data
+          const remoteMachines = Array.isArray(machinesResponse.data.data)
+            ? machinesResponse.data.data
+            : []
+
+          setMachines(
+            remoteMachines
+              .filter((machine) => Boolean(machine?.id) && Boolean(machine?.name))
+              .map((machine: { id: string; name: string }) => ({
+                id: machine.id,
+                name: machine.name,
+              })),
+          )
+        } catch (err: unknown) {
+          const error = err as { response?: { data?: { error?: { message?: string } } } }
+          setMachines([])
+          setMachinesError(error?.response?.data?.error?.message || 'Failed to load machines')
+        } finally {
+          setLoadingMachines(false)
         }
 
         // Fetch users for assignment
@@ -93,9 +96,9 @@ export default function CreateWorkOrder() {
         } finally {
           setLoadingUsers(false)
         }
-        } catch {
-          setError('Failed to load form data')
-        }
+      } catch {
+        setError('Failed to load form data')
+      }
     }
 
     fetchData()
@@ -106,13 +109,6 @@ export default function CreateWorkOrder() {
     setError(null)
 
     try {
-      // If we're using mock data (non-UUID machine), just simulate success
-      if (!isUUID(data.machineId)) {
-        await new Promise((resolve) => setTimeout(resolve, 500))
-        navigate('/work-orders')
-        return
-      }
-
       // Map form values to API format
       const apiData = {
         machineId: data.machineId,
@@ -173,12 +169,22 @@ export default function CreateWorkOrder() {
                         id="machineId"
                         className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                         {...register('machineId')}
+                        disabled={isMachineSelectDisabled}
                     >
                         <option value="">Select Machine</option>
                         {machines.map(m => (
                             <option key={m.id} value={m.id}>{m.name}</option>
                         ))}
                     </select>
+                    {loadingMachines && (
+                        <p className="text-sm text-muted-foreground">Loading machines...</p>
+                    )}
+                    {!loadingMachines && machinesError && (
+                        <p className="text-sm text-destructive">{machinesError}</p>
+                    )}
+                    {!loadingMachines && !machinesError && machines.length === 0 && (
+                        <p className="text-sm text-muted-foreground">No machines found. Add one to continue.</p>
+                    )}
                     {errors.machineId && (
                         <p className="text-sm text-destructive">{errors.machineId.message}</p>
                     )}
@@ -255,7 +261,7 @@ export default function CreateWorkOrder() {
             <Button variant="outline" type="button" onClick={() => navigate(-1)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isSubmitDisabled}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Work Order
             </Button>

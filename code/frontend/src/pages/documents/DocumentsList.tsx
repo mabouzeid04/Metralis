@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Plus, Search, Filter, FileText, Download, Eye, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,7 +17,7 @@ import { api } from '@/lib/api'
 interface Document {
   id: string
   title: string
-  type: string
+  type: DocumentType
   filename: string
   fileSize: number | null
   mimeType: string | null
@@ -32,6 +32,20 @@ interface Document {
   } | null
 }
 
+type DocumentType = 'MANUAL' | 'SOP' | 'TROUBLESHOOTING' | 'OTHER'
+const documentTypes: { value: DocumentType; label: string }[] = [
+  { value: 'MANUAL', label: 'Manual' },
+  { value: 'SOP', label: 'SOP' },
+  { value: 'TROUBLESHOOTING', label: 'Troubleshooting' },
+  { value: 'OTHER', label: 'Other' },
+]
+const allowedExtensions = ['pdf', 'doc', 'docx']
+const allowedMimeTypes = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+]
+
 function formatFileSize(bytes: number | null): string {
   if (!bytes) return '-'
   if (bytes < 1024) return `${bytes} B`
@@ -44,23 +58,31 @@ export default function DocumentsList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [formValues, setFormValues] = useState<{ title: string; type: DocumentType }>({
+    title: '',
+    type: 'MANUAL',
+  })
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const fetchDocuments = useCallback(async () => {
+    try {
+      const response = await api.get('/documents')
+      setDocuments(response.data.data || [])
+      setError(null)
+    } catch (err) {
+      console.error('Failed to fetch documents:', err)
+      setError('Failed to load documents')
+    }
+  }, [])
 
   useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const response = await api.get('/documents')
-        setDocuments(response.data.data || [])
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch documents:', err)
-        setError('Failed to load documents')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchDocuments()
-  }, [])
+    setLoading(true)
+    fetchDocuments().finally(() => setLoading(false))
+  }, [fetchDocuments])
 
   const handleDownload = async (doc: Document) => {
     try {
@@ -78,6 +100,73 @@ export default function DocumentsList() {
       window.URL.revokeObjectURL(url)
     } catch (err) {
       console.error('Failed to download document:', err)
+    }
+  }
+
+  const resetUploadState = () => {
+    setFormValues({ title: '', type: 'MANUAL' })
+    setSelectedFile(null)
+    setUploadError(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const closeUploader = () => {
+    setUploadOpen(false)
+    resetUploadState()
+  }
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) {
+      setSelectedFile(null)
+      return
+    }
+
+    const hasAllowedExtension = allowedExtensions.some((ext) =>
+      file.name.toLowerCase().endsWith(`.${ext}`)
+    )
+    if (!hasAllowedExtension && !allowedMimeTypes.includes(file.type)) {
+      setUploadError('Only PDF, DOC, or DOCX files are supported.')
+      setSelectedFile(null)
+      return
+    }
+
+    setUploadError(null)
+    setSelectedFile(file)
+  }
+
+  const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!formValues.title.trim()) {
+      setUploadError('Title is required.')
+      return
+    }
+
+    if (!selectedFile) {
+      setUploadError('Please select a PDF or DOCX file to upload.')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('title', formValues.title.trim())
+    formData.append('type', formValues.type)
+    formData.append('file', selectedFile)
+
+    setUploading(true)
+    setUploadError(null)
+    try {
+      await api.post('/documents', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      await fetchDocuments()
+      closeUploader()
+    } catch (err) {
+      console.error('Failed to upload document:', err)
+      setUploadError('Failed to upload document. Please try again.')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -111,10 +200,85 @@ export default function DocumentsList() {
           <h2 className="text-3xl font-bold tracking-tight">Documents</h2>
           <p className="text-muted-foreground">Centralized library for manuals, SOPs, and diagrams.</p>
         </div>
-        <Button className="w-full sm:w-auto">
+        <Button className="w-full sm:w-auto" onClick={() => setUploadOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Upload Document
         </Button>
       </div>
+
+      {uploadOpen && (
+        <Card>
+          <CardHeader className="pb-2">
+            <h3 className="text-xl font-semibold">Upload a document</h3>
+            <p className="text-sm text-muted-foreground">Supports PDF or Word files up to 25MB.</p>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4" onSubmit={handleUpload}>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Title</label>
+                <Input
+                  value={formValues.title}
+                  onChange={(e) => setFormValues((prev) => ({ ...prev, title: e.target.value }))}
+                  placeholder="Machine manual (English)"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Document type</label>
+                <select
+                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                  value={formValues.type}
+                  onChange={(e) =>
+                    setFormValues((prev) => ({ ...prev, type: e.target.value as DocumentType }))
+                  }
+                >
+                  {documentTypes.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">File</label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Choose file
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    {selectedFile ? selectedFile.name : 'No file selected'}
+                  </span>
+                </div>
+              </div>
+              {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
+              <div className="flex items-center gap-2">
+                <Button type="submit" disabled={uploading}>
+                  {uploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
+                    </>
+                  ) : (
+                    'Upload'
+                  )}
+                </Button>
+                <Button type="button" variant="ghost" onClick={closeUploader} disabled={uploading}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader className="p-4">
@@ -142,7 +306,7 @@ export default function DocumentsList() {
                 {searchTerm ? 'Try a different search term' : 'Get started by uploading your first document'}
               </p>
               {!searchTerm && (
-                <Button>
+                <Button onClick={() => setUploadOpen(true)}>
                   <Plus className="mr-2 h-4 w-4" /> Upload Document
                 </Button>
               )}
