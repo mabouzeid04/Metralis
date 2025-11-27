@@ -18,6 +18,8 @@ import UserManagement from '@/pages/users/UserManagement'
 import Settings from '@/pages/Settings'
 import NotFound from '@/pages/NotFound'
 import { ProtectedRoute, AdminRoute } from '@/components/auth/ProtectedRoute'
+import { AIChatProvider } from '@/contexts/AIChatContext'
+import MetralisAI from '@/pages/ai/MetralisAI'
 
 function App() {
   return (
@@ -28,7 +30,7 @@ function App() {
         <Route path="/awaiting-approval" element={<AwaitingApproval />} />
         
         {/* Protected Routes */}
-        <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+        <Route element={<ProtectedRoute><AIChatProvider><AppLayout /></AIChatProvider></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/machines" element={<MachinesList />} />
           <Route
@@ -63,6 +65,7 @@ function App() {
             }
           />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/ai" element={<MetralisAI />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

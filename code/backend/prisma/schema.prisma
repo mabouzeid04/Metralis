@@ -69,6 +69,12 @@ enum DocumentIngestionStatus {
   FAILED
 }
 
+enum ChatMessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -93,6 +99,7 @@ model User {
   repairActions      RepairAction[]
   documents          Document[]
   approvals          User[]        @relation("UserApprovals")
+  chatConversations  ChatConversation[]
 }
 
 model Machine {
@@ -114,6 +121,7 @@ model Machine {
 
   workOrders WorkOrder[]
   documents  Document[]
+  chatConversations ChatConversation[]
 
   @@index([name])
   @@index([status])
@@ -233,5 +241,37 @@ model DocumentChunk {
 
   @@index([documentId, chunkIndex])
   @@index([documentId])
+}
+
+model ChatConversation {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  machineId     String?
+  machine       Machine?    @relation(fields: [machineId], references: [id])
+  title         String
+  summary       String?
+  metadata      Json?
+  lastMessageAt DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  messages ChatMessage[]
+
+  @@index([userId, lastMessageAt])
+  @@index([machineId])
+}
+
+model ChatMessage {
+  id             String           @id @default(uuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           ChatMessageRole
+  content        String
+  citations      Json?
+  contextChunks  Json?
+  createdAt      DateTime         @default(now())
+
+  @@index([conversationId, createdAt])
 }
 

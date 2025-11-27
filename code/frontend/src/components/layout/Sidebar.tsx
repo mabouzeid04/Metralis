@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { 
-  LayoutDashboard, 
-  Settings, 
-  Wrench, 
-  FileText, 
+import {
+  LayoutDashboard,
+  Settings,
+  Wrench,
+  FileText,
   Package,
   Users,
   Cog,
   ShieldCheck,
+  Bot,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
@@ -25,6 +26,7 @@ export function Sidebar({ className }: SidebarProps) {
     { to: '/work-orders', icon: Wrench, label: 'Work Orders' },
     { to: '/parts', icon: Package, label: 'Parts' },
     { to: '/documents', icon: FileText, label: 'Documents' },
+    { to: '/ai', icon: Bot, label: 'Metralis AI' },
     ...(user?.role === 'ADMIN'
       ? [
           { to: '/users', icon: Users, label: 'Users' },

@@ -8,6 +8,7 @@ import usersRoutes from "./users";
 import dashboardRoutes from "./dashboard";
 import searchRoutes from "./search";
 import profileRoutes from "./profile";
+import aiRoutes from "./ai";
 
 const router = Router();
 
@@ -19,7 +20,8 @@ router.use("/documents", documentRoutes);
 router.use("/users", usersRoutes);
 router.use("/dashboard", dashboardRoutes);
 router.use("/search", searchRoutes);
-router.use("/users", profileRoutes);
+router.use("/profile", profileRoutes);
+router.use("/ai", aiRoutes);
 
 export default router;
 

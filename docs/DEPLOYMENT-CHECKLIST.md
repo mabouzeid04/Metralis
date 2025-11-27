@@ -78,9 +78,11 @@ Go to **"Environment Variables"** and add these (click "Add" for each):
 | `S3_ENDPOINT` | `https://[PROJECT-REF].supabase.co/storage/v1/s3` | Step 1.4 |
 | `S3_FORCE_PATH_STYLE` | `true` | - |
 | `FRONTEND_URL` | `https://yourdomain.com` | Your frontend domain (optional, for CORS) |
-| `OPENAI_API_KEY` | `[YOUR OPENAI KEY]` | Step 1.6 |
-| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Step 1.6 |
+| `OPENAI_API_KEY` | `[YOUR OPENAI KEY]` | Step 1.6 (required for embeddings) |
+| `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Step 1.6 (optional, defaults to text-embedding-3-small) |
 | `OPENAI_EMBEDDING_DIMENSIONS` | `1536` | Leave at 1536 unless you change the DB column |
+| `GEMINI_API_KEY` | `[YOUR GEMINI KEY]` | Required if using Gemini AI (default provider) |
+| `AI_PROVIDER` | `gemini` | Optional, defaults to "gemini" |
 
 **Important**: Replace all `[PLACEHOLDERS]` with actual values!
 

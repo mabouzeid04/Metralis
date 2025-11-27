@@ -21,6 +21,12 @@ requiredEnv.forEach((key) => {
   }
 });
 
+// Conditionally require GEMINI_API_KEY based on AI provider
+const aiProvider = (process.env.AI_PROVIDER || "gemini").toLowerCase();
+if (aiProvider === "gemini" && !process.env.GEMINI_API_KEY) {
+  throw new Error(`Missing required environment variable: GEMINI_API_KEY (required when AI_PROVIDER is gemini)`);
+}
+
 export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   port: Number(process.env.PORT) || 4000,
@@ -38,6 +44,15 @@ export const env = {
     apiKey: process.env.OPENAI_API_KEY as string,
     model: process.env.OPENAI_EMBEDDING_MODEL || "text-embedding-3-small",
     dimensions: Number(process.env.OPENAI_EMBEDDING_DIMENSIONS) || 1536,
+  },
+  ai: {
+    provider: process.env.AI_PROVIDER || "gemini",
+    temperature: Number(process.env.AI_TEMPERATURE ?? "0.2"),
+    maxTokens: Number(process.env.AI_MAX_TOKENS ?? "1024"),
+    gemini: {
+      apiKey: process.env.GEMINI_API_KEY as string,
+      model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+    },
   },
 };
 
