@@ -1,13 +1,7 @@
 import { Router } from "express";
-import { z } from "zod";
 import { requireAuth } from "../middleware/auth";
 import { handleChatMessage, listConversationsForUser, getConversationDetail } from "../services/ai/chatService";
-
-export const chatRequestSchema = z.object({
-  message: z.string().min(1, "Message cannot be empty"),
-  machineId: z.string().uuid().optional(),
-  conversationId: z.string().uuid().optional(),
-});
+import { chatRequestSchema } from "./schemas/aiChatSchema";
 
 const router = Router();
 

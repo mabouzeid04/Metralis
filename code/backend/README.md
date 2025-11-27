@@ -32,6 +32,13 @@ S3_ACCESS_KEY="minio"
 S3_SECRET_KEY="minio123"
 S3_ENDPOINT="http://localhost:9000"
 S3_FORCE_PATH_STYLE=true
+OPENAI_API_KEY="your-openai-key"          # embeddings
+GEMINI_API_KEY="your-gemini-key"          # default chat provider
+GEMINI_MODEL="gemini-2.5-flash"
+AI_PROVIDER="gemini"
+AI_TEMPERATURE=0.2
+AI_MAX_TOKENS=1024
+FRONTEND_URL="http://localhost:5173"      # comma-separated list allowed
 ```
 
 For production, point those values at your managed Postgres instance and S3/Supabase bucket, then remove the `S3_ENDPOINT` + `S3_FORCE_PATH_STYLE` overrides.
@@ -56,6 +63,7 @@ PostgreSQL is now the primary datastore. Document binaries are written to S3 (or
 | `npm run prisma:migrate` | Run migrations |
 | `npm run prisma:generate` | Regenerate Prisma client |
 | `npm run lint` | Type-check via `tsc --noEmit` |
+| `npm test` | Run Vitest unit tests (retrieval + schema coverage) |
 
 ## API Overview
 
@@ -67,6 +75,9 @@ All endpoints are prefixed with `/api/v1`.
 - `PATCH /work-orders/:id/status`, `PATCH /work-orders/:id/assign`, `POST /work-orders/:id/repair`
 - `GET/POST/PATCH /parts`
 - `GET/POST /documents`, `GET /documents/:id/file` (multipart upload using field `file`)
+- `POST /ai/chat` – send a prompt, optional `machineId`, returns LLM reply + citations
+- `GET /ai/conversations` – list a user's chat history
+- `GET /ai/conversations/:id` – fetch messages for a conversation
 - `GET /dashboard/stats`, `GET /dashboard/top-machines`
 - `GET /search?q=...`
 - Admin-only `GET/POST/PATCH /users`
@@ -82,7 +93,8 @@ All routes except `/auth/*` require the `Authorization: Bearer <token>` header.
 ## Next Steps
 
 - Seed script for demo data
-- Hook frontend pages to these endpoints
-- Swap SQLite for PostgreSQL when ready for multi-user deployments
+- Expand AI provider registry (e.g., OpenAI GPT-4o, DeepSeek R1) by binding new adapters
+- Tighten retrieval eval + add automated regression prompts
+- Support streaming answers and richer UI states in the Metralis AI panel
 
 

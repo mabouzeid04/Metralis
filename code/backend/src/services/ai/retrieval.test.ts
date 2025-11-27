@@ -1,4 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { retrieveContext } from "./retrieval";
+import { embedTexts } from "../embeddings";
+import { searchSimilarChunks } from "../vectorStore";
 
 vi.mock("../embeddings", () => ({
   embedTexts: vi.fn(),
@@ -7,10 +10,6 @@ vi.mock("../embeddings", () => ({
 vi.mock("../vectorStore", () => ({
   searchSimilarChunks: vi.fn(),
 }));
-
-const { embedTexts } = await import("../embeddings");
-const { searchSimilarChunks } = await import("../vectorStore");
-const { retrieveContext } = await import("./retrieval");
 
 describe("retrieveContext", () => {
   beforeEach(() => {
@@ -22,7 +21,7 @@ describe("retrieveContext", () => {
   });
 
   it("returns empty list when embeddings are unavailable", async () => {
-    (embedTexts as unknown as vi.Mock).mockResolvedValue([undefined]);
+    vi.mocked(embedTexts).mockResolvedValue([undefined as unknown as number[]]);
 
     const result = await retrieveContext({ question: "Test?", limit: 3 });
 
@@ -31,8 +30,8 @@ describe("retrieveContext", () => {
   });
 
   it("returns mapped chunks with metadata", async () => {
-    (embedTexts as unknown as vi.Mock).mockResolvedValue([[0.1, 0.2]]);
-    (searchSimilarChunks as unknown as vi.Mock).mockResolvedValue([
+    vi.mocked(embedTexts).mockResolvedValue([[0.1, 0.2]]);
+    vi.mocked(searchSimilarChunks).mockResolvedValue([
       {
         id: "chunk-1",
         documentId: "doc-1",

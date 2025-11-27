@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chatRequestSchema } from "./ai";
+import { chatRequestSchema } from "./schemas/aiChatSchema";
 
 describe("chatRequestSchema", () => {
   it("validates a minimal payload", () => {

@@ -44,6 +44,11 @@ This checklist covers all the manual steps you need to complete after the code c
 - [ ] Store it somewhere safe—you’ll need it for Render environment variables
 - [ ] (Optional) If you prefer a different embedding model/dimension, update both the DB column definition and `OPENAI_EMBEDDING_DIMENSIONS`
 
+### 1.7 Configure Gemini provider
+- [ ] Create a Google AI Studio key with access to **Gemini 2.5 Flash**
+- [ ] Decide whether Gemini remains the default (`AI_PROVIDER=gemini`). You can switch to OpenAI/DeepSeek later without code changes.
+- [ ] (Optional) Set `AI_TEMPERATURE` (defaults to 0.2) and `AI_MAX_TOKENS` (defaults to 1024) if you need different response styles.
+
 ---
 
 ## ✅ Step 2: Render Backend Setup
@@ -77,12 +82,15 @@ Go to **"Environment Variables"** and add these (click "Add" for each):
 | `S3_SECRET_KEY` | `[SERVICE ROLE SECRET KEY]` | Step 1.3 |
 | `S3_ENDPOINT` | `https://[PROJECT-REF].supabase.co/storage/v1/s3` | Step 1.4 |
 | `S3_FORCE_PATH_STYLE` | `true` | - |
-| `FRONTEND_URL` | `https://yourdomain.com` | Your frontend domain (optional, for CORS) |
+| `FRONTEND_URL` | `https://yourdomain.com` | Comma-separated list allowed; dev hosts `http://localhost:5173` are auto-added |
 | `OPENAI_API_KEY` | `[YOUR OPENAI KEY]` | Step 1.6 (required for embeddings) |
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-small` | Step 1.6 (optional, defaults to text-embedding-3-small) |
 | `OPENAI_EMBEDDING_DIMENSIONS` | `1536` | Leave at 1536 unless you change the DB column |
-| `GEMINI_API_KEY` | `[YOUR GEMINI KEY]` | Required if using Gemini AI (default provider) |
-| `AI_PROVIDER` | `gemini` | Optional, defaults to "gemini" |
+| `GEMINI_API_KEY` | `[YOUR GEMINI KEY]` | Step 1.7 |
+| `GEMINI_MODEL` | `gemini-2.5-flash` | Step 1.7 (optional override) |
+| `AI_PROVIDER` | `gemini` | Step 1.7 (set to `openai`, `deepseek`, etc. when swapping) |
+| `AI_TEMPERATURE` | `0.2` | Step 1.7 (optional) |
+| `AI_MAX_TOKENS` | `1024` | Step 1.7 (optional) |
 
 **Important**: Replace all `[PLACEHOLDERS]` with actual values!
 
@@ -165,6 +173,7 @@ If you added a custom domain in Vercel:
 ### 5.1 Test Backend
 - [ ] Visit: `https://metralis-api.onrender.com/health` (or your custom domain)
 - [ ] Should see: `{"status":"ok"}`
+- [ ] Hit `POST /api/v1/ai/chat` with `{ "message": "How do I diagnose vibration?", "machineId": "<machine-id>" }` and confirm you receive an `assistantMessage` plus `citations`.
 
 ### 5.2 Test Frontend
 - [ ] Visit: `https://metralis.vercel.app` (or your custom domain)
@@ -177,6 +186,12 @@ If you added a custom domain in Vercel:
 - [ ] Go to **Documents** page
 - [ ] Upload a test file
 - [ ] Should work (stored in Supabase Storage) ✅
+
+### 5.4 Validate Metralis AI chat
+- [ ] Open **Metralis AI** in the sidebar
+- [ ] Ask a maintenance question with and without selecting a machine
+- [ ] Confirm answers cite manuals/SOPs and History (top-right tab) lists previous chats
+- [ ] Refresh the page and ensure the selected conversation reloads
 
 ---
 

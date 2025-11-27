@@ -116,19 +116,25 @@ export const getConversationDetail = async (userId: string, conversationId: stri
 type HandleChatParams = {
   userId: string;
   message: string;
-  conversationId?: string;
-  machineId?: string;
+  conversationId?: string | undefined;
+  machineId?: string | undefined;
 };
 
 export const handleChatMessage = async ({ userId, message, conversationId, machineId }: HandleChatParams) => {
   const { conversation, isNew } = await ensureConversation(userId, conversationId, machineId);
 
-  if (!conversation.machine && machineId && !conversationId) {
-    // conversation freshly created but machine may not have been set if creation happened earlier
-    conversation.machine = await prisma.machine.findUnique({
+  if (!conversation.machine && machineId) {
+    const machine = await prisma.machine.findUnique({
       where: { id: machineId },
       select: { id: true, name: true, model: true, manufacturer: true, line: true },
     });
+    if (machine) {
+      conversation.machine = machine;
+      await prisma.chatConversation.update({
+        where: { id: conversation.id },
+        data: { machineId: machine.id },
+      });
+    }
   }
 
   const history = await prisma.chatMessage.findMany({

@@ -43,10 +43,10 @@ export const replaceDocumentChunks = async (documentId: string, chunks: Document
 };
 
 export type SimilarChunkFilter = {
-  documentId?: string;
-  machineId?: string;
-  machineType?: string;
-  language?: string;
+  documentId?: string | undefined;
+  machineId?: string | undefined;
+  machineType?: string | undefined;
+  language?: string | undefined;
 };
 
 export const searchSimilarChunks = async (embedding: number[], limit: number, filter?: SimilarChunkFilter) => {
