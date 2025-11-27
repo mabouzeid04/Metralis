@@ -72,7 +72,7 @@ export default function CreateWorkOrder() {
 
           setMachines(
             remoteMachines
-              .filter((machine) => Boolean(machine?.id) && Boolean(machine?.name))
+              .filter((machine: { id?: string; name?: string }) => Boolean(machine?.id) && Boolean(machine?.name))
               .map((machine: { id: string; name: string }) => ({
                 id: machine.id,
                 name: machine.name,
