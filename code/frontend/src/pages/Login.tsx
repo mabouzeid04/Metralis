@@ -58,7 +58,7 @@ export default function Login() {
                 <p className="text-slate-400 text-lg">Streamline your maintenance operations, track assets, and empower your workforce with our next-gen CMMS.</p>
             </div>
             <div className="text-sm text-slate-500">
-                © 2024 Metralis Inc. All rights reserved.
+                © 2025 Metralis Inc. All rights reserved.
             </div>
         </div>
 

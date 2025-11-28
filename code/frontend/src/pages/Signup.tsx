@@ -76,7 +76,7 @@ export default function Signup() {
                 </div>
             </div>
             <div className="text-sm text-slate-500">
-                © 2024 Metralis Inc. All rights reserved.
+                © 2025 Metralis Inc. All rights reserved.
             </div>
         </div>
 
