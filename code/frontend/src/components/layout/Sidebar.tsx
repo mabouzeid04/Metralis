@@ -7,7 +7,6 @@ import {
   Package,
   Users,
   Cog,
-  ShieldCheck,
   Bot,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -30,7 +29,6 @@ export function Sidebar({ className }: SidebarProps) {
     ...(user?.role === 'ADMIN'
       ? [
           { to: '/users', icon: Users, label: 'Users' },
-          { to: '/access', icon: ShieldCheck, label: 'Access' },
         ]
       : []),
   ]

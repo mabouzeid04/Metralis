@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { api } from '@/lib/api'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, ShieldCheck } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Loader2, RefreshCw, ShieldCheck, Users as UsersIcon } from 'lucide-react'
+
+type UserStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
 interface UserRecord {
   id: string
@@ -13,9 +16,21 @@ interface UserRecord {
   email: string
   role: 'ADMIN' | 'TECHNICIAN'
   createdAt?: string
+  status?: UserStatus
+  approvedAt?: string | null
 }
 
 const roleOptions: UserRecord['role'][] = ['ADMIN', 'TECHNICIAN']
+
+const StatusPill = ({ status }: { status: UserStatus }) => {
+  const variants: Record<UserStatus, { label: string; variant: 'outline' | 'secondary' | 'destructive' }> = {
+    APPROVED: { label: 'Approved', variant: 'secondary' },
+    PENDING: { label: 'Pending', variant: 'outline' },
+    REJECTED: { label: 'Rejected', variant: 'destructive' },
+  }
+  const { label, variant } = variants[status]
+  return <Badge variant={variant}>{label}</Badge>
+}
 
 const initialFormState = {
   name: '',
@@ -31,11 +46,15 @@ export default function UserManagement() {
   const [users, setUsers] = useState<UserRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [pendingUsers, setPendingUsers] = useState<UserRecord[]>([])
+  const [pendingLoading, setPendingLoading] = useState(true)
+  const [pendingError, setPendingError] = useState<string | null>(null)
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [formState, setFormState] = useState(initialFormState)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true)
     try {
       const { data } = await api.get('/users')
@@ -46,11 +65,95 @@ export default function UserManagement() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  const fetchPendingUsers = useCallback(async () => {
+    setPendingLoading(true)
+    setPendingError(null)
+    try {
+      const { data } = await api.get('/users/pending')
+      setPendingUsers(data.data)
+    } catch (err) {
+      setPendingError(getApiErrorMessage(err) || 'Failed to load pending users')
+    } finally {
+      setPendingLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     fetchUsers()
-  }, [])
+    fetchPendingUsers()
+  }, [fetchUsers, fetchPendingUsers])
+
+  const handleDecision = useCallback(
+    async (id: string, action: 'approve' | 'reject') => {
+      setActionLoading(id + action)
+      try {
+        await api.patch(`/users/${id}/${action}`)
+        await Promise.all([fetchUsers(), fetchPendingUsers()])
+      } catch (err) {
+        setPendingError(getApiErrorMessage(err) || 'Action failed')
+      } finally {
+        setActionLoading(null)
+      }
+    },
+    [fetchUsers, fetchPendingUsers],
+  )
+
+  const handleRefresh = () => {
+    fetchUsers()
+    fetchPendingUsers()
+  }
+
+  const pendingContent = useMemo(() => {
+    if (pendingLoading) {
+      return <p className="text-sm text-muted-foreground">Loading pending requests…</p>
+    }
+
+    if (!pendingUsers.length) {
+      return <p className="text-sm text-muted-foreground">No technician requests are waiting for approval.</p>
+    }
+
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Requested</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {pendingUsers.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell className="font-mono text-xs">{user.email}</TableCell>
+              <TableCell>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '—'}</TableCell>
+              <TableCell className="text-right space-x-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={actionLoading !== null}
+                  onClick={() => handleDecision(user.id, 'approve')}
+                >
+                  Approve
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={actionLoading !== null}
+                  onClick={() => handleDecision(user.id, 'reject')}
+                >
+                  Reject
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )
+  }, [pendingUsers, pendingLoading, actionLoading, handleDecision])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target
@@ -87,6 +190,33 @@ export default function UserManagement() {
         </div>
       </div>
 
+      <Card>
+        <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <UsersIcon className="h-5 w-5 text-primary" />
+              Pending Technician Requests
+            </CardTitle>
+            <CardDescription>Technicians stay here until an admin approves or rejects them.</CardDescription>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={loading || pendingLoading}
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+        </CardHeader>
+        {pendingError && (
+          <div className="mx-6 mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            {pendingError}
+          </div>
+        )}
+        <CardContent>{pendingContent}</CardContent>
+      </Card>
+
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <Card>
           <CardHeader>
@@ -106,6 +236,7 @@ export default function UserManagement() {
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Role</TableHead>
+                    <TableHead className="hidden md:table-cell">Status</TableHead>
                     <TableHead className="hidden md:table-cell">Created</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -115,9 +246,12 @@ export default function UserManagement() {
                       <TableCell className="font-medium">{user.name}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
-                        <span className="uppercase text-xs font-semibold text-muted-foreground">
+                        <Badge variant={user.role === 'ADMIN' ? 'secondary' : 'outline'} className="uppercase">
                           {user.role}
-                        </span>
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-sm">
+                        {user.status ? <StatusPill status={user.status} /> : '—'}
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
                         {user.createdAt

@@ -4,7 +4,6 @@ import Dashboard from '@/pages/Dashboard'
 import Login from '@/pages/Login'
 import Signup from '@/pages/Signup'
 import AwaitingApproval from '@/pages/AwaitingApproval'
-import AccessManagement from '@/pages/access/AccessManagement'
 import MachinesList from '@/pages/machines/MachinesList'
 import CreateMachine from '@/pages/machines/CreateMachine'
 import MachineDetail from '@/pages/machines/MachineDetail'
@@ -13,6 +12,7 @@ import CreateWorkOrder from '@/pages/work-orders/CreateWorkOrder'
 import WorkOrderDetail from '@/pages/work-orders/WorkOrderDetail'
 import PartsList from '@/pages/parts/PartsList'
 import PartDetail from '@/pages/parts/PartDetail'
+import CreatePart from '@/pages/parts/CreatePart'
 import DocumentsList from '@/pages/documents/DocumentsList'
 import UserManagement from '@/pages/users/UserManagement'
 import Settings from '@/pages/Settings'
@@ -46,6 +46,7 @@ function App() {
           <Route path="/work-orders/new" element={<CreateWorkOrder />} />
           <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
           <Route path="/parts" element={<PartsList />} />
+          <Route path="/parts/new" element={<CreatePart />} />
           <Route path="/parts/:id" element={<PartDetail />} />
           <Route path="/documents" element={<DocumentsList />} />
           <Route
@@ -53,14 +54,6 @@ function App() {
             element={
               <AdminRoute>
                 <UserManagement />
-              </AdminRoute>
-            }
-          />
-          <Route
-            path="/access"
-            element={
-              <AdminRoute>
-                <AccessManagement />
               </AdminRoute>
             }
           />

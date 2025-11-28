@@ -14,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
 
 interface Part {
   id: string
@@ -32,6 +33,7 @@ export default function PartsList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const { isApproved } = useAuth()
 
   useEffect(() => {
     const fetchParts = async () => {
@@ -81,9 +83,17 @@ export default function PartsList() {
           <h2 className="text-3xl font-bold tracking-tight">Parts Inventory</h2>
           <p className="text-muted-foreground">Manage spare parts and stock levels.</p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <Plus className="mr-2 h-4 w-4" /> Add Part
-        </Button>
+        {isApproved ? (
+          <Button className="w-full sm:w-auto" asChild>
+            <Link to="/parts/new">
+              <Plus className="mr-2 h-4 w-4" /> Add Part
+            </Link>
+          </Button>
+        ) : (
+          <Button className="w-full sm:w-auto" variant="outline" disabled title="Awaiting approval">
+            <Plus className="mr-2 h-4 w-4" /> Add Part
+          </Button>
+        )}
       </div>
 
       <Card>
@@ -111,11 +121,18 @@ export default function PartsList() {
               <p className="text-muted-foreground mb-4">
                 {searchTerm ? 'Try a different search term' : 'Get started by adding your first part'}
               </p>
-              {!searchTerm && (
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" /> Add Part
-                </Button>
-              )}
+              {!searchTerm &&
+                (isApproved ? (
+                  <Button asChild>
+                    <Link to="/parts/new">
+                      <Plus className="mr-2 h-4 w-4" /> Add Part
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="outline" disabled title="Awaiting approval">
+                    <Plus className="mr-2 h-4 w-4" /> Add Part
+                  </Button>
+                ))}
             </div>
           ) : (
             <Table>
