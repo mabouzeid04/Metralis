@@ -11,15 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { api } from '@/lib/api'
 
-const optionalNumber = z.preprocess(
-  value => {
-    if (value === '' || value === null || value === undefined) return undefined
-    if (typeof value === 'number' && Number.isNaN(value)) return undefined
-    return value
-  },
-  z.coerce.number().min(0, { message: 'Must be 0 or greater' }).optional(),
-)
-
 const partSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
   partNumber: z.string().optional(),
@@ -27,9 +18,9 @@ const partSchema = z.object({
   manufacturer: z.string().optional(),
   location: z.string().optional(),
   description: z.string().optional(),
-  stockQty: z.coerce.number().int().min(0, { message: 'Stock must be 0 or greater' }),
-  minStock: z.coerce.number().int().min(0, { message: 'Min stock must be 0 or greater' }),
-  cost: optionalNumber,
+  stockQty: z.number().int().min(0, { message: 'Stock must be 0 or greater' }),
+  minStock: z.number().int().min(0, { message: 'Min stock must be 0 or greater' }),
+  cost: z.number().min(0, { message: 'Must be 0 or greater' }).optional().or(z.undefined()),
 })
 
 type PartFormValues = z.infer<typeof partSchema>
@@ -143,7 +134,10 @@ export default function CreatePart() {
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  {...register('cost', { valueAsNumber: true })}
+                  {...register('cost', {
+                    valueAsNumber: true,
+                    setValueAs: (v) => (v === '' || Number.isNaN(v) ? undefined : Number(v)),
+                  })}
                 />
                 {errors.cost && <p className="text-sm text-destructive">{errors.cost.message}</p>}
               </div>
