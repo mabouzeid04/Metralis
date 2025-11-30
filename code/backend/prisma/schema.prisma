@@ -90,6 +90,8 @@ model User {
   rejectedAt   DateTime?
   rejectionReason String?
   preferences  Json?
+  phoneNumber  String?
+  assignmentWhatsappOptIn Boolean @default(false)
   metadata     Json?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

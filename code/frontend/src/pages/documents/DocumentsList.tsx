@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Plus, Search, Filter, FileText, Download, Eye, Loader2 } from 'lucide-react'
+import { Plus, Search, Filter, FileText, Download, Eye, Loader2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -67,6 +67,11 @@ export default function DocumentsList() {
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const previewDocIdRef = useRef<string | null>(null)
+  const [previewDoc, setPreviewDoc] = useState<Document | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewError, setPreviewError] = useState<string | null>(null)
 
   const fetchDocuments = useCallback(async () => {
     try {
@@ -83,6 +88,14 @@ export default function DocumentsList() {
     setLoading(true)
     fetchDocuments().finally(() => setLoading(false))
   }, [fetchDocuments])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    }
+  }, [previewUrl])
 
   const handleDownload = async (doc: Document) => {
     try {
@@ -115,6 +128,17 @@ export default function DocumentsList() {
   const closeUploader = () => {
     setUploadOpen(false)
     resetUploadState()
+  }
+
+  const closePreview = () => {
+    setPreviewDoc(null)
+    previewDocIdRef.current = null
+    setPreviewError(null)
+    setPreviewLoading(false)
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,6 +198,52 @@ export default function DocumentsList() {
     doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
   )
+
+  const canPreviewDocument = (doc?: Document | null) => {
+    if (!doc) return false
+    const mime = doc.mimeType?.toLowerCase()
+    if (mime?.includes('pdf')) {
+      return true
+    }
+    return doc.filename.toLowerCase().endsWith('.pdf')
+  }
+
+  const handlePreview = async (doc: Document) => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
+
+    setPreviewDoc(doc)
+    previewDocIdRef.current = doc.id
+    setPreviewError(null)
+    const previewable = canPreviewDocument(doc)
+    if (!previewable) {
+      setPreviewLoading(false)
+      return
+    }
+
+    setPreviewLoading(true)
+    try {
+      const response = await api.get(`/documents/${doc.id}/file`, {
+        responseType: 'blob'
+      })
+
+      const blob: Blob = response.data
+      const url = window.URL.createObjectURL(blob)
+      if (previewDocIdRef.current !== doc.id) {
+        window.URL.revokeObjectURL(url)
+        return
+      }
+
+      setPreviewUrl(url)
+    } catch (err) {
+      console.error('Failed to preview document:', err)
+      setPreviewError('Failed to load document preview. Please try again.')
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -350,7 +420,7 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" title="View">
+                          <Button variant="ghost" size="icon" title="View" onClick={() => handlePreview(doc)}>
                               <Eye className="h-4 w-4" />
                           </Button>
                           <Button 
@@ -370,6 +440,77 @@ export default function DocumentsList() {
           )}
         </CardContent>
       </Card>
+
+      {previewDoc && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8"
+          onClick={closePreview}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-background rounded-lg shadow-xl w-full max-w-5xl h-full max-h-[90vh] flex flex-col"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b px-6 py-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Previewing</p>
+                <h3 className="text-lg font-semibold">{previewDoc.title}</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => handleDownload(previewDoc)}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+                <Button variant="ghost" size="icon" onClick={closePreview} title="Close preview">
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 p-6 bg-muted/40 rounded-b-lg">
+              {previewLoading && (
+                <div className="h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <p>Loading document...</p>
+                </div>
+              )}
+
+              {!previewLoading && previewError && (
+                <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
+                  <p className="text-sm text-destructive">{previewError}</p>
+                  <div className="flex gap-2">
+                    <Button onClick={() => handlePreview(previewDoc)}>Retry</Button>
+                    <Button variant="ghost" onClick={closePreview}>
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {!previewLoading && !previewError && previewUrl && canPreviewDocument(previewDoc) && (
+                <iframe
+                  src={previewUrl}
+                  title={`Preview ${previewDoc.title}`}
+                  className="w-full h-full rounded-md border"
+                />
+              )}
+
+              {!previewLoading &&
+                !previewError &&
+                previewDoc &&
+                !canPreviewDocument(previewDoc) && (
+                  <div className="h-full flex flex-col items-center justify-center gap-4 text-center text-sm text-muted-foreground px-6">
+                    <p>Preview is unavailable for this file type. Please download it instead.</p>
+                    <Button onClick={() => handleDownload(previewDoc)}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Download document
+                    </Button>
+                  </div>
+                )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

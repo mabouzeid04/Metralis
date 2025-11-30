@@ -181,11 +181,6 @@ const MetralisAI = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
-              <p className="font-medium text-foreground">Tip</p>
-              <p>Add relevant symptoms, error codes, and recent repairs so Metralis AI can anchor its reasoning.</p>
-            </div>
-
             <div className="flex flex-col gap-4 rounded-lg border bg-background/70 p-4">
               <div className="flex-1 space-y-4 overflow-y-auto">
                 {messages.length === 0 && (

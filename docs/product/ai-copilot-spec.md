@@ -399,7 +399,23 @@ These metrics are used to:
 
 ---
 
-## 12. Future Extensions
+## 12. Current Implementation
+
+### 12.1 Chat flow & persistence
+Every request routes through `code/backend/src/services/ai/chatService.ts`: it loads (or creates) the conversation, ties it to the selected machine, fetches the last 10 messages, asks `retrieveContext` for relevant documentation, builds the prompt, calls `generateLLMResponse`, and saves both the user message and the generated response along with the mapped citations/context chunks. The conversation record keeps `lastMessageAt`, a computed title, and the associated machine metadata so the UI can replay the full thread with traceable sources.
+
+### 12.2 Retrieval + machine context
+`retrieveContext` embeds the user question via `code/backend/src/services/embeddings.ts`, then searches `code/backend/src/services/vectorStore.ts` for similar `DocumentChunk` rows (machine filter, language, and document ID filters are supported). The returned chunks feed `buildPrompt` (`code/backend/src/services/ai/prompt.ts`), which prepends the machine name/model/manufacturer/line, lists the retrieved docs as numbered snippets, and warns the LLM when nothing was pulled so it asks clarifying questions.
+
+### 12.3 Guardrails & citations
+The provider-level `SYSTEM_PROMPT` in `code/backend/src/services/ai/providers/gemini.ts` defines the copilot persona, insists every answer stay grounded in manuals/SOPs/work orders, warns before safety-critical steps, cites retrieved document titles, states missing information explicitly, and keeps the tone confident and professional. The prompt builder enforces the output structure (short summary, ranked causes, stepwise actions referencing numbered documents, a “Citations” section, and a “more data needed” callout), so even if the LLM drifts it is reminded of the traceability rules.
+
+### 12.4 Provider abstraction
+`generateLLMResponse` now comes from `code/backend/src/services/ai/provider.ts`, which asks `getLLMProvider(env.ai.provider)` (`services/ai/providers/index.ts`) for the configured provider. That registry maps canonical names (e.g., `"gemini"`) to factories that instantiate the corresponding `LLMProvider` implementation (`GeminiProvider` for now) and caches the instance. Adding another provider only requires implementing `LLMProvider` in this folder and extending the factory map—no changes are needed elsewhere in the chat stack.
+
+---
+
+## 13. Future Extensions
 
 Not required for v1, but guided by this spec:
 
@@ -411,7 +427,7 @@ Not required for v1, but guided by this spec:
 
 ---
 
-## 13. Non-Goals (For Now)
+## 14. Non-Goals (For Now)
 
 The co-pilot is **not** responsible for:
 

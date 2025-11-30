@@ -49,6 +49,8 @@ router.post("/signup", async (req, res) => {
       role: true,
       status: true,
       approvedAt: true,
+      phoneNumber: true,
+      assignmentWhatsappOptIn: true,
     },
   });
 
@@ -133,6 +135,8 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
         status: user.status,
+        phoneNumber: user.phoneNumber,
+        assignmentWhatsappOptIn: user.assignmentWhatsappOptIn,
       },
     },
   });
@@ -152,6 +156,8 @@ router.get("/me", requireAuth, async (req, res) => {
       status: true,
       role: true,
       preferences: true,
+      phoneNumber: true,
+      assignmentWhatsappOptIn: true,
     },
   });
 

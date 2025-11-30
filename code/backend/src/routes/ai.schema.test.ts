@@ -21,5 +21,16 @@ describe("chatRequestSchema", () => {
     expect(payload.machineId).toBeDefined();
     expect(payload.conversationId).toBeDefined();
   });
+
+  it("skips sentinel identifier values", () => {
+    const payload = chatRequestSchema.parse({
+      message: "Check machine",
+      machineId: "",
+      conversationId: "null",
+    });
+
+    expect(payload.machineId).toBeUndefined();
+    expect(payload.conversationId).toBeUndefined();
+  });
 });
 

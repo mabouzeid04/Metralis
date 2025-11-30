@@ -8,6 +8,8 @@ interface AuthUser {
   email: string
   role: 'ADMIN' | 'TECHNICIAN'
   status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  phoneNumber?: string | null
+  assignmentWhatsappOptIn?: boolean
 }
 
 interface LoginPayload {

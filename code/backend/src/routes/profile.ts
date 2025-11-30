@@ -9,10 +9,42 @@ const router = Router();
 // All routes require authentication
 router.use(requireAuth);
 
-const profileUpdateSchema = z.object({
-  name: z.string().min(1).optional(),
-  email: z.string().email().optional(),
-});
+const phoneRegex = /^\+?[0-9\s\-()]+$/;
+
+const phoneNumberSchema = z
+  .string()
+  .trim()
+  .min(7, { message: "Phone number must be at least 7 characters" })
+  .max(20, { message: "Phone number must be 20 characters or less" })
+  .refine((value) => phoneRegex.test(value), {
+    message: "Phone number can only include numbers, spaces, +, -, and parentheses",
+  });
+
+const profileUpdateSchema = z
+  .object({
+    name: z.string().min(1).optional(),
+    email: z.string().email().optional(),
+    phoneNumber: z
+      .preprocess((val) => {
+        if (typeof val !== "string") return val;
+        const trimmed = val.trim();
+        return trimmed === "" ? null : trimmed;
+      }, phoneNumberSchema.nullable())
+      .optional(),
+    assignmentWhatsappOptIn: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.assignmentWhatsappOptIn && !data.phoneNumber) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Add your phone number to enable WhatsApp alerts",
+      path: ["assignmentWhatsappOptIn"],
+    },
+  );
 
 const passwordChangeSchema = z.object({
   currentPassword: z.string().min(1),
@@ -30,7 +62,7 @@ router.patch("/me", async (req, res) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
-  const { name, email } = parsed.data;
+  const { name, email, phoneNumber, assignmentWhatsappOptIn } = parsed.data;
   const userId = req.user!.id;
 
   // Check if email is being updated and if it's already taken
@@ -45,9 +77,20 @@ router.patch("/me", async (req, res) => {
     }
   }
 
-  const updateData: { name?: string; email?: string } = {};
+  const updateData: {
+    name?: string;
+    email?: string;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+  } = {};
   if (name !== undefined) updateData.name = name;
   if (email !== undefined) updateData.email = email;
+  if ("phoneNumber" in parsed.data) {
+    updateData.phoneNumber = phoneNumber ?? null;
+  }
+  if (assignmentWhatsappOptIn !== undefined) {
+    updateData.assignmentWhatsappOptIn = assignmentWhatsappOptIn;
+  }
 
   try {
     const user = await prisma.user.update({
@@ -58,6 +101,8 @@ router.patch("/me", async (req, res) => {
         name: true,
         email: true,
         role: true,
+        phoneNumber: true,
+        assignmentWhatsappOptIn: true,
       },
     });
 
