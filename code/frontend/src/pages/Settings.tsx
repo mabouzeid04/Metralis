@@ -23,30 +23,31 @@ import { useTranslation } from 'react-i18next'
 
 const phoneRegex = /^\+?[0-9\s\-()]+$/
 
+const phoneNumberSchema = z
+  .string()
+  .trim()
+  .refine((value) => value.length === 0 || value.length >= 7, {
+    message: 'Phone number must be at least 7 characters',
+  })
+  .refine((value) => value.length === 0 || value.length <= 20, {
+    message: 'Phone number must be 20 characters or less',
+  })
+  .refine((value) => value.length === 0 || phoneRegex.test(value), {
+    message: 'Phone number can include numbers, spaces, +, -, and parentheses',
+  })
+
 const profileSchema = z
   .object({
     name: z.string().min(1, { message: 'Name is required' }),
     email: z.string().email({ message: 'Please enter a valid email address' }),
-    phoneNumber: z
-      .preprocess((val) => {
-        if (typeof val !== 'string') return val
-        const trimmed = val.trim()
-        return trimmed === '' ? null : trimmed
-      }, z
-        .string()
-        .min(7, { message: 'Phone number must be at least 7 characters' })
-        .max(20, { message: 'Phone number must be 20 characters or less' })
-        .refine((value) => phoneRegex.test(value), {
-          message: 'Phone number can include numbers, spaces, +, -, and parentheses',
-        })
-        .nullable(),
-      )
-      .optional(),
+    phoneNumber: phoneNumberSchema.optional(),
     assignmentWhatsappOptIn: z.boolean().optional(),
   })
   .refine(
     (data) => {
-      if (data.assignmentWhatsappOptIn && !data.phoneNumber) {
+      const hasWhatsappPhone =
+        typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
+      if (data.assignmentWhatsappOptIn && !hasWhatsappPhone) {
         return false
       }
       return true
@@ -214,10 +215,14 @@ export default function Settings() {
     setProfileSuccess(false)
 
     try {
+      const sanitizedPhoneNumber =
+        typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
+          ? data.phoneNumber
+          : null
       await api.patch('/users/me', {
         name: data.name,
         email: data.email,
-        phoneNumber: data.phoneNumber ?? null,
+        phoneNumber: sanitizedPhoneNumber,
         assignmentWhatsappOptIn: data.assignmentWhatsappOptIn ?? false,
       })
       await refreshUser()
