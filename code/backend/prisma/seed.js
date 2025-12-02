@@ -18,7 +18,11 @@ const workOrderId = 'workorder-robot-calibration-001'
 const workOrderPartId = 'workorderpart-001'
 const repairActionId = 'repair-action-robot-001'
 const documentId = 'document-robot-manual'
+const workOrderAttachmentDocId = 'document-robot-attachment-wo'
+const repairAttachmentDocId = 'document-robot-attachment-repair'
 const conversationId = 'chat-convo-robot-a1'
+const assistantMessageId = `${conversationId}-message-2`
+const feedbackId = 'feedback-robot-001'
 
 const hashPassword = (plain) => bcrypt.hashSync(plain, 10)
 
@@ -235,6 +239,7 @@ async function main() {
       success: true,
       verification: 'Test cycle passed with ±0.03° drift',
       partsUsed: { bearings: ['part-bearing-6203'] },
+      rootCause: 'Bearing wear created axis drift',
     },
     create: {
       id: repairActionId,
@@ -244,6 +249,7 @@ async function main() {
       success: true,
       verification: 'Test cycle passed with ±0.03° drift',
       partsUsed: { bearings: ['part-bearing-6203'] },
+      rootCause: 'Bearing wear created axis drift',
     },
   })
 
@@ -269,6 +275,58 @@ async function main() {
       ingestionStatus: 'COMPLETE',
       ingestedAt: new Date(),
       metadata: { version: 'v1.4', language: 'en' },
+    },
+  })
+
+  await prisma.document.upsert({
+    where: { id: workOrderAttachmentDocId },
+    update: {
+      title: 'Axis drift photo',
+      filePath: 'uploads/robot-a1-drift.jpg',
+      type: 'OTHER',
+      machineId: machine.id,
+      workOrderId: workOrder.id,
+      uploadedById: technicianA.id,
+      ingestionStatus: 'COMPLETE',
+      metadata: { source: 'WORK_ORDER_ATTACHMENT' },
+    },
+    create: {
+      id: workOrderAttachmentDocId,
+      title: 'Axis drift photo',
+      filePath: 'uploads/robot-a1-drift.jpg',
+      type: 'OTHER',
+      machineId: machine.id,
+      workOrderId: workOrder.id,
+      uploadedById: technicianA.id,
+      ingestionStatus: 'COMPLETE',
+      metadata: { source: 'WORK_ORDER_ATTACHMENT' },
+    },
+  })
+
+  await prisma.document.upsert({
+    where: { id: repairAttachmentDocId },
+    update: {
+      title: 'Calibrated torque report',
+      filePath: 'uploads/robot-a1-torque.pdf',
+      type: 'OTHER',
+      machineId: machine.id,
+      workOrderId: workOrder.id,
+      repairActionId: repairActionId,
+      uploadedById: technicianA.id,
+      ingestionStatus: 'COMPLETE',
+      metadata: { source: 'REPAIR_ATTACHMENT' },
+    },
+    create: {
+      id: repairAttachmentDocId,
+      title: 'Calibrated torque report',
+      filePath: 'uploads/robot-a1-torque.pdf',
+      type: 'OTHER',
+      machineId: machine.id,
+      workOrderId: workOrder.id,
+      repairActionId: repairActionId,
+      uploadedById: technicianA.id,
+      ingestionStatus: 'COMPLETE',
+      metadata: { source: 'REPAIR_ATTACHMENT' },
     },
   })
 
@@ -307,17 +365,102 @@ async function main() {
   })
 
   await prisma.chatMessage.upsert({
-    where: { id: `${conversationId}-message-2` },
+    where: { id: assistantMessageId },
     update: {
       conversationId: conversation.id,
       role: 'ASSISTANT',
       content: 'Verify torque is within ±2 Nm and run a 3-cycle test. Document the drift.',
+      structuredOutput: {
+        summary: 'Axis 2 drift is most likely caused by bearing wear that loosened torque on the joint.',
+        likelyCauses: [
+          {
+            title: 'Bearing wear on axis 2',
+            confidence: 'HIGH',
+            rationale: 'Previous work orders and vibration logs point to accelerated wear every ~6 months.',
+            citations: [1],
+          },
+          {
+            title: 'Uneven torque after reassembly',
+            confidence: 'MEDIUM',
+            rationale: 'Torque logs show inconsistent values after the last repair.',
+            citations: [],
+          },
+        ],
+        recommendedSteps: [
+          {
+            title: 'Verify torque',
+            action: 'Use the calibrated wrench to confirm bolts are within ±2 Nm of spec.',
+            citations: [1],
+          },
+          {
+            title: 'Run drift test',
+            action: 'Execute a 3-cycle move test and record deviation per axis.',
+            citations: [],
+          },
+        ],
+        references: [
+          { id: 1, source: 'Assembly Robot A1 - Operation Manual' },
+        ],
+        needsMoreData: false,
+        missingDataNotes: '',
+      },
     },
     create: {
-      id: `${conversationId}-message-2`,
+      id: assistantMessageId,
       conversationId: conversation.id,
       role: 'ASSISTANT',
       content: 'Verify torque is within ±2 Nm and run a 3-cycle test. Document the drift.',
+      structuredOutput: {
+        summary: 'Axis 2 drift is most likely caused by bearing wear that loosened torque on the joint.',
+        likelyCauses: [
+          {
+            title: 'Bearing wear on axis 2',
+            confidence: 'HIGH',
+            rationale: 'Previous work orders and vibration logs point to accelerated wear every ~6 months.',
+            citations: [1],
+          },
+          {
+            title: 'Uneven torque after reassembly',
+            confidence: 'MEDIUM',
+            rationale: 'Torque logs show inconsistent values after the last repair.',
+            citations: [],
+          },
+        ],
+        recommendedSteps: [
+          {
+            title: 'Verify torque',
+            action: 'Use the calibrated wrench to confirm bolts are within ±2 Nm of spec.',
+            citations: [1],
+          },
+          {
+            title: 'Run drift test',
+            action: 'Execute a 3-cycle move test and record deviation per axis.',
+            citations: [],
+          },
+        ],
+        references: [
+          { id: 1, source: 'Assembly Robot A1 - Operation Manual' },
+        ],
+        needsMoreData: false,
+        missingDataNotes: '',
+      },
+    },
+  })
+
+  await prisma.chatMessageFeedback.upsert({
+    where: {
+      messageId_userId_value: {
+        messageId: assistantMessageId,
+        userId: technicianA.id,
+        value: 'HELPFUL',
+      },
+    },
+    update: {},
+    create: {
+      id: feedbackId,
+      messageId: assistantMessageId,
+      userId: technicianA.id,
+      value: 'HELPFUL',
     },
   })
 

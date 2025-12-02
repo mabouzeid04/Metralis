@@ -73,12 +73,14 @@ Capture symptoms, alarms, noises, leaks, vibrations, etc. in a structured form.
 - Free-text descriptions
 - Timestamping
 - Attachments
+- Drag-and-drop upload for photos, videos, and quick PDFs tied directly to each work order
 
 ## AI Integration
 - AI converts messy descriptions (“weird grinding noise”) into structured tags.  
 - Maps symptoms → relevant manual sections.  
 - Suggests additional context to collect (“Any temperature changes? Any leaks near the pump?”).  
 - Populates symptom fields automatically.
+- Attachment metadata (uploader, filename, machine) becomes searchable context for the diagnostics engine.
 
 This is a major source of AI reasoning accuracy.
 
@@ -95,12 +97,14 @@ Record what was actually done, what parts were used, and what solved the problem
 - Mark resolution success
 - Log final root cause
 - Attach post-repair notes
+- Upload before/after media for every repair entry
 
 ## AI Integration
 - AI helps users describe actions (“Sounds like you realigned the coupling — should I log that?”).  
 - AI infers root cause from text and asks for confirmation.  
 - AI turns free-text repair logs into structured data fields (failure mode, cause, component).  
 - AI flags low-quality or ambiguous closure entries.
+- Pre-fills root cause suggestions, parts used, and verification prompts based on similar incidents.
 
 Structured closure data feeds future predictions.
 
@@ -158,6 +162,14 @@ Deep integration across the system:
 - Experimental features:
   - “What’s going wrong on Line 3 this week?”
   - “Summarize all recurring issues across the plant.”
+
+- Responses are now delivered as structured JSON which the UI renders into:
+  - a concise summary
+  - ranked likely causes with confidence badges
+  - a checklist of recommended diagnostic / repair steps
+  - reference cards that cite the exact manuals or past work orders pulled into context
+- Quick actions beneath each answer drop technicians directly into “Create Work Order”, “View Machine”, or “Log Repair” flows with the machine context prefilled.
+- Inline feedback (“Helpful”, “Needs work”, “Correct cause”) is captured per message and feeds telemetry so prompt tuning and retrieval ranking improve week over week.
 
 The AI co-pilot is **the core differentiation** of the product.
 

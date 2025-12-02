@@ -3,6 +3,8 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
 import type { Prisma, WorkOrderPriority, WorkOrderStatus, WorkOrderType } from "../generated/prisma/client";
+import { DocumentIngestionStatus, DocumentType } from "../generated/prisma/client";
+import { upload, saveDocumentToS3 } from "../services/storage";
 
 const router = Router();
 
@@ -56,10 +58,29 @@ router.get("/:id", async (req, res) => {
       reportedBy: true,
       assignedTo: true,
       repairActions: {
-        include: { performedBy: true },
+        orderBy: { createdAt: "desc" },
+        include: {
+          performedBy: true,
+          attachments: {
+            orderBy: { createdAt: "desc" },
+            include: {
+              uploadedBy: {
+                select: { id: true, name: true },
+              },
+            },
+          },
+        },
       },
       parts: {
         include: { part: true },
+      },
+      attachments: {
+        orderBy: { createdAt: "desc" },
+        include: {
+          uploadedBy: {
+            select: { id: true, name: true },
+          },
+        },
       },
     },
   });
@@ -220,6 +241,7 @@ router.post("/:id/repair", async (req, res) => {
     verification: z.string().optional(),
     success: z.boolean(),
     failureNote: z.string().optional(),
+    rootCause: z.string().max(500).optional(),
   });
 
   const parsed = repairSchema.safeParse(req.body);
@@ -237,6 +259,7 @@ router.post("/:id/repair", async (req, res) => {
       adjustments: parsed.data.adjustments ?? null,
       verification: parsed.data.verification ?? null,
       failureNote: parsed.data.failureNote ?? null,
+      rootCause: parsed.data.rootCause ?? null,
     },
   });
 
@@ -262,6 +285,101 @@ router.post("/:id/repair", async (req, res) => {
   }
 
   return res.status(201).json({ data: repair });
+});
+
+const attachmentSelect = {
+  id: true,
+  title: true,
+  mimeType: true,
+  fileSize: true,
+  createdAt: true,
+  uploadedBy: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+} as const;
+
+router.post("/:id/attachments", upload.single("file"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: { message: "File is required" } });
+  }
+
+  const workOrder = await prisma.workOrder.findUnique({
+    where: { id: req.params.id },
+    select: { id: true, machineId: true },
+  });
+
+  if (!workOrder) {
+    return res.status(404).json({ error: { message: "Work order not found" } });
+  }
+
+  const key = await saveDocumentToS3(req.file);
+  const now = new Date();
+
+  const document = await prisma.document.create({
+    data: {
+      title: (req.body?.title as string)?.trim() || req.file.originalname,
+      type: DocumentType.OTHER,
+      filePath: key,
+      fileSize: req.file.size,
+      mimeType: req.file.mimetype,
+      language: "en",
+      uploadedBy: { connect: { id: req.user!.id } },
+      workOrder: { connect: { id: workOrder.id } },
+      machine: { connect: { id: workOrder.machineId } },
+      ingestionStatus: DocumentIngestionStatus.COMPLETE,
+      ingestedAt: now,
+      metadata: {
+        source: "WORK_ORDER_ATTACHMENT",
+      },
+    },
+    select: attachmentSelect,
+  });
+
+  return res.status(201).json({ data: document });
+});
+
+router.post("/:id/repair/:repairId/attachments", upload.single("file"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: { message: "File is required" } });
+  }
+
+  const repairAction = await prisma.repairAction.findFirst({
+    where: { id: req.params.repairId, workOrderId: req.params.id },
+    include: { workOrder: { select: { machineId: true } } },
+  });
+
+  if (!repairAction) {
+    return res.status(404).json({ error: { message: "Repair action not found" } });
+  }
+
+  const key = await saveDocumentToS3(req.file);
+  const now = new Date();
+
+  const document = await prisma.document.create({
+    data: {
+      title: (req.body?.title as string)?.trim() || req.file.originalname,
+      type: DocumentType.OTHER,
+      filePath: key,
+      fileSize: req.file.size,
+      mimeType: req.file.mimetype,
+      language: "en",
+      uploadedBy: { connect: { id: req.user!.id } },
+      workOrder: { connect: { id: req.params.id } },
+      repairAction: { connect: { id: req.params.repairId } },
+      machine: repairAction.workOrder.machineId ? { connect: { id: repairAction.workOrder.machineId } } : undefined,
+      ingestionStatus: DocumentIngestionStatus.COMPLETE,
+      ingestedAt: now,
+      metadata: {
+        source: "REPAIR_ATTACHMENT",
+      },
+    },
+    select: attachmentSelect,
+  });
+
+  return res.status(201).json({ data: document });
 });
 
 export default router;

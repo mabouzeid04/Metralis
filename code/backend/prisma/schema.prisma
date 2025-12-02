@@ -75,6 +75,12 @@ enum ChatMessageRole {
   SYSTEM
 }
 
+enum AiFeedbackValue {
+  HELPFUL
+  NOT_HELPFUL
+  CORRECT_CAUSE
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -102,10 +108,11 @@ model User {
   documents          Document[]
   approvals          User[]        @relation("UserApprovals")
   chatConversations  ChatConversation[]
+  aiFeedback         ChatMessageFeedback[]
 }
 
 model Machine {
-  id             String           @id @default(uuid())
+  id             String              @id @default(uuid())
   name           String
   code           String?
   category       String?
@@ -115,14 +122,14 @@ model Machine {
   model          String?
   serialNumber   String?
   commissionedAt DateTime?
-  status         MachineStatus    @default(RUNNING)
-  criticality    MachineCriticality @default(MEDIUM)
+  status         MachineStatus       @default(RUNNING)
+  criticality    MachineCriticality  @default(MEDIUM)
   metadata       Json?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 
-  workOrders WorkOrder[]
-  documents  Document[]
+  workOrders        WorkOrder[]
+  documents         Document[]        @relation("MachineDocuments")
   chatConversations ChatConversation[]
 
   @@index([name])
@@ -130,49 +137,53 @@ model Machine {
 }
 
 model WorkOrder {
-  id              String           @id @default(uuid())
-  machineId       String
-  machine         Machine          @relation(fields: [machineId], references: [id])
-  title           String
-  descriptionRaw  String
-  status          WorkOrderStatus  @default(OPEN)
-  type            WorkOrderType    @default(CORRECTIVE)
-  priority        WorkOrderPriority @default(MEDIUM)
-  reportedAt      DateTime         @default(now())
-  reportedById    String
-  reportedBy      User             @relation("reportedBy", fields: [reportedById], references: [id])
-  assignedToId    String?
-  assignedTo      User?            @relation("assignedTo", fields: [assignedToId], references: [id])
-  startedAt       DateTime?
-  completedAt     DateTime?
-  symptoms        Json?
-  suspectedCause  String?
-  rootCause       String?
-  failureMode     String?
+  id                String            @id @default(uuid())
+  machineId         String
+  machine           Machine           @relation(fields: [machineId], references: [id])
+  title             String
+  descriptionRaw    String
+  status            WorkOrderStatus   @default(OPEN)
+  type              WorkOrderType     @default(CORRECTIVE)
+  priority          WorkOrderPriority @default(MEDIUM)
+  reportedAt        DateTime          @default(now())
+  reportedById      String
+  reportedBy        User              @relation("reportedBy", fields: [reportedById], references: [id])
+  assignedToId      String?
+  assignedTo        User?             @relation("assignedTo", fields: [assignedToId], references: [id])
+  startedAt         DateTime?
+  completedAt       DateTime?
+  symptoms          Json?
+  suspectedCause    String?
+  rootCause         String?
+  failureMode       String?
   environmentContext Json?
-  metadata        Json?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  metadata          Json?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
   repairActions RepairAction[]
   parts        WorkOrderPart[]
+  attachments  Document[]        @relation("WorkOrderDocuments")
 }
 
 model RepairAction {
-  id              String   @id @default(uuid())
+  id              String      @id @default(uuid())
   workOrderId     String
-  workOrder       WorkOrder @relation(fields: [workOrderId], references: [id])
+  workOrder       WorkOrder   @relation(fields: [workOrderId], references: [id])
   performedById   String
-  performedBy     User     @relation(fields: [performedById], references: [id])
+  performedBy     User        @relation(fields: [performedById], references: [id])
   actions         String
   partsUsed       Json?
   adjustments     String?
   verification    String?
   success         Boolean
   failureNote     String?
+  rootCause       String?
   metadata        Json?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  attachments Document[] @relation("RepairActionDocuments")
 }
 
 model Part {
@@ -207,27 +218,34 @@ model WorkOrderPart {
 }
 
 model Document {
-  id          String       @id @default(uuid())
-  title       String
-  type        DocumentType @default(MANUAL)
-  filePath    String
-  fileSize    Int?
-  mimeType    String?
-  machineId   String?
-  machine     Machine?     @relation(fields: [machineId], references: [id])
-  machineType String?
-  language    String?      @default("en")
-  version     String?
-  metadata    Json?
-  uploadedById String
-  uploadedBy  User        @relation(fields: [uploadedById], references: [id])
+  id             String       @id @default(uuid())
+  title          String
+  type           DocumentType @default(MANUAL)
+  filePath       String
+  fileSize       Int?
+  mimeType       String?
+  machineId      String?
+  machine        Machine?     @relation("MachineDocuments", fields: [machineId], references: [id])
+  workOrderId    String?
+  workOrder      WorkOrder?   @relation("WorkOrderDocuments", fields: [workOrderId], references: [id])
+  repairActionId String?
+  repairAction   RepairAction? @relation("RepairActionDocuments", fields: [repairActionId], references: [id])
+  machineType    String?
+  language       String?      @default("en")
+  version        String?
+  metadata       Json?
+  uploadedById   String
+  uploadedBy     User        @relation(fields: [uploadedById], references: [id])
   ingestionStatus DocumentIngestionStatus @default(PENDING)
   ingestedAt     DateTime?
   ingestionError String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   chunks DocumentChunk[]
+
+  @@index([workOrderId])
+  @@index([repairActionId])
 }
 
 model DocumentChunk {
@@ -272,8 +290,24 @@ model ChatMessage {
   content        String
   citations      Json?
   contextChunks  Json?
+  structuredOutput Json?
   createdAt      DateTime         @default(now())
 
+  feedback ChatMessageFeedback[]
+
   @@index([conversationId, createdAt])
+}
+
+model ChatMessageFeedback {
+  id        String          @id @default(uuid())
+  messageId String
+  message   ChatMessage     @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value     AiFeedbackValue
+  createdAt DateTime        @default(now())
+
+  @@unique([messageId, userId, value])
+  @@index([userId])
 }
 

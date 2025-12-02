@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
 import { useAIChat } from '@/contexts/AIChatContext'
 import { api } from '@/lib/api'
-import type { ConversationSummary } from '@/lib/aiClient'
-import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon } from 'lucide-react'
+import type { ConversationSummary, StructuredAiResponse, AiFeedbackValue, ChatMessage } from '@/lib/aiClient'
+import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, Frown, CheckCircle2 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 type MachineOption = {
   id: string
@@ -14,6 +17,7 @@ type MachineOption = {
 }
 
 const MetralisAI = () => {
+  const navigate = useNavigate()
   const {
     conversations,
     messages,
@@ -22,6 +26,7 @@ const MetralisAI = () => {
     selectConversation,
     startNewConversation,
     sendMessage,
+    submitFeedback,
     isSending,
     historyLoading,
   } = useAIChat()
@@ -32,6 +37,8 @@ const MetralisAI = () => {
   const [input, setInput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState<Record<string, boolean>>({})
+  const [feedbackErrors, setFeedbackErrors] = useState<Record<string, string | null>>({})
 
   useEffect(() => {
     const load = async () => {
@@ -85,6 +92,179 @@ const MetralisAI = () => {
   }
 
   const machineDisabled = Boolean(activeMachineId)
+
+  const feedbackOptions: Array<{ value: AiFeedbackValue; label: string; Icon: LucideIcon }> = [
+    { value: 'HELPFUL', label: 'Helpful', Icon: ThumbsUp },
+    { value: 'NOT_HELPFUL', label: 'Needs work', Icon: Frown },
+    { value: 'CORRECT_CAUSE', label: 'Correct cause', Icon: CheckCircle2 },
+  ]
+
+  const handleFeedback = async (messageId: string, value: AiFeedbackValue) => {
+    setFeedbackErrors((prev) => ({ ...prev, [messageId]: null }))
+    setFeedbackSubmitting((prev) => ({ ...prev, [messageId]: true }))
+    try {
+      await submitFeedback(messageId, value)
+    } catch (err) {
+      console.error(err)
+      setFeedbackErrors((prev) => ({ ...prev, [messageId]: 'Unable to send feedback. Please try again.' }))
+    } finally {
+      setFeedbackSubmitting((prev) => ({ ...prev, [messageId]: false }))
+    }
+  }
+
+  const handleCreateWorkOrderShortcut = () => {
+    if (selectedMachineId) {
+      navigate(`/work-orders/new?machine=${selectedMachineId}`)
+    } else {
+      navigate('/work-orders/new')
+    }
+  }
+
+  const handleViewMachineShortcut = () => {
+    if (selectedMachineId) {
+      navigate(`/machines/${selectedMachineId}`)
+    }
+  }
+
+  const renderCitationBadge = (citations?: number[]) => {
+    if (!citations || citations.length === 0) {
+      return null
+    }
+    return <span className="text-[11px] uppercase text-muted-foreground">Docs {citations.join(', ')}</span>
+  }
+
+  const renderConfidenceBadge = (confidence: StructuredAiResponse['likelyCauses'][number]['confidence']) => {
+    const styles: Record<StructuredAiResponse['likelyCauses'][number]['confidence'], string> = {
+      HIGH: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      MEDIUM: 'bg-amber-50 text-amber-700 border-amber-200',
+      LOW: 'bg-slate-100 text-slate-600 border-slate-300',
+    }
+    return (
+      <Badge variant="outline" className={styles[confidence]}>
+        {confidence}
+      </Badge>
+    )
+  }
+
+  const renderStructuredMessage = (message: ChatMessage) => {
+    if (!message.structuredOutput) {
+      return <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+    }
+
+    const structured = message.structuredOutput
+
+    return (
+      <div className="space-y-4">
+        <div>
+          <p className="text-xs font-semibold uppercase text-muted-foreground">Summary</p>
+          <p className="text-sm">{structured.summary || 'No summary available.'}</p>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-sm font-semibold flex items-center gap-2">
+            <Target className="h-4 w-4" /> Likely Causes
+          </p>
+          {structured.likelyCauses.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No ranked causes yet.</p>
+          ) : (
+            structured.likelyCauses.map((cause, index) => (
+              <div key={`${cause.title}-${index}`} className="rounded-md border p-3 text-sm space-y-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium">{cause.title || `Hypothesis ${index + 1}`}</span>
+                  {renderConfidenceBadge(cause.confidence)}
+                </div>
+                <p className="text-muted-foreground">{cause.rationale}</p>
+                {renderCitationBadge(cause.citations)}
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-sm font-semibold flex items-center gap-2">
+            <ClipboardCheck className="h-4 w-4" /> Recommended Steps
+          </p>
+          {structured.recommendedSteps.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No actions proposed.</p>
+          ) : (
+            structured.recommendedSteps.map((step, index) => (
+              <div key={`${step.title}-${index}`} className="rounded-md border p-3 text-sm space-y-1">
+                <span className="font-medium">{step.title || `Step ${index + 1}`}</span>
+                <p className="text-muted-foreground">{step.action}</p>
+                {renderCitationBadge(step.citations)}
+              </div>
+            ))
+          )}
+        </div>
+
+        {structured.needsMoreData && (
+          <div className="flex gap-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            <AlertTriangle className="h-4 w-4" />
+            <div>
+              <p className="font-semibold">More data required</p>
+              <p>{structured.missingDataNotes || 'Provide additional context before taking action.'}</p>
+            </div>
+          </div>
+        )}
+
+        {structured.references.length > 0 && (
+          <div>
+            <p className="text-sm font-semibold">References</p>
+            <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+              {structured.references.map((reference) => (
+                <li key={reference.id}>
+                  ({reference.id}) {reference.source}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" onClick={handleCreateWorkOrderShortcut}>
+            Create Work Order
+          </Button>
+          <Button size="sm" variant="ghost" onClick={handleViewMachineShortcut} disabled={!selectedMachineId}>
+            View Machine
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => navigate('/work-orders')}>
+            Log Repair
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const renderFeedbackButtons = (message: ChatMessage) => {
+    if (message.role !== 'ASSISTANT') {
+      return null
+    }
+
+    const sent = message.feedback ?? []
+    return (
+      <div className="mt-4 space-y-1">
+        <p className="text-xs font-semibold text-muted-foreground">Was this response helpful?</p>
+        <div className="flex flex-wrap gap-2">
+          {feedbackOptions.map(({ value, label, Icon }) => {
+            const alreadySent = sent.includes(value)
+            return (
+              <Button
+                key={value}
+                size="sm"
+                variant={alreadySent ? 'secondary' : 'ghost'}
+                disabled={alreadySent || Boolean(feedbackSubmitting[message.id])}
+                className="text-xs"
+                onClick={() => handleFeedback(message.id, value)}
+              >
+                <Icon className="mr-1 h-3 w-3" /> {label}
+              </Button>
+            )
+          })}
+        </div>
+        {feedbackErrors[message.id] && <p className="text-xs text-destructive">{feedbackErrors[message.id]}</p>}
+      </div>
+    )
+  }
 
   return (
     <div className="relative space-y-6">
@@ -189,40 +369,48 @@ const MetralisAI = () => {
                     Ask a question to get started. Metralis AI will cite specific manual sections and past incidents.
                   </div>
                 )}
-                {messages.map((message) => (
-                  <div key={message.id} className={`flex ${message.role === 'ASSISTANT' ? 'justify-start' : 'justify-end'}`}>
-                    <div
-                      className={`max-w-[85%] rounded-xl border p-3 text-sm shadow-sm ${
-                        message.role === 'ASSISTANT' ? 'bg-background' : 'bg-primary text-primary-foreground'
-                      }`}
-                    >
-                      <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide">
-                        {message.role === 'ASSISTANT' ? (
-                          <>
-                            <BotIcon className="h-4 w-4" /> Metralis AI
-                          </>
-                        ) : (
-                          <>
-                            <UserIcon className="h-4 w-4" /> You
-                          </>
-                        )}
-                      </div>
-                      <p className="whitespace-pre-wrap text-sm">{message.content}</p>
-                      {message.citations && message.citations.length > 0 && (
-                        <div className="mt-3 border-t pt-2 text-xs">
-                          <p className="font-semibold">Citations</p>
-                          <ul className="mt-1 space-y-1 text-muted-foreground">
-                            {message.citations.map((citation) => (
-                              <li key={citation.chunkId}>
-                                • {citation.documentTitle ?? citation.documentId} (score {(citation.similarity * 100).toFixed(1)}%)
-                              </li>
-                            ))}
-                          </ul>
+                {messages.map((message) => {
+                  const isAssistant = message.role === 'ASSISTANT'
+                  return (
+                    <div key={message.id} className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}>
+                      <div
+                        className={`max-w-[85%] rounded-xl border p-3 text-sm shadow-sm ${
+                          isAssistant ? 'bg-background' : 'bg-primary text-primary-foreground'
+                        }`}
+                      >
+                        <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide">
+                          {isAssistant ? (
+                            <>
+                              <BotIcon className="h-4 w-4" /> Metralis AI
+                            </>
+                          ) : (
+                            <>
+                              <UserIcon className="h-4 w-4" /> You
+                            </>
+                          )}
                         </div>
-                      )}
+                        {isAssistant ? (
+                          renderStructuredMessage(message)
+                        ) : (
+                          <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+                        )}
+                        {message.citations && message.citations.length > 0 && (
+                          <div className="mt-3 border-t pt-2 text-xs">
+                            <p className="font-semibold">Citations</p>
+                            <ul className="mt-1 space-y-1 text-muted-foreground">
+                              {message.citations.map((citation) => (
+                                <li key={citation.chunkId}>
+                                  • {citation.documentTitle ?? citation.documentId} (score {(citation.similarity * 100).toFixed(1)}%)
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {isAssistant && renderFeedbackButtons(message)}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <div className="space-y-3">

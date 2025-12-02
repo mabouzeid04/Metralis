@@ -41,6 +41,17 @@ router.get("/:id", async (req, res) => {
       workOrders: {
         orderBy: { reportedAt: "desc" },
         take: 20,
+        include: {
+          repairActions: {
+            orderBy: { createdAt: "desc" },
+            select: {
+              id: true,
+              actions: true,
+              success: true,
+              createdAt: true,
+            },
+          },
+        },
       },
       documents: true,
     },

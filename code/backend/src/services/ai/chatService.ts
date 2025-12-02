@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
-import type { ChatConversation, ChatMessageRole, Prisma } from "../../generated/prisma/client";
+import type { AiFeedbackValue, ChatConversation, ChatMessageRole, Prisma } from "../../generated/prisma/client";
+import { z } from "zod";
 import { buildPrompt } from "./prompt";
 import { retrieveContext } from "./retrieval";
 import { generateLLMResponse } from "./provider";
@@ -25,6 +26,66 @@ const mapCitations = (chunks: RetrievedChunk[]): Citation[] =>
     language: chunk.metadata?.language,
     version: chunk.metadata?.version,
   }));
+
+const structuredOutputSchema = z.object({
+  summary: z.string().optional().default(""),
+  likelyCauses: z
+    .array(
+      z.object({
+        title: z.string().optional().default(""),
+        confidence: z.enum(["HIGH", "MEDIUM", "LOW"]).optional().default("MEDIUM"),
+        rationale: z.string().optional().default(""),
+        citations: z.array(z.number()).optional().default([]),
+      }),
+    )
+    .optional()
+    .default([]),
+  recommendedSteps: z
+    .array(
+      z.object({
+        title: z.string().optional().default(""),
+        action: z.string().optional().default(""),
+        citations: z.array(z.number()).optional().default([]),
+      }),
+    )
+    .optional()
+    .default([]),
+  references: z
+    .array(
+      z.object({
+        id: z.number(),
+        source: z.string().optional().default(""),
+      }),
+    )
+    .optional()
+    .default([]),
+  needsMoreData: z.boolean().optional().default(false),
+  missingDataNotes: z.string().optional().default(""),
+});
+
+type StructuredAnswer = z.infer<typeof structuredOutputSchema>;
+
+const extractJsonBlock = (text: string) => {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) {
+    return null;
+  }
+  return text.slice(start, end + 1);
+};
+
+const parseStructuredOutput = (rawText: string): StructuredAnswer | null => {
+  const payload = extractJsonBlock(rawText.trim());
+  if (!payload) {
+    return null;
+  }
+  try {
+    const parsed = JSON.parse(payload);
+    return structuredOutputSchema.parse(parsed);
+  } catch {
+    return null;
+  }
+};
 
 const formatHistory = (messages: { role: ChatMessageRole; content: string }[]) =>
   messages.map((msg) => ({
@@ -108,9 +169,21 @@ export const getConversationDetail = async (userId: string, conversationId: stri
   const messages = await prisma.chatMessage.findMany({
     where: { conversationId },
     orderBy: { createdAt: "asc" },
+    include: {
+      feedback: {
+        where: { userId },
+        select: { value: true },
+      },
+    },
   });
 
-  return { conversation, messages };
+  return {
+    conversation,
+    messages: messages.map((message) => ({
+      ...message,
+      feedback: message.feedback.map((item) => item.value),
+    })),
+  };
 };
 
 type HandleChatParams = {
@@ -164,6 +237,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
   });
 
   const citations = mapCitations(retrievedChunks);
+  const structuredOutput = parseStructuredOutput(llmResponse.text);
 
   const titleUpdate = !isNew && conversation.title !== "Metralis AI Chat" ? undefined : createTitleFromMessage(message);
   const now = new Date();
@@ -189,6 +263,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
         content: llmResponse.text,
         citations,
         contextChunks: retrievedChunks,
+        structuredOutput: structuredOutput ?? undefined,
       },
     }),
     prisma.chatConversation.update({
@@ -205,7 +280,45 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     userMessage,
     assistantMessage,
     citations,
+    structuredOutput,
     retrievedChunks,
   };
+};
+
+export const submitMessageFeedback = async ({ userId, messageId, value }: { userId: string; messageId: string; value: AiFeedbackValue }) => {
+  const message = await prisma.chatMessage.findFirst({
+    where: {
+      id: messageId,
+      conversation: { userId },
+    },
+    select: { id: true },
+  });
+
+  if (!message) {
+    throw new Error("Message not found");
+  }
+
+  await prisma.chatMessageFeedback.upsert({
+    where: {
+      messageId_userId_value: {
+        messageId,
+        userId,
+        value,
+      },
+    },
+    update: {},
+    create: {
+      messageId,
+      userId,
+      value,
+    },
+  });
+
+  const feedback = await prisma.chatMessageFeedback.findMany({
+    where: { messageId, userId },
+    select: { value: true },
+  });
+
+  return feedback.map((item) => item.value);
 };
 

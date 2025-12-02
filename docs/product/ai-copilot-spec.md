@@ -276,6 +276,8 @@ Feedback is tied to:
 - retrieved documents
 - ranking logic
 
+In the UI, these inputs sit directly under every assistant response as one-tap buttons (“Helpful”, “Needs work”, “Correct cause”). Each click is stored per-user/per-message so telemetry can tune prompts, retrieval weights, and safety rules.
+
 ---
 
 ## 8. Reasoning Behavior
@@ -324,6 +326,8 @@ The co-pilot must support:
 
 - **Chat-style interface**  
   For freeform questions and troubleshooting.
+  - Responses render as structured cards (summary, ranked causes, recommended steps, references) instead of raw paragraphs.
+  - Quick-action buttons (“Create Work Order”, “View Machine”, “Log Repair”) reuse the current machine context so dispatch is frictionless.
 
 - **Guided forms/wizards**  
   For structured incident logging and stepwise workflows (especially on mobile).
@@ -346,6 +350,15 @@ The co-pilot should support multiple response modes:
 
 - **Structured mode (for logging)**
   - Proposed values for root cause, failure type, affected component, etc.
+
+- **JSON contract**
+  - LLM responses must serialize to a single JSON object with fields:
+    - `summary`
+    - `likelyCauses[]` (title, confidence, rationale, citations)
+    - `recommendedSteps[]` (title, action, citations)
+    - `references[]` (id, source)
+    - `needsMoreData`, `missingDataNotes`
+  - The frontend parses this payload to render cards; fallback plain text is only used when parsing fails.
 
 ### 9.3 Constraints
 

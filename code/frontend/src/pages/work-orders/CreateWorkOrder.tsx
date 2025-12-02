@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, ArrowLeft, User } from 'lucide-react'
+import { Loader2, ArrowLeft, User, Paperclip, Trash2 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -35,6 +35,13 @@ interface UserOption {
   role: string
 }
 
+const formatFileSize = (bytes?: number | null) => {
+  if (!bytes) return '-'
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
 export default function CreateWorkOrder() {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -45,6 +52,9 @@ export default function CreateWorkOrder() {
   const [users, setUsers] = useState<UserOption[]>([])
   const [loadingUsers, setLoadingUsers] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [attachments, setAttachments] = useState<File[]>([])
+  const [attachmentError, setAttachmentError] = useState<string | null>(null)
+  const attachmentInputRef = useRef<HTMLInputElement | null>(null)
   
   const { register, handleSubmit, formState: { errors } } = useForm<WorkOrderFormValues>({
     resolver: zodResolver(workOrderSchema),
@@ -104,9 +114,34 @@ export default function CreateWorkOrder() {
     fetchData()
   }, [])
 
+  const handleAttachmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files ? Array.from(event.target.files) : []
+    if (!files.length) return
+    setAttachments((prev) => [...prev, ...files])
+    setAttachmentError(null)
+    event.target.value = ''
+  }
+
+  const removeAttachment = (index: number) => {
+    setAttachments((prev) => prev.filter((_, idx) => idx !== index))
+  }
+
+  const uploadAttachments = async (workOrderId: string) => {
+    if (!attachments.length) return
+    for (const file of attachments) {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('title', file.name)
+      await api.post(`/work-orders/${workOrderId}/attachments`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+    }
+  }
+
   const onSubmit = async (data: WorkOrderFormValues) => {
     setIsLoading(true)
     setError(null)
+    setAttachmentError(null)
 
     try {
       // Map form values to API format
@@ -119,8 +154,24 @@ export default function CreateWorkOrder() {
         assignedToId: data.assignedToId || null,
       }
 
-      await api.post('/work-orders', apiData)
-      navigate('/work-orders')
+      const response = await api.post('/work-orders', apiData)
+      const workOrderId: string = response.data.data?.id
+
+      try {
+        if (workOrderId) {
+          await uploadAttachments(workOrderId)
+        }
+      } catch (attachmentErr) {
+        console.error('Failed to upload attachments', attachmentErr)
+        setAttachmentError('Work order created, but some attachments failed to upload. You can add them from the work order page.')
+      }
+
+      setAttachments([])
+      if (workOrderId) {
+        navigate(`/work-orders/${workOrderId}`)
+      } else {
+        navigate('/work-orders')
+      }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { error?: { message?: string } } } }
       setError(error?.response?.data?.error?.message || 'Failed to create work order')
@@ -245,6 +296,56 @@ export default function CreateWorkOrder() {
               />
               {errors.description && (
                 <p className="text-sm text-destructive">{errors.description.message}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                Include symptoms, alarms, noises, smells, leaks, and anything else that will help diagnose the issue quickly.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Attachments (optional)</Label>
+              <input
+                ref={attachmentInputRef}
+                type="file"
+                accept="image/*,.pdf,.doc,.docx,.txt"
+                multiple
+                className="hidden"
+                onChange={handleAttachmentChange}
+              />
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => attachmentInputRef.current?.click()}
+                  disabled={isLoading}
+                >
+                  <Paperclip className="mr-2 h-4 w-4" />
+                  Add files
+                </Button>
+                <p className="text-xs text-muted-foreground">Up to 25MB per file.</p>
+              </div>
+              {attachmentError && (
+                <p className="text-sm text-destructive">{attachmentError}</p>
+              )}
+              {attachments.length > 0 && (
+                <ul className="space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+                  {attachments.map((file, index) => (
+                    <li key={`${file.name}-${index}`} className="flex items-center justify-between gap-2">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{file.name}</span>
+                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeAttachment(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
 

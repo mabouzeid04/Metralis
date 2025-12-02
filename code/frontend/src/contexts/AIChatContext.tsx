@@ -4,9 +4,11 @@ import {
   type ChatMessage,
   type ConversationDetail,
   type ConversationSummary,
+  type AiFeedbackValue,
   fetchConversationDetail,
   fetchConversationList,
   sendChatMessage,
+  sendMessageFeedback,
 } from '@/lib/aiClient'
 
 type AIChatContextValue = {
@@ -20,6 +22,7 @@ type AIChatContextValue = {
   selectConversation: (conversationId: string) => Promise<void>
   startNewConversation: () => void
   sendMessage: (input: { message: string; machineId?: string }) => Promise<void>
+  submitFeedback: (messageId: string, value: AiFeedbackValue) => Promise<void>
 }
 
 const AIChatContext = createContext<AIChatContextValue | undefined>(undefined)
@@ -102,6 +105,20 @@ export const AIChatProvider = ({ children }: { children: ReactNode }) => {
     [currentConversationId, fetchConversations],
   )
 
+  const submitFeedback = useCallback(async (messageId: string, value: AiFeedbackValue) => {
+    const feedback = await sendMessageFeedback(messageId, value)
+    setMessages((prev) =>
+      prev.map((message) =>
+        message.id === messageId
+          ? {
+              ...message,
+              feedback,
+            }
+          : message,
+      ),
+    )
+  }, [])
+
   const value = useMemo<AIChatContextValue>(
     () => ({
       conversations,
@@ -114,6 +131,7 @@ export const AIChatProvider = ({ children }: { children: ReactNode }) => {
       selectConversation,
       startNewConversation,
       sendMessage,
+      submitFeedback,
     }),
     [
       conversations,
@@ -126,6 +144,7 @@ export const AIChatProvider = ({ children }: { children: ReactNode }) => {
       selectConversation,
       startNewConversation,
       sendMessage,
+      submitFeedback,
     ],
   )
 

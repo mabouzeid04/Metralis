@@ -30,6 +30,12 @@ interface Machine {
     type: string
     createdAt: string
     completedAt: string | null
+    repairActions?: Array<{
+      id: string
+      actions: string
+      success: boolean
+      createdAt: string
+    }>
   }>
 }
 
@@ -102,25 +108,47 @@ export default function MachineDetail() {
     )
   }
 
-  // Build history items from work orders
-  const historyItems = (machine.workOrders || []).map((wo) => {
-    let icon
-    if (wo.status === 'CLOSED') {
-      icon = <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-    } else if (wo.type === 'CORRECTIVE') {
-      icon = <AlertTriangle className="h-5 w-5 text-red-500" />
-    } else {
-      icon = <Wrench className="h-5 w-5 text-blue-500" />
-    }
+  // Build history items from work orders + repair logs
+  const historyItems = (machine.workOrders || [])
+    .flatMap((wo) => {
+      const workOrderIcon =
+        wo.status === 'CLOSED'
+          ? <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+          : wo.type === 'CORRECTIVE'
+          ? <AlertTriangle className="h-5 w-5 text-red-500" />
+          : <Wrench className="h-5 w-5 text-blue-500" />
 
-    return {
-      id: wo.id,
-      date: new Date(wo.createdAt).toLocaleString(),
-      title: wo.title,
-      description: `${wo.type} - ${wo.status}`,
-      icon
-    }
-  })
+      const items: Array<{ id: string; date: string; description: string; title: string; icon: JSX.Element; timestamp: number }> = [
+        {
+          id: wo.id,
+          date: new Date(wo.createdAt).toLocaleString(),
+          title: wo.title,
+          description: `${wo.type} - ${wo.status}`,
+          icon: workOrderIcon,
+          timestamp: new Date(wo.createdAt).getTime(),
+        },
+      ]
+
+      if (wo.repairActions?.length) {
+        items.push(
+          ...wo.repairActions.map((repair) => ({
+            id: `${repair.id}-repair`,
+            date: new Date(repair.createdAt).toLocaleString(),
+            title: repair.actions,
+            description: repair.success ? 'Repair completed' : 'Repair logged - needs follow-up',
+            icon: repair.success ? (
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+            ) : (
+              <Wrench className="h-5 w-5 text-blue-500" />
+            ),
+            timestamp: new Date(repair.createdAt).getTime(),
+          })),
+        )
+      }
+
+      return items
+    })
+    .sort((a, b) => b.timestamp - a.timestamp)
 
   return (
     <div className="space-y-6">

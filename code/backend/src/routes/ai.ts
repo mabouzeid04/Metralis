@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth";
-import { handleChatMessage, listConversationsForUser, getConversationDetail } from "../services/ai/chatService";
+import { handleChatMessage, listConversationsForUser, getConversationDetail, submitMessageFeedback } from "../services/ai/chatService";
 import { chatRequestSchema } from "./schemas/aiChatSchema";
+import { z } from "zod";
 
 const router = Router();
 
@@ -35,6 +36,8 @@ router.post("/chat", async (req, res, next) => {
           content: result.assistantMessage.content,
           createdAt: result.assistantMessage.createdAt,
           citations: result.citations,
+          structuredOutput: result.assistantMessage.structuredOutput ?? null,
+          feedback: [],
         },
       },
     });
@@ -66,6 +69,27 @@ router.get("/conversations/:id", async (req, res, next) => {
     });
   } catch (error) {
     if (error instanceof Error && error.message === "Conversation not found") {
+      return res.status(404).json({ error: { message: error.message } });
+    }
+    return next(error);
+  }
+});
+
+const feedbackSchema = z.object({
+  value: z.enum(["HELPFUL", "NOT_HELPFUL", "CORRECT_CAUSE"]),
+});
+
+router.post("/messages/:id/feedback", async (req, res, next) => {
+  try {
+    const parsed = feedbackSchema.parse(req.body);
+    const feedback = await submitMessageFeedback({
+      userId: req.user!.id,
+      messageId: req.params.id,
+      value: parsed.value,
+    });
+    return res.json({ data: feedback });
+  } catch (error) {
+    if (error instanceof Error && error.message === "Message not found") {
       return res.status(404).json({ error: { message: error.message } });
     }
     return next(error);

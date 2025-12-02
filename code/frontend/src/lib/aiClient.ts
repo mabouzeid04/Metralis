@@ -12,6 +12,29 @@ export type ConversationSummary = {
   } | null
 }
 
+export type AiFeedbackValue = 'HELPFUL' | 'NOT_HELPFUL' | 'CORRECT_CAUSE'
+
+export type StructuredAiResponse = {
+  summary: string
+  likelyCauses: Array<{
+    title: string
+    confidence: 'HIGH' | 'MEDIUM' | 'LOW'
+    rationale: string
+    citations: number[]
+  }>
+  recommendedSteps: Array<{
+    title: string
+    action: string
+    citations: number[]
+  }>
+  references: Array<{
+    id: number
+    source: string
+  }>
+  needsMoreData: boolean
+  missingDataNotes: string
+}
+
 export type ChatMessage = {
   id: string
   role: 'USER' | 'ASSISTANT'
@@ -27,6 +50,8 @@ export type ChatMessage = {
     language?: string | null
     version?: string | null
   }>
+  structuredOutput?: StructuredAiResponse | null
+  feedback?: AiFeedbackValue[]
 }
 
 export type ConversationDetail = {
@@ -77,6 +102,11 @@ export const sendChatMessage = async ({
     machineId,
     conversationId: conversationId ?? undefined,
   })
+  return data.data
+}
+
+export const sendMessageFeedback = async (messageId: string, value: AiFeedbackValue) => {
+  const { data } = await api.post<{ data: AiFeedbackValue[] }>(`/ai/messages/${messageId}/feedback`, { value })
   return data.data
 }
 

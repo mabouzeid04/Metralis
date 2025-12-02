@@ -20,6 +20,10 @@ router.use(requireAuth);
 
 router.get("/", async (_req, res) => {
   const documents = await prisma.document.findMany({
+    where: {
+      workOrderId: null,
+      repairActionId: null,
+    },
     orderBy: { createdAt: "desc" },
     include: { machine: true, uploadedBy: true },
   });

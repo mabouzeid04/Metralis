@@ -39,11 +39,36 @@ ${contextText}
 User Question:
 ${question}
 
-Response Guidelines:
-1. Start with a short summary (2 sentences).
-2. List likely causes ranked by confidence.
-3. Provide stepwise troubleshooting actions referencing the numbered documents above when relevant.
-4. Include a final section titled "Citations" referencing the associated numbers.
-5. Clearly state if more data is required before taking action.`;
+You MUST respond with a single valid JSON object that matches this schema exactly:
+{
+  "summary": "One or two sentences that recap the situation.",
+  "likelyCauses": [
+    {
+      "title": "Short name for the hypothesis.",
+      "confidence": "HIGH" | "MEDIUM" | "LOW",
+      "rationale": "Why this cause is likely (reference similar incidents or docs).",
+      "citations": [Numbers referencing Retrieved Knowledge entries, e.g., 1,2]
+    }
+  ],
+  "recommendedSteps": [
+    {
+      "title": "Name of the diagnostic or repair step.",
+      "action": "Step-by-step instructions.",
+      "citations": [Numbers referencing Retrieved Knowledge entries]
+    }
+  ],
+  "references": [
+    { "id": Number matching the Retrieved Knowledge entry, "source": "Document title or context" }
+  ],
+  "needsMoreData": Boolean,
+  "missingDataNotes": "If needsMoreData is true, explain what information is missing (otherwise use an empty string)."
+}
+
+Guidelines:
+- Always include arrays even if they are empty.
+- Confidence must be one of HIGH, MEDIUM, LOW.
+- Citations should reference the numbered Retrieved Knowledge entries; use an empty array when nothing is cited.
+- If there are no documents, references should be an empty array and citations should be empty arrays.
+- Do NOT wrap the JSON in backticks or add commentary—return JSON only.`;
 };
 
