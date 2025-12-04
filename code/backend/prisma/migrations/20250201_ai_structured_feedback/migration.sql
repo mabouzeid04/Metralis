@@ -26,11 +26,28 @@ CREATE UNIQUE INDEX IF NOT EXISTS "ChatMessageFeedback_messageId_userId_value_ke
 CREATE INDEX IF NOT EXISTS "ChatMessageFeedback_userId_idx" ON "ChatMessageFeedback" ("userId");
 
 -- Foreign keys
-ALTER TABLE "ChatMessageFeedback"
-    ADD CONSTRAINT "ChatMessageFeedback_messageId_fkey"
-    FOREIGN KEY ("messageId") REFERENCES "ChatMessage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint 
+        WHERE conname = 'ChatMessageFeedback_messageId_fkey'
+    ) THEN
+        ALTER TABLE "ChatMessageFeedback"
+            ADD CONSTRAINT "ChatMessageFeedback_messageId_fkey"
+            FOREIGN KEY ("messageId") REFERENCES "ChatMessage"("id") 
+            ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;
 
-ALTER TABLE "ChatMessageFeedback"
-    ADD CONSTRAINT "ChatMessageFeedback_userId_fkey"
-    FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint 
+        WHERE conname = 'ChatMessageFeedback_userId_fkey'
+    ) THEN
+        ALTER TABLE "ChatMessageFeedback"
+            ADD CONSTRAINT "ChatMessageFeedback_userId_fkey"
+            FOREIGN KEY ("userId") REFERENCES "User"("id") 
+            ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END $$;

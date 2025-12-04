@@ -118,7 +118,7 @@ export default function MachineDetail() {
           ? <AlertTriangle className="h-5 w-5 text-red-500" />
           : <Wrench className="h-5 w-5 text-blue-500" />
 
-      const items: Array<{ id: string; date: string; description: string; title: string; icon: JSX.Element; timestamp: number }> = [
+      const items = [
         {
           id: wo.id,
           date: new Date(wo.createdAt).toLocaleString(),

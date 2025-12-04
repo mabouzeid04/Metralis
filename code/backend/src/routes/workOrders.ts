@@ -302,12 +302,18 @@ const attachmentSelect = {
 } as const;
 
 router.post("/:id/attachments", upload.single("file"), async (req, res) => {
+  const workOrderId = req.params.id;
+
+  if (!workOrderId) {
+    return res.status(400).json({ error: { message: "Work order id is required" } });
+  }
+
   if (!req.file) {
     return res.status(400).json({ error: { message: "File is required" } });
   }
 
   const workOrder = await prisma.workOrder.findUnique({
-    where: { id: req.params.id },
+    where: { id: workOrderId },
     select: { id: true, machineId: true },
   });
 
@@ -327,7 +333,7 @@ router.post("/:id/attachments", upload.single("file"), async (req, res) => {
       mimeType: req.file.mimetype,
       language: "en",
       uploadedBy: { connect: { id: req.user!.id } },
-      workOrder: { connect: { id: workOrder.id } },
+      workOrder: { connect: { id: workOrderId } },
       machine: { connect: { id: workOrder.machineId } },
       ingestionStatus: DocumentIngestionStatus.COMPLETE,
       ingestedAt: now,
@@ -342,13 +348,24 @@ router.post("/:id/attachments", upload.single("file"), async (req, res) => {
 });
 
 router.post("/:id/repair/:repairId/attachments", upload.single("file"), async (req, res) => {
+  const { id: workOrderId, repairId } = req.params;
+
+  if (!workOrderId || !repairId) {
+    return res.status(400).json({ error: { message: "Work order id and repair id are required" } });
+  }
+
   if (!req.file) {
     return res.status(400).json({ error: { message: "File is required" } });
   }
 
   const repairAction = await prisma.repairAction.findFirst({
-    where: { id: req.params.repairId, workOrderId: req.params.id },
-    include: { workOrder: { select: { machineId: true } } },
+    where: { id: repairId, workOrderId },
+    select: {
+      id: true,
+      workOrder: {
+        select: { machineId: true },
+      },
+    },
   });
 
   if (!repairAction) {
@@ -367,9 +384,11 @@ router.post("/:id/repair/:repairId/attachments", upload.single("file"), async (r
       mimeType: req.file.mimetype,
       language: "en",
       uploadedBy: { connect: { id: req.user!.id } },
-      workOrder: { connect: { id: req.params.id } },
-      repairAction: { connect: { id: req.params.repairId } },
-      machine: repairAction.workOrder.machineId ? { connect: { id: repairAction.workOrder.machineId } } : undefined,
+      workOrder: { connect: { id: workOrderId } },
+      repairAction: { connect: { id: repairId } },
+      ...(repairAction.workOrder?.machineId
+        ? { machine: { connect: { id: repairAction.workOrder.machineId } } }
+        : {}),
       ingestionStatus: DocumentIngestionStatus.COMPLETE,
       ingestedAt: now,
       metadata: {

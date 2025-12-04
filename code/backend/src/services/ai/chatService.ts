@@ -248,6 +248,18 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     updateData.title = titleUpdate;
   }
 
+  const assistantMessageData: Prisma.ChatMessageUncheckedCreateInput = {
+    conversationId: conversation.id,
+    role: "ASSISTANT",
+    content: llmResponse.text,
+    citations,
+    contextChunks: retrievedChunks,
+  };
+
+  if (structuredOutput) {
+    assistantMessageData.structuredOutput = structuredOutput;
+  }
+
   const [userMessage, assistantMessage, updatedConversation] = await prisma.$transaction([
     prisma.chatMessage.create({
       data: {
@@ -257,14 +269,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
       },
     }),
     prisma.chatMessage.create({
-      data: {
-        conversationId: conversation.id,
-        role: "ASSISTANT",
-        content: llmResponse.text,
-        citations,
-        contextChunks: retrievedChunks,
-        structuredOutput: structuredOutput ?? undefined,
-      },
+      data: assistantMessageData,
     }),
     prisma.chatConversation.update({
       where: { id: conversation.id },

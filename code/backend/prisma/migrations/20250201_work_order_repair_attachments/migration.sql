@@ -14,10 +14,33 @@ CREATE INDEX IF NOT EXISTS "Document_workOrderId_idx" ON "Document"("workOrderId
 CREATE INDEX IF NOT EXISTS "Document_repairActionId_idx" ON "Document"("repairActionId");
 
 -- AddForeignKey
-ALTER TABLE "Document"
-    ADD CONSTRAINT "Document_workOrderId_fkey" FOREIGN KEY ("workOrderId") REFERENCES "WorkOrder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint 
+        WHERE conname = 'Document_workOrderId_fkey'
+    ) THEN
+        ALTER TABLE "Document"
+            ADD CONSTRAINT "Document_workOrderId_fkey" 
+            FOREIGN KEY ("workOrderId") REFERENCES "WorkOrder"("id") 
+            ON DELETE SET NULL ON UPDATE CASCADE;
+    END IF;
+END $$;
 
 -- AddForeignKey
-ALTER TABLE "Document"
-    ADD CONSTRAINT "Document_repairActionId_fkey" FOREIGN KEY ("repairActionId") REFERENCES "RepairAction"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint 
+        WHERE conname = 'Document_repairActionId_fkey'
+    ) THEN
+        ALTER TABLE "Document"
+            ADD CONSTRAINT "Document_repairActionId_fkey" 
+            FOREIGN KEY ("repairActionId") REFERENCES "RepairAction"("id") 
+            ON DELETE SET NULL ON UPDATE CASCADE;
+    END IF;
+END $$;
+
+
+
 
