@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
+import { WorkOrderNotifications } from './WorkOrderNotifications'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -21,6 +22,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-3">
+        <WorkOrderNotifications />
         <div className="text-right hidden sm:block">
           <p className="text-sm font-medium">{user?.name ?? 'User'}</p>
           <p className="text-xs text-muted-foreground capitalize">{user?.role?.toLowerCase()}</p>
