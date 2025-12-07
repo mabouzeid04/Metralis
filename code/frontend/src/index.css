@@ -64,3 +64,40 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* RTL layout helpers */
+.app-sidebar {
+  left: 0;
+}
+
+.app-sidebar-drawer {
+  left: 0;
+}
+
+@media (min-width: 768px) {
+  .app-main {
+    padding-left: 16rem;
+  }
+}
+
+[dir='rtl'] .app-sidebar {
+  left: auto;
+  right: 0;
+}
+
+[dir='rtl'] .app-sidebar-drawer {
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+}
+
+[dir='rtl'] .app-sidebar-drawer.translate-x-0 {
+  transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+  [dir='rtl'] .app-main {
+    padding-left: 0;
+    padding-right: 16rem;
+  }
+}

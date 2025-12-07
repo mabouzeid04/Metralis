@@ -21,6 +21,13 @@ export default defineConfig([
     },
     rules: {
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: 'JSXText[value=/\\S/]',
+          message: 'Prefer i18n translations over raw JSX text.',
+        },
+      ],
     },
   },
 ])

@@ -1,0 +1,44 @@
+{
+  "title": "Documents",
+  "subtitle": "Centralized library for manuals, SOPs, and diagrams.",
+  "upload": "Upload Document",
+  "uploadTitle": "Upload a document",
+  "uploadSubtitle": "Supports PDF or Word files up to 25MB.",
+  "form": {
+    "title": "Title",
+    "titlePlaceholder": "Machine manual (English)",
+    "type": "Document type",
+    "file": "File",
+    "chooseFile": "Choose file",
+    "noFile": "No file selected",
+    "uploading": "Uploading..."
+  },
+  "uploadErrors": {
+    "unsupported": "Only PDF, DOC, or DOCX files are supported.",
+    "titleRequired": "Title is required.",
+    "fileRequired": "Please select a PDF or DOCX file to upload.",
+    "failed": "Failed to upload document. Please try again."
+  },
+  "searchPlaceholder": "Search documents...",
+  "emptyTitle": "No documents found",
+  "emptySearchHint": "Try a different search term",
+  "emptyCreateHint": "Get started by uploading your first document",
+  "types": {
+    "manual": "Manual",
+    "sop": "SOP",
+    "troubleshooting": "Troubleshooting",
+    "other": "Other"
+  },
+  "table": {
+    "actions": "Actions",
+    "size": "Size",
+    "date": "Date",
+    "machine": "Machine",
+    "type": "Type",
+    "title": "Title"
+  },
+  "errors": {
+    "load": "Failed to load documents",
+    "preview": "Failed to load document preview. Please try again."
+  }
+}

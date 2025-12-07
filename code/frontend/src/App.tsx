@@ -7,12 +7,14 @@ import AwaitingApproval from '@/pages/AwaitingApproval'
 import MachinesList from '@/pages/machines/MachinesList'
 import CreateMachine from '@/pages/machines/CreateMachine'
 import MachineDetail from '@/pages/machines/MachineDetail'
+import EditMachine from '@/pages/machines/EditMachine'
 import WorkOrdersList from '@/pages/work-orders/WorkOrdersList'
 import CreateWorkOrder from '@/pages/work-orders/CreateWorkOrder'
 import WorkOrderDetail from '@/pages/work-orders/WorkOrderDetail'
 import PartsList from '@/pages/parts/PartsList'
 import PartDetail from '@/pages/parts/PartDetail'
 import CreatePart from '@/pages/parts/CreatePart'
+import EditPart from '@/pages/parts/EditPart'
 import DocumentsList from '@/pages/documents/DocumentsList'
 import UserManagement from '@/pages/users/UserManagement'
 import Settings from '@/pages/Settings'
@@ -41,12 +43,21 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route
+            path="/machines/:id/edit"
+            element={
+              <AdminRoute>
+                <EditMachine />
+              </AdminRoute>
+            }
+          />
           <Route path="/machines/:id" element={<MachineDetail />} />
           <Route path="/work-orders" element={<WorkOrdersList />} />
           <Route path="/work-orders/new" element={<CreateWorkOrder />} />
           <Route path="/work-orders/:id" element={<WorkOrderDetail />} />
           <Route path="/parts" element={<PartsList />} />
           <Route path="/parts/new" element={<CreatePart />} />
+          <Route path="/parts/:id/edit" element={<EditPart />} />
           <Route path="/parts/:id" element={<PartDetail />} />
           <Route path="/documents" element={<DocumentsList />} />
           <Route

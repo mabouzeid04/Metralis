@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { 
   BarChart, 
@@ -32,6 +33,7 @@ interface MachineStatusChartData {
 }
 
 export default function Dashboard() {
+  const { t } = useTranslation(['dashboard', 'common'])
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [machineStatusData, setMachineStatusData] = useState<MachineStatusChartData[]>([])
   const [loading, setLoading] = useState(true)
@@ -63,11 +65,16 @@ export default function Dashboard() {
             'RETIRED': '#94A3B8',
           }
           
-          const chartData = Object.entries(statusCounts).map(([status, count]) => ({
-            name: status.charAt(0) + status.slice(1).toLowerCase(),
-            value: count,
-            color: statusColors[status] || '#94A3B8'
-          }))
+          const chartData = Object.entries(statusCounts).map(([status, count]) => {
+            const normalized = status.toLowerCase()
+            return {
+              name: t(`common:status.${normalized}`, {
+                defaultValue: status.charAt(0) + status.slice(1).toLowerCase(),
+              }),
+              value: count,
+              color: statusColors[status] || '#94A3B8',
+            }
+          })
           
           setMachineStatusData(chartData)
         } catch {
@@ -81,34 +88,34 @@ export default function Dashboard() {
     }
 
     fetchDashboardData()
-  }, [])
+  }, [t])
 
   const statsCards = [
     {
-      title: "Active Work Orders",
+      title: t('stats.activeWorkOrders'),
       value: stats?.openWorkOrders ?? 0,
-      change: "Open tasks",
+      change: t('stats.activeSubtitle'),
       icon: Clock,
       color: "text-blue-500"
     },
     {
-      title: "Machines Down",
+      title: t('stats.machinesDown'),
       value: stats?.machinesDown ?? 0,
-      change: stats?.machinesDown ? "Critical Alert" : "All operational",
+      change: stats?.machinesDown ? t('stats.machinesDownAlert') : t('stats.machinesDownOk'),
       icon: AlertCircle,
       color: "text-red-500"
     },
     {
-      title: "Completed Today",
+      title: t('stats.completedToday'),
       value: stats?.completedToday ?? 0,
-      change: "Closed work orders",
+      change: t('stats.completedSubtitle'),
       icon: CheckCircle2,
       color: "text-green-500"
     },
     {
-      title: "System Status",
-      value: loading ? "..." : "Online",
-      change: "All systems operational",
+      title: t('stats.systemStatus'),
+      value: loading ? "..." : t('stats.online'),
+      change: t('stats.allOperational'),
       icon: Activity,
       color: "text-orange-500"
     }
@@ -116,13 +123,13 @@ export default function Dashboard() {
 
   // Placeholder chart data (real weekly data would require additional API endpoint)
   const workOrderData = [
-    { name: 'Mon', completed: 0, created: 0 },
-    { name: 'Tue', completed: 0, created: 0 },
-    { name: 'Wed', completed: 0, created: 0 },
-    { name: 'Thu', completed: 0, created: 0 },
-    { name: 'Fri', completed: 0, created: 0 },
-    { name: 'Sat', completed: 0, created: 0 },
-    { name: 'Sun', completed: 0, created: 0 },
+    { name: t('charts.weekdays.mon'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.tue'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.wed'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.thu'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.fri'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.sat'), completed: 0, created: 0 },
+    { name: t('charts.weekdays.sun'), completed: 0, created: 0 },
   ]
 
   if (loading) {
@@ -136,7 +143,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
       </div>
 
       {/* Stats Grid */}
@@ -163,7 +170,7 @@ export default function Dashboard() {
         {/* Main Chart */}
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Weekly Overview</CardTitle>
+            <CardTitle>{t('charts.weeklyOverview')}</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
             <div className="h-[350px]">
@@ -188,8 +195,8 @@ export default function Dashboard() {
                     cursor={{ fill: 'transparent' }}
                     contentStyle={{ borderRadius: '8px' }}
                   />
-                  <Bar dataKey="created" name="Created" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="completed" name="Completed" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="created" name={t('charts.created')} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="completed" name={t('charts.completed')} fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -199,7 +206,7 @@ export default function Dashboard() {
         {/* Machine Status Chart */}
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Machine Status</CardTitle>
+            <CardTitle>{t('charts.machineStatus')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[350px]">
@@ -227,7 +234,7 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               ) : (
                 <div className="flex items-center justify-center h-full text-muted-foreground">
-                  No machines registered yet
+                  {t('charts.noMachines')}
                 </div>
               )}
             </div>

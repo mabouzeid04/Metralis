@@ -1,0 +1,86 @@
+{
+  "appName": "نظام مترياليس لإدارة الصيانة",
+  "actions": {
+    "save": "حفظ",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "retry": "إعادة المحاولة",
+    "back": "رجوع",
+    "view": "عرض",
+    "add": "إضافة",
+    "edit": "تعديل",
+    "apply": "تطبيق",
+    "close": "إغلاق",
+    "view": "عرض",
+    "add": "إضافة",
+    "create": "إنشاء",
+    "upload": "رفع",
+    "search": "بحث",
+    "filter": "تصفية"
+  },
+  "states": {
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ ما"
+  },
+  "status": {
+    "running": "يعمل",
+    "up": "نشط",
+    "completed": "مكتمل",
+    "success": "نجاح",
+    "closed": "مغلق",
+    "maintenance": "صيانة",
+    "warning": "تحذير",
+    "in_progress": "قيد التنفيذ",
+    "pending": "معلق",
+    "down": "متوقف",
+    "error": "خطأ",
+    "failed": "فشل",
+    "critical": "حرج",
+    "retired": "متقاعد",
+    "open": "مفتوح",
+    "idle": "خامل",
+    "draft": "مسودة",
+    "unknown": "غير معروف",
+    "low": "منخفض",
+    "none": "-",
+    "noMachine": "بدون آلة"
+  },
+  "priority": {
+    "critical": "حرج",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض"
+  },
+  "language": {
+    "label": "اللغة",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "choose": "اختر لغتك المفضلة للواجهة"
+  },
+  "form": {
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "phoneNumber": "رقم الهاتف",
+    "description": "الوصف",
+    "searchPlaceholder": "ابحث...",
+    "required": "هذا الحقل مطلوب"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "workOrders": "أوامر العمل المخصصة لك",
+    "noneTitle": "لا توجد أوامر عمل مخصصة",
+    "noneBody": "ستظهر الإشعارات هنا عند تعيينك.",
+    "signIn": "سجّل الدخول لعرض الإشعارات.",
+    "retry": "أعد المحاولة",
+    "goToWorkOrders": "انتقل إلى أوامر العمل",
+    "unableToLoad": "تعذر تحميل الإشعارات"
+  },
+  "roles": {
+    "admin": "مسؤول",
+    "manager": "مدير",
+    "technician": "فني",
+    "user": "مستخدم"
+  }
+}

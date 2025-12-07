@@ -9,6 +9,7 @@ import {
   Cog,
   Bot,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -18,17 +19,18 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const { user } = useAuth()
+  const { t } = useTranslation('nav')
 
   const navItems = [
-    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/machines', icon: Settings, label: 'Machines' },
-    { to: '/work-orders', icon: Wrench, label: 'Work Orders' },
-    { to: '/parts', icon: Package, label: 'Parts' },
-    { to: '/documents', icon: FileText, label: 'Documents' },
-    { to: '/ai', icon: Bot, label: 'Metralis AI' },
+    { to: '/', icon: LayoutDashboard, label: t('dashboard') },
+    { to: '/machines', icon: Settings, label: t('machines') },
+    { to: '/work-orders', icon: Wrench, label: t('workOrders') },
+    { to: '/parts', icon: Package, label: t('parts') },
+    { to: '/documents', icon: FileText, label: t('documents') },
+    { to: '/ai', icon: Bot, label: t('ai') },
     ...(user?.role === 'ADMIN'
       ? [
-          { to: '/users', icon: Users, label: 'Users' },
+          { to: '/users', icon: Users, label: t('users') },
         ]
       : []),
   ]
@@ -72,7 +74,7 @@ export function Sidebar({ className }: SidebarProps) {
           }
         >
           <Cog className="w-4 h-4" />
-          Settings
+          {t('settings')}
         </NavLink>
       </div>
     </aside>

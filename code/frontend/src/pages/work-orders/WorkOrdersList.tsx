@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Loader2, ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +40,7 @@ export default function WorkOrdersList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const { t } = useTranslation(['workOrders', 'common'])
 
   useEffect(() => {
     const fetchWorkOrders = async () => {
@@ -48,7 +50,7 @@ export default function WorkOrdersList() {
         setError(null)
       } catch (err) {
         console.error('Failed to fetch work orders:', err)
-        setError('Failed to load work orders')
+        setError(t('errors.load'))
       } finally {
         setLoading(false)
       }
@@ -76,7 +78,7 @@ export default function WorkOrdersList() {
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <ClipboardList className="h-12 w-12 text-muted-foreground" />
         <p className="text-muted-foreground">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
   }
@@ -85,12 +87,12 @@ export default function WorkOrdersList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Work Orders</h2>
-          <p className="text-muted-foreground">Track maintenance tasks and repairs.</p>
+          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button className="w-full sm:w-auto" asChild>
           <Link to="/work-orders/new">
-            <Plus className="mr-2 h-4 w-4" /> Create Work Order
+            <Plus className="mr-2 h-4 w-4" /> {t('create')}
           </Link>
         </Button>
       </div>
@@ -101,7 +103,7 @@ export default function WorkOrdersList() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search work orders..."
+                placeholder={t('searchPlaceholder')}
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,14 +118,14 @@ export default function WorkOrdersList() {
           {filteredWOs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <ClipboardList className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No work orders found</h3>
+              <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? 'Try a different search term' : 'Get started by creating your first work order'}
+                {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
               {!searchTerm && (
                 <Button asChild>
                   <Link to="/work-orders/new">
-                    <Plus className="mr-2 h-4 w-4" /> Create Work Order
+                    <Plus className="mr-2 h-4 w-4" /> {t('create')}
                   </Link>
                 </Button>
               )}
@@ -132,15 +134,15 @@ export default function WorkOrdersList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead className="hidden md:table-cell">Machine</TableHead>
-                  <TableHead className="hidden md:table-cell">Priority</TableHead>
-                  <TableHead className="hidden lg:table-cell">Assignee</TableHead>
-                  <TableHead className="hidden lg:table-cell">Created</TableHead>
-                  <TableHead className="hidden xl:table-cell">Resolved</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('table.id')}</TableHead>
+                  <TableHead>{t('table.status')}</TableHead>
+                  <TableHead>{t('table.title')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.machine')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.priority')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('table.assignee')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('table.created')}</TableHead>
+                  <TableHead className="hidden xl:table-cell">{t('table.resolved')}</TableHead>
+                  <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -166,7 +168,7 @@ export default function WorkOrdersList() {
                           {wo.priority}
                       </Badge>
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">{wo.assignedTo?.name || 'Unassigned'}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{wo.assignedTo?.name || t('unassigned')}</TableCell>
                     <TableCell className="hidden lg:table-cell">
                       {new Date(wo.createdAt).toLocaleDateString()}
                     </TableCell>
@@ -175,7 +177,7 @@ export default function WorkOrdersList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/work-orders/${wo.id}`}>View</Link>
+                        <Link to={`/work-orders/${wo.id}`}>{t('view')}</Link>
                       </Button>
                     </TableCell>
                   </TableRow>

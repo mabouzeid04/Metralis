@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Badge } from "@/components/ui/badge"
 
 export type StatusType = 
@@ -12,6 +13,7 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
+  const { t } = useTranslation()
   const normalizedStatus = status.toLowerCase().replace(' ', '_') as StatusType
   
   let variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" = "secondary"
@@ -49,7 +51,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
 
   return (
     <Badge variant={variant} className={className}>
-      {status.replace('_', ' ')}
+      {t(`common:status.${normalizedStatus}`, { defaultValue: status.replace('_', ' ') })}
     </Badge>
   )
 }

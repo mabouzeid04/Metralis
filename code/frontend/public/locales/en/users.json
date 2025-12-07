@@ -1,0 +1,39 @@
+{
+  "title": "User Management",
+  "subtitle": "Create accounts and manage access levels for your maintenance team.",
+  "pendingTitle": "Pending Technician Requests",
+  "pendingEmpty": "No technician requests are waiting for approval.",
+  "pendingLoading": "Loading pending requests…",
+  "pendingDescription": "Technicians stay here until an admin approves or rejects them.",
+  "refresh": "Refresh",
+  "approve": "Approve",
+  "reject": "Reject",
+  "form": {
+    "title": "Add New User",
+    "name": "Full Name",
+    "email": "Email",
+    "role": "Role",
+    "password": "Temporary Password",
+    "passwordHint": "At least 8 characters",
+    "submit": "Create User"
+  },
+  "table": {
+    "created": "Created",
+    "status": "Status",
+    "role": "Role",
+    "email": "Email",
+    "name": "Name",
+    "teamMembers": "Team Members"
+  },
+  "status": {
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected"
+  },
+  "errors": {
+    "load": "Failed to load users",
+    "loadPending": "Failed to load pending users",
+    "action": "Action failed",
+    "create": "Failed to create user"
+  }
+}

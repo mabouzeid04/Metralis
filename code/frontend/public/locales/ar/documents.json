@@ -1,0 +1,44 @@
+{
+  "title": "المستندات",
+  "subtitle": "مكتبة مركزية للأدلة والإجراءات والرسومات.",
+  "upload": "رفع مستند",
+  "uploadTitle": "رفع مستند",
+  "uploadSubtitle": "يدعم ملفات PDF أو Word حتى 25 ميغابايت.",
+  "form": {
+    "title": "العنوان",
+    "titlePlaceholder": "دليل الآلة (بالإنجليزية)",
+    "type": "نوع المستند",
+    "file": "الملف",
+    "chooseFile": "اختر ملفاً",
+    "noFile": "لم يتم اختيار ملف",
+    "uploading": "جاري الرفع..."
+  },
+  "uploadErrors": {
+    "unsupported": "يُسمح فقط بملفات PDF أو DOC أو DOCX.",
+    "titleRequired": "العنوان مطلوب.",
+    "fileRequired": "يرجى اختيار ملف PDF أو DOCX للرفع.",
+    "failed": "فشل رفع المستند. حاول مرة أخرى."
+  },
+  "searchPlaceholder": "ابحث عن المستندات...",
+  "emptyTitle": "لا توجد مستندات",
+  "emptySearchHint": "جرّب مصطلح بحث مختلف",
+  "emptyCreateHint": "ابدأ برفع أول مستند لك",
+  "types": {
+    "manual": "دليل",
+    "sop": "إجراء تشغيلي",
+    "troubleshooting": "استكشاف الأخطاء",
+    "other": "أخرى"
+  },
+  "table": {
+    "actions": "الإجراءات",
+    "size": "الحجم",
+    "date": "التاريخ",
+    "machine": "الآلة",
+    "type": "النوع",
+    "title": "العنوان"
+  },
+  "errors": {
+    "load": "فشل تحميل المستندات",
+    "preview": "فشل تحميل معاينة المستند. يرجى المحاولة مرة أخرى."
+  }
+}

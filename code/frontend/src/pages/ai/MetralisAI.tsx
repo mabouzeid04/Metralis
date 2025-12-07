@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
@@ -18,6 +19,7 @@ type MachineOption = {
 
 const MetralisAI = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation('ai')
   const {
     conversations,
     messages,
@@ -48,14 +50,14 @@ const MetralisAI = () => {
         setMachines(data.data)
       } catch (err) {
         console.error(err)
-        setError('Unable to load machines right now.')
+        setError(t('error'))
       } finally {
         setLoadingMachines(false)
       }
     }
     load()
     fetchConversations()
-  }, [fetchConversations])
+  }, [fetchConversations, t])
 
   const activeMachineId = useMemo(() => currentConversation?.machineId ?? currentConversation?.machine?.id ?? '', [currentConversation])
 
@@ -74,7 +76,7 @@ const MetralisAI = () => {
       setInput('')
     } catch (err) {
       console.error(err)
-      setError('Unable to send message. Please try again.')
+      setError(t('error'))
     }
   }
 
@@ -94,9 +96,9 @@ const MetralisAI = () => {
   const machineDisabled = Boolean(activeMachineId)
 
   const feedbackOptions: Array<{ value: AiFeedbackValue; label: string; Icon: LucideIcon }> = [
-    { value: 'HELPFUL', label: 'Helpful', Icon: ThumbsUp },
-    { value: 'NOT_HELPFUL', label: 'Needs work', Icon: Frown },
-    { value: 'CORRECT_CAUSE', label: 'Correct cause', Icon: CheckCircle2 },
+    { value: 'HELPFUL', label: t('feedback.helpful', { defaultValue: 'Helpful' }), Icon: ThumbsUp },
+    { value: 'NOT_HELPFUL', label: t('feedback.needsWork', { defaultValue: 'Needs work' }), Icon: Frown },
+    { value: 'CORRECT_CAUSE', label: t('feedback.correctCause', { defaultValue: 'Correct cause' }), Icon: CheckCircle2 },
   ]
 
   const handleFeedback = async (messageId: string, value: AiFeedbackValue) => {
@@ -106,7 +108,7 @@ const MetralisAI = () => {
       await submitFeedback(messageId, value)
     } catch (err) {
       console.error(err)
-      setFeedbackErrors((prev) => ({ ...prev, [messageId]: 'Unable to send feedback. Please try again.' }))
+      setFeedbackErrors((prev) => ({ ...prev, [messageId]: t('feedback.error') }))
     } finally {
       setFeedbackSubmitting((prev) => ({ ...prev, [messageId]: false }))
     }
@@ -130,7 +132,11 @@ const MetralisAI = () => {
     if (!citations || citations.length === 0) {
       return null
     }
-    return <span className="text-[11px] uppercase text-muted-foreground">Docs {citations.join(', ')}</span>
+    return (
+      <span className="text-[11px] uppercase text-muted-foreground">
+        {t('citations.docLabel')} {citations.join(', ')}
+      </span>
+    )
   }
 
   const renderConfidenceBadge = (confidence: StructuredAiResponse['likelyCauses'][number]['confidence']) => {
@@ -156,16 +162,16 @@ const MetralisAI = () => {
     return (
       <div className="space-y-4">
         <div>
-          <p className="text-xs font-semibold uppercase text-muted-foreground">Summary</p>
-          <p className="text-sm">{structured.summary || 'No summary available.'}</p>
+          <p className="text-xs font-semibold uppercase text-muted-foreground">{t('structured.summaryTitle')}</p>
+          <p className="text-sm">{structured.summary || t('structured.summaryFallback')}</p>
         </div>
 
         <div className="space-y-2">
           <p className="text-sm font-semibold flex items-center gap-2">
-            <Target className="h-4 w-4" /> Likely Causes
+            <Target className="h-4 w-4" /> {t('structured.causesTitle')}
           </p>
           {structured.likelyCauses.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No ranked causes yet.</p>
+            <p className="text-sm text-muted-foreground">{t('structured.causesEmpty')}</p>
           ) : (
             structured.likelyCauses.map((cause, index) => (
               <div key={`${cause.title}-${index}`} className="rounded-md border p-3 text-sm space-y-1">
@@ -182,10 +188,10 @@ const MetralisAI = () => {
 
         <div className="space-y-2">
           <p className="text-sm font-semibold flex items-center gap-2">
-            <ClipboardCheck className="h-4 w-4" /> Recommended Steps
+            <ClipboardCheck className="h-4 w-4" /> {t('structured.stepsTitle')}
           </p>
           {structured.recommendedSteps.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No actions proposed.</p>
+            <p className="text-sm text-muted-foreground">{t('structured.stepsEmpty')}</p>
           ) : (
             structured.recommendedSteps.map((step, index) => (
               <div key={`${step.title}-${index}`} className="rounded-md border p-3 text-sm space-y-1">
@@ -201,15 +207,15 @@ const MetralisAI = () => {
           <div className="flex gap-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
             <AlertTriangle className="h-4 w-4" />
             <div>
-              <p className="font-semibold">More data required</p>
-              <p>{structured.missingDataNotes || 'Provide additional context before taking action.'}</p>
+              <p className="font-semibold">{t('structured.moreDataTitle')}</p>
+              <p>{structured.missingDataNotes || t('structured.moreDataBody')}</p>
             </div>
           </div>
         )}
 
         {structured.references.length > 0 && (
           <div>
-            <p className="text-sm font-semibold">References</p>
+            <p className="text-sm font-semibold">{t('structured.referencesTitle')}</p>
             <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
               {structured.references.map((reference) => (
                 <li key={reference.id}>
@@ -222,13 +228,13 @@ const MetralisAI = () => {
 
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="outline" onClick={handleCreateWorkOrderShortcut}>
-            Create Work Order
+            {t('structured.createWorkOrder')}
           </Button>
           <Button size="sm" variant="ghost" onClick={handleViewMachineShortcut} disabled={!selectedMachineId}>
-            View Machine
+            {t('structured.viewMachine')}
           </Button>
           <Button size="sm" variant="ghost" onClick={() => navigate('/work-orders')}>
-            Log Repair
+            {t('structured.logRepair')}
           </Button>
         </div>
       </div>
@@ -243,7 +249,7 @@ const MetralisAI = () => {
     const sent = message.feedback ?? []
     return (
       <div className="mt-4 space-y-1">
-        <p className="text-xs font-semibold text-muted-foreground">Was this response helpful?</p>
+        <p className="text-xs font-semibold text-muted-foreground">{t('feedback.prompt')}</p>
         <div className="flex flex-wrap gap-2">
           {feedbackOptions.map(({ value, label, Icon }) => {
             const alreadySent = sent.includes(value)
@@ -272,8 +278,8 @@ const MetralisAI = () => {
         <div className="absolute right-0 top-0 z-20 w-full max-w-sm rounded-xl border bg-background shadow-2xl">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <div>
-              <p className="text-sm font-semibold">Conversation History</p>
-              <p className="text-xs text-muted-foreground">Select a chat to resume or start a new one</p>
+              <p className="text-sm font-semibold">{t('historyPanel.title')}</p>
+              <p className="text-xs text-muted-foreground">{t('historyPanel.subtitle')}</p>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setShowHistory(false)}>
               <X className="h-4 w-4" />
@@ -283,11 +289,11 @@ const MetralisAI = () => {
             {historyLoading && (
               <div className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Loading history...
+                {t('historyPanel.loading')}
               </div>
             )}
             {!historyLoading && conversations.length === 0 && (
-              <div className="px-4 py-6 text-sm text-muted-foreground">No previous conversations yet.</div>
+              <div className="px-4 py-6 text-sm text-muted-foreground">{t('historyPanel.empty')}</div>
             )}
             {conversations.map((conversation) => (
               <button
@@ -302,15 +308,17 @@ const MetralisAI = () => {
                     {conversation.machine.model ? ` · ${conversation.machine.model}` : ''}
                   </p>
                 ) : (
-                  <p className="text-xs text-muted-foreground">No machine selected</p>
+                  <p className="text-xs text-muted-foreground">{t('historyPanel.noMachine')}</p>
                 )}
-                <p className="text-xs text-muted-foreground line-clamp-1">{conversation.lastMessagePreview ?? 'No messages yet'}</p>
+                <p className="text-xs text-muted-foreground line-clamp-1">
+                  {conversation.lastMessagePreview ?? t('historyPanel.noMessages')}
+                </p>
               </button>
             ))}
           </div>
           <div className="border-t px-4 py-3">
             <Button className="w-full" variant="outline" onClick={handleStartNew}>
-              Start new chat
+              {t('historyPanel.startNew')}
             </Button>
           </div>
         </div>
@@ -318,17 +326,17 @@ const MetralisAI = () => {
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-wide text-primary">Metralis AI</p>
-          <h1 className="text-3xl font-semibold tracking-tight">Maintenance Copilot</h1>
-          <p className="text-sm text-muted-foreground">Ask troubleshooting questions, reference manuals, and capture learnings.</p>
+          <p className="text-sm uppercase tracking-wide text-primary">{t('title')}</p>
+          <h1 className="text-3xl font-semibold tracking-tight">{t('subtitle')}</h1>
+          <p className="text-sm text-muted-foreground">{t('emptyState')}</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleStartNew}>
-            New Chat
+            {t('newChat', { defaultValue: 'New Chat' })}
           </Button>
           <Button variant="ghost" onClick={() => setShowHistory((prev) => !prev)}>
             <History className="mr-2 h-4 w-4" />
-            History
+            {t('history', { defaultValue: 'History' })}
           </Button>
         </div>
       </div>
@@ -337,7 +345,7 @@ const MetralisAI = () => {
         <Card className="p-4 sm:p-6">
           <div className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Machine Context</label>
+              <label className="text-sm font-medium text-muted-foreground">{t('machineContext', { defaultValue: 'Machine Context' })}</label>
               <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
                 <select
                   className="w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1"
@@ -345,7 +353,7 @@ const MetralisAI = () => {
                   value={selectedMachineId}
                   onChange={(event) => setMachineId(event.target.value)}
                 >
-                  <option value="">Select a machine (optional)</option>
+                  <option value="">{t('selectMachine', { defaultValue: 'Select a machine (optional)' })}</option>
                   {machines.map((machine) => (
                     <option key={machine.id} value={machine.id}>
                       {machine.name} {machine.model ? `• ${machine.model}` : ''}
@@ -354,7 +362,7 @@ const MetralisAI = () => {
                 </select>
                 {selectedMachine && (
                   <span className="text-xs text-muted-foreground">
-                    Bound to {selectedMachine.name}
+                    {t('boundTo', { defaultValue: 'Bound to' })} {selectedMachine.name}
                     {selectedMachine.model ? ` · ${selectedMachine.model}` : ''}
                   </span>
                 )}
@@ -366,7 +374,7 @@ const MetralisAI = () => {
                 {messages.length === 0 && (
                   <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/40 p-6 text-center text-sm text-muted-foreground">
                     <Sparkles className="mb-2 h-5 w-5" />
-                    Ask a question to get started. Metralis AI will cite specific manual sections and past incidents.
+                    {t('emptyState')}
                   </div>
                 )}
                 {messages.map((message) => {
@@ -381,11 +389,11 @@ const MetralisAI = () => {
                         <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide">
                           {isAssistant ? (
                             <>
-                              <BotIcon className="h-4 w-4" /> Metralis AI
+                              <BotIcon className="h-4 w-4" /> {t('assistantLabel')}
                             </>
                           ) : (
                             <>
-                              <UserIcon className="h-4 w-4" /> You
+                              <UserIcon className="h-4 w-4" /> {t('userLabel')}
                             </>
                           )}
                         </div>
@@ -396,7 +404,7 @@ const MetralisAI = () => {
                         )}
                         {message.citations && message.citations.length > 0 && (
                           <div className="mt-3 border-t pt-2 text-xs">
-                            <p className="font-semibold">Citations</p>
+                            <p className="font-semibold">{t('citations.label')}</p>
                             <ul className="mt-1 space-y-1 text-muted-foreground">
                               {message.citations.map((citation) => (
                                 <li key={citation.chunkId}>
@@ -416,7 +424,7 @@ const MetralisAI = () => {
               <div className="space-y-3">
                 {error && <p className="text-sm text-destructive">{error}</p>}
                 <Textarea
-                  placeholder="Describe the issue, alarm code, or maintenance question..."
+                  placeholder={t('inputPlaceholder')}
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
                   rows={4}
@@ -426,11 +434,11 @@ const MetralisAI = () => {
                     {isSending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Thinking
+                        {t('thinking', { defaultValue: 'Thinking' })}
                       </>
                     ) : (
                       <>
-                        Send
+                        {t('send')}
                         <Send className="ml-2 h-4 w-4" />
                       </>
                     )}
@@ -444,29 +452,36 @@ const MetralisAI = () => {
         <Card className="p-4 sm:p-6">
           <div className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Active conversation</p>
-              <h2 className="text-xl font-semibold">{currentConversation?.title ?? 'New Metralis AI chat'}</h2>
+              <p className="text-sm font-medium text-muted-foreground">{t('active.title')}</p>
+              <h2 className="text-xl font-semibold">{currentConversation?.title ?? t('active.defaultTitle')}</h2>
               <p className="text-sm text-muted-foreground">
-                {currentConversation ? `Conversation ID • ${currentConversation.id.slice(0, 8)}…` : 'No messages yet'}
+                {currentConversation
+                  ? `${t('active.idLabel')} • ${currentConversation.id.slice(0, 8)}…`
+                  : t('active.noMessages')}
               </p>
             </div>
 
             <div className="rounded-lg border bg-muted/30 p-3 text-sm">
-              <p className="font-medium">Bound machine</p>
+              <p className="font-medium">{t('active.boundMachine')}</p>
               <p className="text-muted-foreground">
                 {selectedMachine
                   ? `${selectedMachine.name}${selectedMachine.model ? ` • ${selectedMachine.model}` : ''}`
-                  : 'Not specified'}
+                  : t('active.notSpecified')}
               </p>
             </div>
 
             <div className="rounded-lg border bg-muted/30 p-3 text-sm">
-              <p className="font-medium">Conversation tips</p>
-              <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
-                <li>Reference error codes, sensor readings, or symptoms.</li>
-                <li>Metralis AI cites manuals and SOPs automatically.</li>
-                <li>Use the History tab to revisit earlier chats.</li>
-              </ul>
+              <p className="font-medium">{t('active.tipsTitle')}</p>
+              {(() => {
+                const tips = t('active.tips', { returnObjects: true }) as string[]
+                return (
+                  <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
+                    {tips.map((tip, idx) => (
+                      <li key={idx}>{tip}</li>
+                    ))}
+                  </ul>
+                )
+              })()}
             </div>
           </div>
         </Card>

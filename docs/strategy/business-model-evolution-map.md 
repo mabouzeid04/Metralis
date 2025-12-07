@@ -1,0 +1,241 @@
+# Business Model Evolution Map
+
+This document outlines how the company’s business model expands over time from a SaaS platform into a hybrid software–automation–industrial operator. Each stage builds new revenue streams, deeper moats, and higher operating leverage.
+
+---
+
+# Phase 1 — SaaS (Maintenance Intelligence Layer)
+
+## Core Business Model
+Subscription SaaS:
+
+- Per-technician or per-factory pricing  
+- AI diagnostics + CMMS + machine memory  
+- Optional enterprise tier with integrations  
+
+## Revenue Streams
+- SaaS subscriptions  
+- Onboarding or training fees  
+- Add-ons (advanced analytics, reporting modules)  
+
+## Margins
+- High (80–90% typical SaaS gross margins)  
+
+## Strategic Value
+- Factory foot-in-the-door  
+- Daily usage inside maintenance operations  
+- Access to failure data, fix data, and technician workflows  
+- Ground truth for machine behavior in emerging markets  
+
+## Moat
+- Proprietary failure data  
+- Technician adoption and workflow lock-in  
+- Semantic machine memory  
+
+---
+
+# Phase 2 — Factory OS (Operational Brain)
+
+## Core Business Model
+Expand from maintenance → full operational intelligence.
+
+Mixed SaaS + usage-based pricing:
+
+- Per-line or per-shift pricing  
+- Per-active-machine pricing  
+- Usage-based AI reasoning units (diagnostics, recommendations)  
+
+## Revenue Streams
+- Factory OS subscription  
+- Real-time monitoring fees  
+- Production optimization modules  
+- Multi-factory enterprise contracts  
+
+## Margins
+- SaaS-like margins remain high  
+- Slightly lower due to support & integrations  
+
+## Strategic Value
+- Becomes a system-of-record + system-of-intelligence  
+- Influences production decisions  
+- Captures cross-functional factory data (maintenance, production, quality)  
+
+## Moat
+- Deep integration into factory processes  
+- Factory-wide memory graph (not just maintenance)  
+- Increasing switching cost (OS-level dependency)  
+
+---
+
+# Phase 3 — Automation Layer (Robotics + AI Execution)
+
+## Core Business Model
+Software + automation services:
+
+- Robotics-as-a-service (RaaS)  
+- Automated inspection & maintenance workflows  
+- AI-driven execution planning  
+
+## Revenue Streams
+- Monthly robotics service fees  
+- Per-inspection or per-task fees  
+- Automation deployment projects  
+- Reliability improvement guarantees (performance-based contracts)  
+
+## Margins
+- Lower gross margins initially due to hardware  
+- Expand to high-margin recurring robotics services  
+- Hybrid SaaS + automation model similar to “AWS + robots”  
+
+## Strategic Value
+- You now influence **execution**, not just recommendations  
+- Robotics data feeds back into machine memory  
+- Your OS becomes the active coordinator of human + robotic teams  
+
+## Moat
+- Proprietary automation playbooks  
+- Cross-factory intelligence for optimizing robots  
+- Customers see tangible labor reduction → strong retention  
+
+---
+
+# Phase 4 — AI-Managed Factory Operations (Operator Model)
+
+## Core Business Model
+Operate factories using your OS + automation + AI.
+
+Two models:
+
+### Model A — “Managed Factory OS”
+Customer keeps ownership; you operate the factory digitally.
+- Monthly operational management fee  
+- % of uptime or throughput improvements  
+- Multi-year operational contracts  
+
+### Model B — “Full Operations Outsourcing”
+You provide end-to-end operations (labor + automation + OS) as a managed service.
+
+## Revenue Streams
+- Operational management contracts  
+- Quality/yield improvement fees  
+- Cost-savings-share agreements  
+
+## Margins
+- Higher than traditional factory operators because:  
+  - lower labor cost  
+  - higher uptime  
+  - energy optimization  
+  - predictable maintenance cycles  
+
+## Strategic Value
+- You learn to run factories better than traditional management  
+- You gain internal playbooks for modernization  
+- Strong reputation for high-efficiency operations  
+
+## Moat
+- Operational datasets no one else has  
+- AI tuned specifically to your operational style  
+- Cost of switching becomes existential for factories  
+
+---
+
+# Phase 5 — Factory Acquisition (AI-Enabled Industrial PE)
+
+## Core Business Model
+Acquire underperforming factories → modernize → automate → operate profitably.
+
+You become a hybrid of:
+
+- SaaS company  
+- Industrial automation company  
+- Private equity operator  
+- Robotics integrator  
+
+## Revenue Streams
+- Factory operating profit  
+- Modernization arbitrage  
+- Portfolio-wide supply chain synergies  
+- Data synergies across factories  
+
+You can sell factories post-modernization or keep them as cash-flow assets.
+
+## Margins
+- Very high long-term  
+- Labor % drops significantly  
+- Downtime approaches zero  
+- Yield and quality stabilize at higher levels  
+
+## Strategic Value
+- You identify undervalued assets using your proprietary OS data  
+- You rapidly uplift margins using your automation & AI stack  
+- You accumulate a defensible industrial portfolio  
+
+## Moat
+- Proprietary “Factory OS + Automation” modernization playbook  
+- Self-improving robotics/AI across all factories  
+- Deep understanding of undervalued assets  
+- Impossible for software-only competitors to replicate  
+
+---
+
+# Phase 6 — Autonomous Manufacturing Conglomerate (Endgame)
+
+## Core Business Model
+Operate a global network of autonomous or semi-autonomous factories.
+
+The company becomes:
+
+- A fully integrated industrial operator  
+- Powered by AI decision loops  
+- With robotics executing most physical tasks  
+- Optimized globally as a single production network  
+
+## Revenue Streams
+- Operating profit from multiple factories  
+- Licensing the Factory OS to partners  
+- Automated supply chain services  
+- White-labeled manufacturing for brands  
+
+## Margins
+- Industry-leading due to:  
+  - near-zero unplanned downtime  
+  - optimized energy usage  
+  - minimal labor overhead  
+  - algorithmic allocation of production  
+
+## Strategic Value
+- You become the default infrastructure for physical production  
+- A global autonomous industrial layer  
+- The “Amazon Web Services of factories”  
+
+## Moat
+- Largest machine memory dataset in the world  
+- World's strongest factory-coordination AI  
+- Thousands of robots executing your OS's decisions  
+- Deep vertical integration from software → automation → operations → ownership  
+
+---
+
+# Summary: Business Model Evolution at a Glance
+
+| Phase | Model | Core Revenue | Margins | Strategic Advantage |
+|------|--------|----------------|----------|-----------------------|
+| 1 | SaaS | Subscriptions | Very high | Machine memory + technician workflows |
+| 2 | Factory OS | OS subscriptions + enterprise | High | OS lock-in + factory-level data |
+| 3 | Automation | RaaS + automation projects | Medium → High | Execution layer + robotics data |
+| 4 | AI-Managed Ops | Ops contracts + performance fees | High | Operational dominance |
+| 5 | Factory Acquisition | Factory operating profits | Very high | Modernization uplifts + asset ownership |
+| 6 | Autonomous Conglomerate | Global factory profits + licensing | Extremely high | Full vertical integration |
+
+---
+
+The business model evolves from **pure SaaS** into the world’s first **AI-driven, autonomous industrial operator**.
+
+If you want, I can now create:
+
+- **investor narrative for this evolution**
+- **a visual business model evolution diagram**
+- **the updated long-term vision page reflecting this model**
+- **scenario planning: low-risk vs high-aggression evolution paths**
+
+Just tell me what to generate next.

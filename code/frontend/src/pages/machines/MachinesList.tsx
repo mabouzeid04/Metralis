@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Loader2, ServerOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,6 +35,7 @@ export default function MachinesList() {
   const [searchTerm, setSearchTerm] = useState('')
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
+  const { t } = useTranslation(['machines', 'common'])
 
   useEffect(() => {
     const fetchMachines = async () => {
@@ -43,7 +45,7 @@ export default function MachinesList() {
         setError(null)
       } catch (err) {
         console.error('Failed to fetch machines:', err)
-        setError('Failed to load machines')
+        setError(t('errors.load'))
       } finally {
         setLoading(false)
       }
@@ -70,7 +72,7 @@ export default function MachinesList() {
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <ServerOff className="h-12 w-12 text-muted-foreground" />
         <p className="text-muted-foreground">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
   }
@@ -79,18 +81,18 @@ export default function MachinesList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Machines</h2>
-          <p className="text-muted-foreground">Manage your factory assets and equipment.</p>
+          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         {isAdmin ? (
           <Button className="w-full sm:w-auto" asChild>
             <Link to="/machines/new">
-              <Plus className="mr-2 h-4 w-4" /> Add Machine
+              <Plus className="mr-2 h-4 w-4" /> {t('add')}
             </Link>
           </Button>
         ) : (
-          <Button className="w-full sm:w-auto" variant="outline" disabled title="Admins only">
-            <Plus className="mr-2 h-4 w-4" /> Add Machine
+          <Button className="w-full sm:w-auto" variant="outline" disabled title={t('adminsOnly')}>
+            <Plus className="mr-2 h-4 w-4" /> {t('add')}
           </Button>
         )}
       </div>
@@ -101,7 +103,7 @@ export default function MachinesList() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search machines..."
+                placeholder={t('searchPlaceholder')}
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -118,18 +120,18 @@ export default function MachinesList() {
               <ServerOff className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold">No machines found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? 'Try a different search term' : 'Get started by adding your first machine'}
+                {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
               {!searchTerm && (
                 isAdmin ? (
                   <Button asChild>
                     <Link to="/machines/new">
-                      <Plus className="mr-2 h-4 w-4" /> Add Machine
+                      <Plus className="mr-2 h-4 w-4" /> {t('add')}
                     </Link>
                   </Button>
                 ) : (
-                  <Button variant="outline" disabled title="Admins only">
-                    <Plus className="mr-2 h-4 w-4" /> Add Machine
+                  <Button variant="outline" disabled title={t('adminsOnly')}>
+                    <Plus className="mr-2 h-4 w-4" /> {t('add')}
                   </Button>
                 )
               )}
@@ -138,13 +140,13 @@ export default function MachinesList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Code</TableHead>
-                  <TableHead className="hidden md:table-cell">Category</TableHead>
-                  <TableHead className="hidden md:table-cell">Location</TableHead>
-                  <TableHead className="hidden lg:table-cell">Last Updated</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('table.status')}</TableHead>
+                  <TableHead>{t('table.name')}</TableHead>
+                  <TableHead>{t('table.code')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.category')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.location')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('table.updated')}</TableHead>
+                  <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -166,7 +168,7 @@ export default function MachinesList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/machines/${machine.id}`}>View</Link>
+                        <Link to={`/machines/${machine.id}`}>{t('view')}</Link>
                       </Button>
                     </TableCell>
                   </TableRow>

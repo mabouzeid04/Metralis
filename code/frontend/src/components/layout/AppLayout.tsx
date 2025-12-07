@@ -10,7 +10,7 @@ export default function AppLayout() {
   return (
     <div className="min-h-screen bg-muted/20 flex">
       {/* Desktop Sidebar */}
-      <Sidebar className="hidden md:flex fixed inset-y-0 left-0 z-20" />
+      <Sidebar className="app-sidebar hidden md:flex fixed inset-y-0 left-0 z-20" />
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
@@ -21,15 +21,17 @@ export default function AppLayout() {
       )}
       
       {/* Mobile Sidebar */}
-      <div className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 bg-background border-r transform transition-transform duration-200 ease-in-out md:hidden",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      <div
+        className={cn(
+          'app-sidebar-drawer fixed inset-y-0 left-0 z-40 w-64 bg-background border-r transform transition-transform duration-200 ease-in-out md:hidden',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        )}
+      >
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col md:pl-64 min-h-screen transition-all duration-200">
+      <div className="app-main flex-1 flex flex-col md:pl-64 min-h-screen transition-all duration-200">
         <Header onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           <div className="mx-auto max-w-6xl w-full">

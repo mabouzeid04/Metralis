@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, FileText, Download, Eye, Loader2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,11 +34,11 @@ interface Document {
 }
 
 type DocumentType = 'MANUAL' | 'SOP' | 'TROUBLESHOOTING' | 'OTHER'
-const documentTypes: { value: DocumentType; label: string }[] = [
-  { value: 'MANUAL', label: 'Manual' },
-  { value: 'SOP', label: 'SOP' },
-  { value: 'TROUBLESHOOTING', label: 'Troubleshooting' },
-  { value: 'OTHER', label: 'Other' },
+const documentTypes: { value: DocumentType; labelKey: string }[] = [
+  { value: 'MANUAL', labelKey: 'types.manual' },
+  { value: 'SOP', labelKey: 'types.sop' },
+  { value: 'TROUBLESHOOTING', labelKey: 'types.troubleshooting' },
+  { value: 'OTHER', labelKey: 'types.other' },
 ]
 const allowedExtensions = ['pdf', 'doc', 'docx']
 const allowedMimeTypes = [
@@ -72,6 +73,7 @@ export default function DocumentsList() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)
   const [previewError, setPreviewError] = useState<string | null>(null)
+  const { t } = useTranslation(['documents', 'common'])
 
   const fetchDocuments = useCallback(async () => {
     try {
@@ -80,9 +82,9 @@ export default function DocumentsList() {
       setError(null)
     } catch (err) {
       console.error('Failed to fetch documents:', err)
-      setError('Failed to load documents')
+      setError(t('errors.load'))
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     setLoading(true)
@@ -152,7 +154,7 @@ export default function DocumentsList() {
       file.name.toLowerCase().endsWith(`.${ext}`)
     )
     if (!hasAllowedExtension && !allowedMimeTypes.includes(file.type)) {
-      setUploadError('Only PDF, DOC, or DOCX files are supported.')
+      setUploadError(t('uploadErrors.unsupported'))
       setSelectedFile(null)
       return
     }
@@ -164,12 +166,12 @@ export default function DocumentsList() {
   const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!formValues.title.trim()) {
-      setUploadError('Title is required.')
+      setUploadError(t('uploadErrors.titleRequired'))
       return
     }
 
     if (!selectedFile) {
-      setUploadError('Please select a PDF or DOCX file to upload.')
+      setUploadError(t('uploadErrors.fileRequired'))
       return
     }
 
@@ -188,7 +190,7 @@ export default function DocumentsList() {
       closeUploader()
     } catch (err) {
       console.error('Failed to upload document:', err)
-      setUploadError('Failed to upload document. Please try again.')
+      setUploadError(t('uploadErrors.failed'))
     } finally {
       setUploading(false)
     }
@@ -239,7 +241,7 @@ export default function DocumentsList() {
       setPreviewUrl(url)
     } catch (err) {
       console.error('Failed to preview document:', err)
-      setPreviewError('Failed to load document preview. Please try again.')
+      setPreviewError(t('errors.preview'))
     } finally {
       setPreviewLoading(false)
     }
@@ -258,7 +260,7 @@ export default function DocumentsList() {
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <FileText className="h-12 w-12 text-muted-foreground" />
         <p className="text-muted-foreground">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
   }
@@ -267,33 +269,33 @@ export default function DocumentsList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Documents</h2>
-          <p className="text-muted-foreground">Centralized library for manuals, SOPs, and diagrams.</p>
+          <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button className="w-full sm:w-auto" onClick={() => setUploadOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Upload Document
+          <Plus className="mr-2 h-4 w-4" /> {t('upload')}
         </Button>
       </div>
 
       {uploadOpen && (
         <Card>
           <CardHeader className="pb-2">
-            <h3 className="text-xl font-semibold">Upload a document</h3>
-            <p className="text-sm text-muted-foreground">Supports PDF or Word files up to 25MB.</p>
+            <h3 className="text-xl font-semibold">{t('uploadTitle')}</h3>
+            <p className="text-sm text-muted-foreground">{t('uploadSubtitle')}</p>
           </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={handleUpload}>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Title</label>
+                <label className="text-sm font-medium">{t('form.title')}</label>
                 <Input
                   value={formValues.title}
                   onChange={(e) => setFormValues((prev) => ({ ...prev, title: e.target.value }))}
-                  placeholder="Machine manual (English)"
+                  placeholder={t('form.titlePlaceholder')}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Document type</label>
+                <label className="text-sm font-medium">{t('form.type')}</label>
                 <select
                   className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
                   value={formValues.type}
@@ -303,13 +305,13 @@ export default function DocumentsList() {
                 >
                   {documentTypes.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {option.label}
+                      {t(option.labelKey)}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">File</label>
+                <label className="text-sm font-medium">{t('form.file')}</label>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -323,10 +325,10 @@ export default function DocumentsList() {
                     variant="outline"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    Choose file
+                    {t('form.chooseFile')}
                   </Button>
                   <span className="text-sm text-muted-foreground">
-                    {selectedFile ? selectedFile.name : 'No file selected'}
+                    {selectedFile ? selectedFile.name : t('form.noFile')}
                   </span>
                 </div>
               </div>
@@ -335,14 +337,14 @@ export default function DocumentsList() {
                 <Button type="submit" disabled={uploading}>
                   {uploading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('form.uploading')}
                     </>
                   ) : (
-                    'Upload'
+                    t('upload')
                   )}
                 </Button>
                 <Button type="button" variant="ghost" onClick={closeUploader} disabled={uploading}>
-                  Cancel
+                  {t('common:actions.cancel')}
                 </Button>
               </div>
             </form>
@@ -356,7 +358,7 @@ export default function DocumentsList() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search documents..."
+                placeholder={t('searchPlaceholder')}
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -371,13 +373,13 @@ export default function DocumentsList() {
           {filteredDocs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No documents found</h3>
+              <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? 'Try a different search term' : 'Get started by uploading your first document'}
+                {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
               {!searchTerm && (
                 <Button onClick={() => setUploadOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" /> Upload Document
+                  <Plus className="mr-2 h-4 w-4" /> {t('upload')}
                 </Button>
               )}
             </div>
@@ -386,12 +388,12 @@ export default function DocumentsList() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[30px]"></TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead className="hidden md:table-cell">Type</TableHead>
-                  <TableHead className="hidden md:table-cell">Machine</TableHead>
-                  <TableHead className="hidden lg:table-cell">Date</TableHead>
-                  <TableHead className="hidden lg:table-cell">Size</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('table.title')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.type')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.machine')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('table.date')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('table.size')}</TableHead>
+                  <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -420,13 +422,13 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" title="View" onClick={() => handlePreview(doc)}>
+                          <Button variant="ghost" size="icon" title={t('view')} onClick={() => handlePreview(doc)}>
                               <Eye className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="ghost" 
                             size="icon" 
-                            title="Download"
+                            title={t('download')}
                             onClick={() => handleDownload(doc)}
                           >
                               <Download className="h-4 w-4" />
@@ -454,15 +456,15 @@ export default function DocumentsList() {
           >
             <div className="flex items-center justify-between border-b px-6 py-4">
               <div>
-                <p className="text-sm text-muted-foreground">Previewing</p>
+                <p className="text-sm text-muted-foreground">{t('previewing')}</p>
                 <h3 className="text-lg font-semibold">{previewDoc.title}</h3>
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm" onClick={() => handleDownload(previewDoc)}>
                   <Download className="h-4 w-4 mr-2" />
-                  Download
+                  {t('download')}
                 </Button>
-                <Button variant="ghost" size="icon" onClick={closePreview} title="Close preview">
+                <Button variant="ghost" size="icon" onClick={closePreview} title={t('close')}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -471,7 +473,7 @@ export default function DocumentsList() {
               {previewLoading && (
                 <div className="h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
                   <Loader2 className="h-6 w-6 animate-spin" />
-                  <p>Loading document...</p>
+                  <p>{t('loadingPreview')}</p>
                 </div>
               )}
 

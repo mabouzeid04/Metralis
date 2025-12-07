@@ -1,0 +1,86 @@
+{
+  "appName": "Metralis CMMS",
+  "actions": {
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "back": "Back",
+    "view": "View",
+    "add": "Add",
+    "edit": "Edit",
+    "apply": "Apply",
+    "close": "Close",
+    "view": "View",
+    "add": "Add",
+    "create": "Create",
+    "upload": "Upload",
+    "search": "Search",
+    "filter": "Filter"
+  },
+  "states": {
+    "loading": "Loading...",
+    "error": "Something went wrong"
+  },
+  "status": {
+    "running": "Running",
+    "up": "Up",
+    "completed": "Completed",
+    "success": "Success",
+    "closed": "Closed",
+    "maintenance": "Maintenance",
+    "warning": "Warning",
+    "in_progress": "In progress",
+    "pending": "Pending",
+    "down": "Down",
+    "error": "Error",
+    "failed": "Failed",
+    "critical": "Critical",
+    "retired": "Retired",
+    "open": "Open",
+    "idle": "Idle",
+    "draft": "Draft",
+    "unknown": "Unknown",
+    "low": "Low",
+    "none": "-",
+    "noMachine": "No machine"
+  },
+  "priority": {
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "arabic": "Arabic",
+    "choose": "Choose your preferred language for the interface"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "phoneNumber": "Phone Number",
+    "description": "Description",
+    "searchPlaceholder": "Search...",
+    "required": "This field is required"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "workOrders": "Work orders assigned to you",
+    "noneTitle": "No assigned work orders",
+    "noneBody": "You will see notifications here when you are assigned.",
+    "signIn": "Sign in to see notifications.",
+    "retry": "Try again",
+    "goToWorkOrders": "Go to work orders",
+    "unableToLoad": "Unable to load notifications"
+  },
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "technician": "Technician",
+    "user": "User"
+  }
+}

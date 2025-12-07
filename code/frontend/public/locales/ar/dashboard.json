@@ -1,0 +1,31 @@
+{
+  "title": "لوحة التحكم",
+  "stats": {
+    "activeWorkOrders": "أوامر العمل النشطة",
+    "activeSubtitle": "مهام مفتوحة",
+    "machinesDown": "آلات متوقفة",
+    "machinesDownAlert": "تنبيه حرج",
+    "machinesDownOk": "كل شيء يعمل",
+    "completedToday": "المكتملة اليوم",
+    "completedSubtitle": "أوامر العمل المغلقة",
+    "systemStatus": "حالة النظام",
+    "online": "متصل",
+    "allOperational": "جميع الأنظمة تعمل"
+  },
+  "charts": {
+    "weeklyOverview": "نظرة عامة أسبوعية",
+    "created": "المُنشأة",
+    "completed": "المكتملة",
+    "machineStatus": "حالة الآلات",
+    "noMachines": "لا توجد آلات مسجلة بعد",
+    "weekdays": {
+      "mon": "الاثنين",
+      "tue": "الثلاثاء",
+      "wed": "الأربعاء",
+      "thu": "الخميس",
+      "fri": "الجمعة",
+      "sat": "السبت",
+      "sun": "الأحد"
+    }
+  }
+}

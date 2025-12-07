@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
@@ -8,6 +9,7 @@ import { AlertTriangle, Clock } from 'lucide-react'
 export default function AwaitingApproval() {
   const { user } = useAuth()
   const location = useLocation() as { state?: { email?: string } }
+  const { t } = useTranslation('auth')
 
   const email = user?.email || location.state?.email
   const status = user?.status ?? 'PENDING'
@@ -15,19 +17,17 @@ export default function AwaitingApproval() {
   const { title, description, icon } = useMemo(() => {
     if (status === 'REJECTED') {
       return {
-        title: 'Your account was not approved',
-        description:
-          'An administrator rejected this technician account. Please contact your Metralis admin if you believe this is an error.',
+        title: t('auth:awaiting.rejectedTitle'),
+        description: t('auth:awaiting.rejectedDescription'),
         icon: <AlertTriangle className="h-10 w-10 text-red-500" />,
       }
     }
     return {
-      title: 'Awaiting admin approval',
-      description:
-        'Thanks for signing up! A Metralis administrator must approve technician accounts before access is granted.',
+      title: t('auth:awaiting.pendingTitle'),
+      description: t('auth:awaiting.pendingDescription'),
       icon: <Clock className="h-10 w-10 text-primary" />,
     }
-  }, [status])
+  }, [status, t])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/40 px-4">
@@ -40,26 +40,26 @@ export default function AwaitingApproval() {
         <CardContent className="space-y-6">
           {email && (
             <div className="rounded-lg border bg-muted/50 px-4 py-3 text-center">
-              <p className="text-sm text-muted-foreground">Pending account</p>
+              <p className="text-sm text-muted-foreground">{t('auth:awaiting.pendingAccount')}</p>
               <p className="text-base font-medium">{email}</p>
             </div>
           )}
 
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>What happens next?</p>
+            <p>{t('auth:awaiting.next')}</p>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Your request is queued for an admin to review.</li>
-              <li>Approved accounts gain access immediately.</li>
-              <li>Rejected accounts can be retried after speaking with an admin.</li>
+              <li>{t('auth:awaiting.steps.queued')}</li>
+              <li>{t('auth:awaiting.steps.approved')}</li>
+              <li>{t('auth:awaiting.steps.rejected')}</li>
             </ul>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button asChild className="flex-1" variant="secondary">
-              <Link to="/login">Back to login</Link>
+              <Link to="/login">{t('auth:awaiting.backToLogin')}</Link>
             </Button>
             <Button asChild className="flex-1" variant="outline">
-              <Link to="mailto:support@metralis.com">Contact support</Link>
+              <Link to="mailto:support@metralis.com">{t('auth:awaiting.contactSupport')}</Link>
             </Button>
           </div>
         </CardContent>

@@ -1,0 +1,105 @@
+{
+  "title": "Settings",
+  "subtitle": "Manage your account settings and preferences",
+  "profile": {
+    "title": "Profile",
+    "description": "Update your personal information",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number"
+    },
+    "placeholders": {
+      "phone": "+1 555 123 4567"
+    },
+    "whatsappLabel": "WhatsApp work order alerts",
+    "whatsappDescription": "Provide a phone number above to receive a WhatsApp message whenever you get assigned to a work order.",
+    "roleLabel": "Role",
+    "roleHint": "Your role cannot be changed. Contact an administrator if you need a role change.",
+    "success": "Profile updated successfully",
+    "error": "Failed to update profile"
+  },
+  "password": {
+    "title": "Change Password",
+    "description": "Update your password to keep your account secure",
+    "current": "Current Password",
+    "new": "New Password",
+    "confirm": "Confirm New Password",
+    "success": "Password changed successfully",
+    "error": "Failed to change password"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "description": "Customize your application preferences such as language and appearance.",
+    "languageLabel": "Language",
+    "languageHelper": "Choose your preferred language for the interface"
+  },
+  "help": {
+    "title": "Help & Documentation",
+    "description": "Learn how to use the system and find answers to common questions",
+    "gettingStartedTitle": "Getting Started",
+    "gettingStarted": [
+      "Welcome to Metralis CMMS! This system helps you manage your factory maintenance operations.",
+      "Start by exploring the Dashboard to see an overview of your machines and work orders.",
+      "Navigate using the sidebar menu to access different sections of the application."
+    ],
+    "featuresTitle": "Feature Guides",
+    "features": [
+      {
+        "title": "Work Orders",
+        "description": "Create and manage work orders to track maintenance tasks. Assign them to technicians and track their status."
+      },
+      {
+        "title": "Machines",
+        "description": "Register and manage your factory machines. View their history and link documents."
+      },
+      {
+        "title": "Repairs",
+        "description": "Log repair actions and document what was done to fix issues. Link parts used and record root causes."
+      },
+      {
+        "title": "Search",
+        "description": "Use the global search to quickly find machines, work orders, or parts."
+      },
+      {
+        "title": "Documents",
+        "description": "Upload and manage machine manuals, SOPs, and other documentation."
+      }
+    ],
+    "faqTitle": "Frequently Asked Questions",
+    "faq": [
+      {
+        "question": "What are work order statuses?",
+        "answer": "Work orders can be: Open (newly created), In Progress (being worked on), Waiting (on hold), or Closed (completed)."
+      },
+      {
+        "question": "What user roles are available?",
+        "answer": "There are three roles: Admin (full access), Manager (can assign work orders), and Technician (can create and work on orders)."
+      },
+      {
+        "question": "How do I change my password?",
+        "answer": "Go to Settings and use the Change Password section. You'll need to enter your current password."
+      },
+      {
+        "question": "Can I upload documents?",
+        "answer": "Yes! Admins can upload PDFs and other documents in the Documents section and link them to machines."
+      }
+    ],
+    "aboutTitle": "About",
+    "aboutLines": [
+      "Metralis CMMS v1.0",
+      "Factory Intelligence Layer - Foundation Release"
+    ]
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "emailValid": "Please enter a valid email address",
+    "phoneMin": "Phone number must be at least 7 characters",
+    "phoneMax": "Phone number must be 20 characters or less",
+    "phoneFormat": "Phone number can include numbers, spaces, +, -, and parentheses",
+    "whatsappRequiresPhone": "Add your phone number to enable WhatsApp alerts",
+    "currentPasswordRequired": "Current password is required",
+    "newPasswordLength": "Password must be at least 8 characters",
+    "passwordsMatch": "Passwords do not match"
+  }
+}

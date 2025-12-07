@@ -1,0 +1,14 @@
+{
+  "dashboard": "Dashboard",
+  "machines": "Machines",
+  "workOrders": "Work Orders",
+  "parts": "Parts",
+  "documents": "Documents",
+  "ai": "Metralis AI",
+  "users": "Users",
+  "settings": "Settings",
+  "login": "Login",
+  "logout": "Logout",
+  "welcome": "Welcome",
+  "appSubtitle": "Factory Intelligence Layer"
+}

@@ -9,7 +9,7 @@ import { upload, saveDocumentToS3 } from "../services/storage";
 const router = Router();
 
 const workOrderSchema = z.object({
-  machineId: z.string().uuid(),
+  machineId: z.string(),
   title: z.string().min(1),
   descriptionRaw: z.string().min(1),
   type: z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
