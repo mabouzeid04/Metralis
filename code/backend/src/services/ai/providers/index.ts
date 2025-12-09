@@ -1,11 +1,16 @@
 import { env } from "../../../config/env";
 import type { LLMProvider } from "../types";
-import { GeminiProvider } from "./gemini";
+import { GoogleGeminiProvider } from "./googleGemini";
+import { OpenAIProvider } from "./openai";
 
 type ProviderFactory = () => LLMProvider;
 
 const providerFactories: Record<string, ProviderFactory> = {
-  gemini: () => new GeminiProvider(),
+  gemini: () => new GoogleGeminiProvider(),
+  "google-gemini": () => new GoogleGeminiProvider(),
+  google: () => new GoogleGeminiProvider(),
+  openai: () => new OpenAIProvider(),
+  "gpt-4o": () => new OpenAIProvider(),
 };
 
 const providerInstances: Record<string, LLMProvider> = {};

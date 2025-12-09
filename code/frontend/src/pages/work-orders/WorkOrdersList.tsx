@@ -19,6 +19,7 @@ import { api } from '@/lib/api'
 
 interface WorkOrder {
   id: string
+  publicId?: string
   title: string
   status: string
   type: string
@@ -59,11 +60,16 @@ export default function WorkOrdersList() {
     fetchWorkOrders()
   }, [])
 
-  const filteredWOs = workOrders.filter(wo => 
-    wo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    wo.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (wo.machine?.name && wo.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
+  const filteredWOs = workOrders.filter((wo) => {
+    const displayId = (wo.publicId || wo.id || '').toLowerCase()
+    const search = searchTerm.toLowerCase()
+
+    return (
+      wo.title.toLowerCase().includes(search) ||
+      displayId.includes(search) ||
+      (wo.machine?.name && wo.machine.name.toLowerCase().includes(search))
+    )
+  })
 
   if (loading) {
     return (
@@ -146,42 +152,48 @@ export default function WorkOrdersList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredWOs.map((wo) => (
-                  <TableRow key={wo.id}>
-                    <TableCell className="font-mono text-xs font-medium">
-                      {wo.id.slice(0, 8)}...
-                    </TableCell>
-                    <TableCell>
-                      <StatusBadge status={wo.status} />
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      <Link to={`/work-orders/${wo.id}`} className="hover:underline">
-                        {wo.title}
-                      </Link>
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">{wo.machine?.name || '-'}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      <Badge variant={
-                          wo.priority === 'CRITICAL' ? 'destructive' :
-                          wo.priority === 'HIGH' ? 'warning' : 'outline'
-                      }>
+                {filteredWOs.map((wo) => {
+                  const displayId = wo.publicId || wo.id;
+                  return (
+                    <TableRow key={wo.id}>
+                      <TableCell className="font-mono text-xs font-medium">{displayId}</TableCell>
+                      <TableCell>
+                        <StatusBadge status={wo.status} />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        <Link to={`/work-orders/${wo.id}`} className="hover:underline">
+                          {wo.title}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{wo.machine?.name || '-'}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        <Badge
+                          variant={
+                            wo.priority === 'CRITICAL'
+                              ? 'destructive'
+                              : wo.priority === 'HIGH'
+                                ? 'warning'
+                                : 'outline'
+                          }
+                        >
                           {wo.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell">{wo.assignedTo?.name || t('unassigned')}</TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      {new Date(wo.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="hidden xl:table-cell">
-                      {wo.completedAt ? new Date(wo.completedAt).toLocaleDateString() : '-'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/work-orders/${wo.id}`}>{t('view')}</Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">{wo.assignedTo?.name || t('unassigned')}</TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        {new Date(wo.createdAt).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="hidden xl:table-cell">
+                        {wo.completedAt ? new Date(wo.completedAt).toLocaleDateString() : '-'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={`/work-orders/${wo.id}`}>{t('view')}</Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

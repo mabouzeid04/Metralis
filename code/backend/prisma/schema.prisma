@@ -138,6 +138,7 @@ model Machine {
 
 model WorkOrder {
   id                String            @id @default(uuid())
+  publicId          String            @unique @default(dbgenerated("upper(substr(md5(random()::text), 1, 8))"))
   machineId         String
   machine           Machine           @relation(fields: [machineId], references: [id])
   title             String

@@ -196,6 +196,24 @@ type HandleChatParams = {
 export const handleChatMessage = async ({ userId, message, conversationId, machineId }: HandleChatParams) => {
   const { conversation, isNew } = await ensureConversation(userId, conversationId, machineId);
 
+  const targetMachineId = conversation.machineId ?? machineId;
+  const maintenanceHistory = targetMachineId
+    ? await prisma.workOrder.findMany({
+        where: { machineId: targetMachineId },
+        orderBy: { reportedAt: "desc" },
+        take: 15,
+        select: {
+          id: true,
+          title: true,
+          descriptionRaw: true,
+          status: true,
+          type: true,
+          reportedAt: true,
+          completedAt: true,
+        },
+      })
+    : [];
+
   if (!conversation.machine && machineId) {
     const machine = await prisma.machine.findUnique({
       where: { id: machineId },
@@ -227,6 +245,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     question: message,
     machine: conversation.machine,
     retrievedChunks,
+    maintenanceHistory,
   });
 
   const llmResponse = await generateLLMResponse({

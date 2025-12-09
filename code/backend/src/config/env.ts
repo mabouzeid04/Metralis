@@ -53,6 +53,10 @@ export const env = {
       apiKey: process.env.GEMINI_API_KEY as string,
       model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     },
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY as string,
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    },
   },
 };
 

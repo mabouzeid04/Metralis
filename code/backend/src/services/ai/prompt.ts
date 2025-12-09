@@ -10,15 +10,26 @@ type BuildPromptParams = {
     line?: string | null;
   } | null;
   retrievedChunks: RetrievedChunk[];
+  maintenanceHistory: Array<{
+    id: string;
+    title: string;
+    descriptionRaw: string;
+    status: string;
+    type: string;
+    reportedAt: Date;
+    completedAt: Date | null;
+  }>;
 };
 
-export const buildPrompt = ({ question, machine, retrievedChunks }: BuildPromptParams) => {
+export const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHistory }: BuildPromptParams) => {
   const machineContext = machine
     ? `Machine Context:
 - Name: ${machine.name}
 - Model: ${machine.model ?? "Unknown"}
 - Manufacturer: ${machine.manufacturer ?? "Unknown"}
-- Line/Area: ${machine.line ?? "N/A"}`
+- Line/Area: ${machine.line ?? "N/A"}
+- Machine ID: ${machine.id}
+- Machine Type: ${machine.model ?? "Unknown"}`
     : "Machine Context: Not specified by the user.";
 
   const contextText =
@@ -26,12 +37,32 @@ export const buildPrompt = ({ question, machine, retrievedChunks }: BuildPromptP
       ? retrievedChunks
           .map((chunk, index) => {
             const title = chunk.metadata?.documentTitle ?? chunk.metadata?.title ?? chunk.documentId;
-            return `(${index + 1}) [${title}] ${chunk.content.trim()}`;
+            return `[${index + 1}] ${title}\n${chunk.content.trim()}`;
           })
           .join("\n\n")
       : "No relevant documentation was retrieved. Ask clarifying questions before suggesting risky steps.";
 
+  const historyText =
+    maintenanceHistory.length > 0
+      ? maintenanceHistory
+          .map((item, index) => {
+            const reportedAt = item.reportedAt.toISOString();
+            const status = item.status;
+            const type = item.type;
+            const title = item.title;
+            const description = item.descriptionRaw?.trim() ?? "";
+            const truncatedDescription = description.length > 320 ? `${description.slice(0, 317)}...` : description;
+            return `[H${index + 1}] ${reportedAt} — ${status} — ${type} — Title: ${title}${
+              truncatedDescription ? ` — Description: ${truncatedDescription}` : ""
+            }`;
+          })
+          .join("\n")
+      : "No maintenance history entries were provided for this machine.";
+
   return `${machineContext}
+
+Maintenance History (most recent first):
+${historyText}
 
 Retrieved Knowledge:
 ${contextText}
@@ -39,36 +70,10 @@ ${contextText}
 User Question:
 ${question}
 
-You MUST respond with a single valid JSON object that matches this schema exactly:
-{
-  "summary": "One or two sentences that recap the situation.",
-  "likelyCauses": [
-    {
-      "title": "Short name for the hypothesis.",
-      "confidence": "HIGH" | "MEDIUM" | "LOW",
-      "rationale": "Why this cause is likely (reference similar incidents or docs).",
-      "citations": [Numbers referencing Retrieved Knowledge entries, e.g., 1,2]
-    }
-  ],
-  "recommendedSteps": [
-    {
-      "title": "Name of the diagnostic or repair step.",
-      "action": "Step-by-step instructions.",
-      "citations": [Numbers referencing Retrieved Knowledge entries]
-    }
-  ],
-  "references": [
-    { "id": Number matching the Retrieved Knowledge entry, "source": "Document title or context" }
-  ],
-  "needsMoreData": Boolean,
-  "missingDataNotes": "If needsMoreData is true, explain what information is missing (otherwise use an empty string)."
-}
-
-Guidelines:
-- Always include arrays even if they are empty.
-- Confidence must be one of HIGH, MEDIUM, LOW.
-- Citations should reference the numbered Retrieved Knowledge entries; use an empty array when nothing is cited.
-- If there are no documents, references should be an empty array and citations should be empty arrays.
-- Do NOT wrap the JSON in backticks or add commentary—return JSON only.`;
+Instructions:
+- Ground your answer in Machine Context, Maintenance History, and Retrieved Knowledge first; cite entries as [H#] for history and [#] for retrieved knowledge.
+- Choose the format based on intent: troubleshooting/RCA → brief summary, likely causes, stepwise actions with citations; overviews/how-it-works/dependencies/status/training → concise prose/lists with citations; honor user-specified formats (JSON/table/checklist/schema) when safe; otherwise default to concise prose.
+- If critical info is missing for risky steps, state what is missing and ask for it before prescribing hazardous actions.
+- Use background knowledge only after using provided context, and mark it as general when you do.`;
 };
 

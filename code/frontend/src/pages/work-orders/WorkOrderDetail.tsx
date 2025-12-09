@@ -61,6 +61,7 @@ interface RepairAction {
 
 interface WorkOrder {
   id: string
+  publicId?: string
   title: string
   descriptionRaw: string | null
   status: 'OPEN' | 'IN_PROGRESS' | 'WAITING' | 'CLOSED'
@@ -390,6 +391,7 @@ export default function WorkOrderDetail() {
   }
 
   const repairParts = (repair: RepairAction) => parsePartsUsed(repair.partsUsed)
+  const displayId = workOrder.publicId || workOrder.id
 
   return (
     <div className="space-y-6">
@@ -400,10 +402,10 @@ export default function WorkOrderDetail() {
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h2 className="text-3xl font-bold tracking-tight">{workOrder.id.slice(0, 8)}...</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{workOrder.title}</h2>
             <StatusBadge status={workOrder.status} />
           </div>
-          <h3 className="text-xl font-medium text-muted-foreground">{workOrder.title}</h3>
+          <h3 className="text-xl font-medium text-muted-foreground font-mono break-all">{displayId}</h3>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>

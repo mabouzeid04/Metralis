@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { z } from "zod";
+import crypto from "crypto";
 import { prisma } from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
-import type { Prisma, WorkOrderPriority, WorkOrderStatus, WorkOrderType } from "../generated/prisma/client";
-import { DocumentIngestionStatus, DocumentType } from "../generated/prisma/client";
+import { Prisma, DocumentIngestionStatus, DocumentType, type WorkOrderPriority, type WorkOrderStatus, type WorkOrderType } from "../generated/prisma/client";
 import { upload, saveDocumentToS3 } from "../services/storage";
 
 const router = Router();
@@ -19,6 +19,41 @@ const workOrderSchema = z.object({
 });
 
 router.use(requireAuth);
+
+const generateWorkOrderPublicId = () => crypto.randomBytes(4).toString("hex").toUpperCase();
+
+const createWorkOrderWithShortId = async (data: Prisma.WorkOrderCreateInput) => {
+  let attempts = 0;
+
+  while (attempts < 5) {
+    const publicId = generateWorkOrderPublicId();
+
+    try {
+      return await prisma.workOrder.create({
+        data: { ...data, publicId },
+        include: {
+          machine: true,
+          reportedBy: true,
+          assignedTo: true,
+        },
+      });
+    } catch (err: unknown) {
+      const isUniqueViolation =
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === "P2002" &&
+        Array.isArray((err.meta as { target?: unknown } | undefined)?.target) &&
+        ((err.meta as { target?: unknown } | undefined)?.target as string[]).includes("publicId");
+
+      if (!isUniqueViolation) {
+        throw err;
+      }
+
+      attempts += 1;
+    }
+  }
+
+  throw new Error("Failed to generate unique work order id after multiple attempts");
+};
 
 router.get("/", async (req, res) => {
   const { status, priority, machineId } = req.query;
@@ -113,14 +148,7 @@ router.post("/", async (req, res) => {
     data.assignedTo = { connect: { id: parsed.data.assignedToId } };
   }
 
-  const workOrder = await prisma.workOrder.create({
-    data,
-    include: {
-      machine: true,
-      reportedBy: true,
-      assignedTo: true,
-    },
-  });
+  const workOrder = await createWorkOrderWithShortId(data);
 
   return res.status(201).json({ data: workOrder });
 });

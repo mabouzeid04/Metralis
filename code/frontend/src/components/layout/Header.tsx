@@ -21,9 +21,6 @@ export function Header({ onMenuClick }: HeaderProps) {
         <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
           <Menu className="w-5 h-5" />
         </Button>
-        <div className="hidden md:flex items-center text-muted-foreground text-sm">
-          <span className="font-medium text-foreground">{t('nav:dashboard')}</span>
-        </div>
       </div>
 
       <div className="flex items-center gap-3">
