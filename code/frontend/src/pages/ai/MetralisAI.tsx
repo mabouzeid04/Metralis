@@ -131,12 +131,16 @@ const MetralisAI = () => {
         blockquote: ({ node, ...props }) => (
           <blockquote className="border-l-2 border-muted-foreground/40 pl-3 italic text-muted-foreground" {...props} />
         ),
-        code: ({ node, inline, ...props }) =>
-          inline ? (
+        code: ({ node, ...props }) => {
+          const text = String(props.children ?? '')
+          const isInline = !text.includes('\n')
+
+          return isInline ? (
             <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs" {...props} />
           ) : (
             <code className="block rounded bg-muted p-3 font-mono text-xs" {...props} />
-          ),
+          )
+        },
       }}
     >
       {content}
