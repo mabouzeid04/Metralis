@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
@@ -8,7 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { useAIChat } from '@/contexts/AIChatContext'
 import { api } from '@/lib/api'
 import type { ConversationSummary, StructuredAiResponse, AiFeedbackValue, ChatMessage } from '@/lib/aiClient'
-import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, Frown } from 'lucide-react'
+import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, ThumbsDown } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 type MachineOption = {
@@ -77,14 +79,17 @@ const MetralisAI = () => {
   const handleSend = async () => {
     if (!input.trim()) return
     setError(null)
+    const messageToSend = input
+    setInput('')
     try {
       await sendMessage({
-        message: input,
+        message: messageToSend,
         machineId: activeMachineId || machineId || undefined,
       })
-      setInput('')
     } catch (err) {
       console.error(err)
+      // Optional: restore text so the user can retry
+      setInput(messageToSend)
       setError(t('error'))
     }
   }
@@ -106,8 +111,37 @@ const MetralisAI = () => {
 
   const feedbackOptions: Array<{ value: AiFeedbackValue; label: string; Icon: LucideIcon }> = [
     { value: 'HELPFUL', label: t('feedback.helpful', { defaultValue: 'Helpful' }), Icon: ThumbsUp },
-    { value: 'NOT_HELPFUL', label: t('feedback.needsWork', { defaultValue: 'Needs work' }), Icon: Frown },
+    { value: 'NOT_HELPFUL', label: t('feedback.needsWork', { defaultValue: 'Needs work' }), Icon: ThumbsDown },
   ]
+
+  const renderMarkdown = (content: string) => (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      className="space-y-2 text-sm leading-relaxed"
+      components={{
+        p: ({ node, ...props }) => <p className="whitespace-pre-wrap leading-relaxed" {...props} />,
+        strong: ({ node, ...props }) => <strong className="font-semibold" {...props} />,
+        em: ({ node, ...props }) => <em className="italic" {...props} />,
+        ul: ({ node, ...props }) => <ul className="ml-5 list-disc space-y-1" {...props} />,
+        ol: ({ node, ...props }) => <ol className="ml-5 list-decimal space-y-1" {...props} />,
+        li: ({ node, ...props }) => <li className="leading-relaxed" {...props} />,
+        a: ({ node, ...props }) => (
+          <a className="text-primary underline" target="_blank" rel="noreferrer" {...props} />
+        ),
+        blockquote: ({ node, ...props }) => (
+          <blockquote className="border-l-2 border-muted-foreground/40 pl-3 italic text-muted-foreground" {...props} />
+        ),
+        code: ({ node, inline, ...props }) =>
+          inline ? (
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs" {...props} />
+          ) : (
+            <code className="block rounded bg-muted p-3 font-mono text-xs" {...props} />
+          ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  )
 
   const handleFeedback = async (messageId: string, value: AiFeedbackValue) => {
     setFeedbackErrors((prev) => ({ ...prev, [messageId]: null }))
@@ -162,7 +196,7 @@ const MetralisAI = () => {
 
   const renderStructuredMessage = (message: ChatMessage) => {
     if (!message.structuredOutput) {
-      return <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+      return renderMarkdown(message.content)
     }
 
     const structured = message.structuredOutput
@@ -256,21 +290,22 @@ const MetralisAI = () => {
 
     const sent = message.feedback ?? []
     return (
-      <div className="mt-4 space-y-1">
-        <p className="text-xs font-semibold text-muted-foreground">{t('feedback.prompt')}</p>
+      <div className="mt-3">
         <div className="flex flex-wrap gap-2">
           {feedbackOptions.map(({ value, label, Icon }) => {
             const alreadySent = sent.includes(value)
             return (
-                <Button
-                  key={value}
-                  size="sm"
-                  variant={alreadySent ? 'secondary' : 'ghost'}
-                  disabled={alreadySent || Boolean(feedbackSubmitting[message.id])}
-                  className="h-8 px-2 text-xs"
-                  onClick={() => handleFeedback(message.id, value)}
-                >
-                <Icon className="mr-1 h-3 w-3" /> {label}
+              <Button
+                key={value}
+                size="icon"
+                title={label}
+                variant={alreadySent ? 'secondary' : 'ghost'}
+                disabled={alreadySent || Boolean(feedbackSubmitting[message.id])}
+                className="h-8 w-8"
+                onClick={() => handleFeedback(message.id, value)}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span className="sr-only">{label}</span>
               </Button>
             )
           })}

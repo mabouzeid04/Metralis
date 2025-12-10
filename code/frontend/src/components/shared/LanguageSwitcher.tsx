@@ -19,7 +19,7 @@ export function LanguageSwitcher() {
 
     // Persist to backend preferences
     try {
-      await api.patch('/users/me/preferences', { language: lng })
+      await api.patch('/profile/me/preferences', { language: lng })
     } catch {
       // Silently fail - preference is already saved locally
     }

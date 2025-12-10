@@ -25,7 +25,7 @@ export function LanguageProvider({ children }: PropsWithChildren) {
     let cancelled = false
     const loadPreferences = async () => {
       try {
-        const { data } = await api.get('/users/me/preferences')
+        const { data } = await api.get('/profile/me/preferences')
         const preferred = data?.data?.language as string | undefined
         const isSupported = SUPPORTED_LANGUAGES.some((lng) => lng.code === preferred)
         if (preferred && isSupported && !cancelled) {

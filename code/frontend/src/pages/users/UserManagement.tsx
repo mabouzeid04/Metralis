@@ -2,13 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { api } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, RefreshCw, ShieldCheck, Users as UsersIcon } from 'lucide-react'
+import { Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon } from 'lucide-react'
 
 type UserStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
@@ -17,6 +18,7 @@ interface UserRecord {
   name: string
   email: string
   role: 'ADMIN' | 'TECHNICIAN'
+  active?: boolean
   createdAt?: string
   status?: UserStatus
   approvedAt?: string | null
@@ -56,6 +58,7 @@ export default function UserManagement() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const { t } = useTranslation(['users', 'common'])
+  const { user: currentUser } = useAuth()
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
@@ -68,7 +71,7 @@ export default function UserManagement() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   const fetchPendingUsers = useCallback(async () => {
     setPendingLoading(true)
@@ -81,7 +84,7 @@ export default function UserManagement() {
     } finally {
       setPendingLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     fetchUsers()
@@ -107,6 +110,30 @@ export default function UserManagement() {
     fetchUsers()
     fetchPendingUsers()
   }
+
+  const handleDeleteUser = useCallback(
+    async (user: UserRecord) => {
+      if (currentUser?.id === user.id) {
+        setError(t('errors.deleteSelf'))
+        return
+      }
+
+      const confirmed = window.confirm(t('confirmDelete', { name: user.name }))
+      if (!confirmed) return
+
+      setActionLoading(`${user.id}-delete`)
+      try {
+        await api.delete(`/users/${user.id}`)
+        await fetchUsers()
+        setError(null)
+      } catch (err) {
+        setError(getApiErrorMessage(err) || t('errors.delete'))
+      } finally {
+        setActionLoading(null)
+      }
+    },
+    [currentUser?.id, fetchUsers, t],
+  )
 
   const pendingContent = useMemo(() => {
     if (pendingLoading) {
@@ -156,7 +183,7 @@ export default function UserManagement() {
         </TableBody>
       </Table>
     )
-  }, [pendingUsers, pendingLoading, actionLoading, handleDecision])
+  }, [pendingUsers, pendingLoading, actionLoading, handleDecision, t])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target
@@ -241,6 +268,7 @@ export default function UserManagement() {
                     <TableHead>{t('table.role')}</TableHead>
                     <TableHead className="hidden md:table-cell">{t('table.status')}</TableHead>
                     <TableHead className="hidden md:table-cell">{t('table.created')}</TableHead>
+                    <TableHead className="text-right">{t('table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -260,6 +288,18 @@ export default function UserManagement() {
                         {user.createdAt
                           ? new Date(user.createdAt).toLocaleDateString()
                           : '—'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive"
+                          disabled={actionLoading !== null}
+                          onClick={() => handleDeleteUser(user)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">{t('deleteUser', { name: user.name })}</span>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

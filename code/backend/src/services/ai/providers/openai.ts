@@ -8,12 +8,16 @@ export class OpenAIProvider implements LLMProvider {
   private client = new OpenAI({ apiKey: env.ai.openai.apiKey });
 
   async generate(params: GenerateParams): Promise<GenerateResult> {
-    const messages: ChatCompletionMessageParam[] = [
-      { role: "system", content: SYSTEM_PROMPT },
-      ...params.history.map((message) => ({
+    const historyMessages: ChatCompletionMessageParam[] = params.history.map((message) =>
+      ({
         role: message.role === "ASSISTANT" ? "assistant" : "user",
         content: message.content,
-      })),
+      }) satisfies ChatCompletionMessageParam,
+    );
+
+    const messages: ChatCompletionMessageParam[] = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...historyMessages,
       { role: "user", content: params.prompt },
     ];
 

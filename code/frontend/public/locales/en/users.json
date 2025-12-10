@@ -23,7 +23,8 @@
     "role": "Role",
     "email": "Email",
     "name": "Name",
-    "teamMembers": "Team Members"
+    "teamMembers": "Team Members",
+    "actions": "Actions"
   },
   "status": {
     "approved": "Approved",
@@ -34,6 +35,10 @@
     "load": "Failed to load users",
     "loadPending": "Failed to load pending users",
     "action": "Action failed",
-    "create": "Failed to create user"
-  }
+    "create": "Failed to create user",
+    "delete": "Failed to delete user",
+    "deleteSelf": "You cannot delete your own account"
+  },
+  "confirmDelete": "Delete {{name}}? This will remove their access.",
+  "deleteUser": "Delete {{name}}"
 }

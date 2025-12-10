@@ -14,9 +14,8 @@ const createPoolMock = () => {
 };
 
 const importPgModule = async () => {
-  return vi.isolateModulesAsync(async () => {
-    return import("./pg");
-  });
+  vi.resetModules();
+  return import("./pg");
 };
 
 afterEach(() => {

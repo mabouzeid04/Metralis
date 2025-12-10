@@ -58,8 +58,8 @@
         "description": "Log repair actions and document what was done to fix issues. Link parts used and record root causes."
       },
       {
-        "title": "Search",
-        "description": "Use the global search to quickly find machines, work orders, or parts."
+        "title": "Metralis AI",
+        "description": "Ask Metralis AI for quick answers about work orders, machines, and parts."
       },
       {
         "title": "Documents",

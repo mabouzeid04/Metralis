@@ -12,6 +12,7 @@ describe("embedTexts", () => {
   });
 
   it("throws when provider returns missing embeddings", async () => {
+    vi.resetModules();
     vi.doMock("openai", () => ({
       default: class OpenAI {
         embeddings = {
@@ -22,9 +23,7 @@ describe("embedTexts", () => {
       },
     }));
 
-    await vi.isolateModulesAsync(async () => {
-      const { embedTexts } = await import("./embeddings");
-      await expect(embedTexts(["Hello"])).rejects.toThrow("Embedding provider returned empty vector");
-    });
+    const { embedTexts } = await import("./embeddings");
+    await expect(embedTexts(["Hello"])).rejects.toThrow("Embedding provider returned empty vector");
   });
 });

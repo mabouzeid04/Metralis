@@ -168,7 +168,7 @@ export default function Settings() {
     // Load language preference
     const loadPreferences = async () => {
       try {
-        const { data } = await api.get('/users/me/preferences')
+        const { data } = await api.get('/profile/me/preferences')
         const prefs = data.data || {}
         if (prefs.language && SUPPORTED_LANGUAGES.some((lng) => lng.code === prefs.language)) {
           setLanguage(prefs.language)
@@ -200,7 +200,7 @@ export default function Settings() {
         typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
           ? data.phoneNumber
           : null
-      await api.patch('/users/me', {
+      await api.patch('/profile/me', {
         name: data.name,
         email: data.email,
         phoneNumber: sanitizedPhoneNumber,
@@ -222,7 +222,7 @@ export default function Settings() {
     setPasswordSuccess(false)
 
     try {
-      await api.patch('/users/me/password', {
+      await api.patch('/profile/me/password', {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       })
@@ -242,7 +242,7 @@ export default function Settings() {
     localStorage.setItem('i18nextLng', newLanguage)
 
     try {
-      await api.patch('/users/me/preferences', { language: newLanguage })
+      await api.patch('/profile/me/preferences', { language: newLanguage })
     } catch {
       // Silently fail - preference is already saved locally
     }
