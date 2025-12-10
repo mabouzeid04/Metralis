@@ -99,7 +99,7 @@ export default function EditPart() {
         const { data } = await api.get<{ data?: PartApiResponse }>(`/parts/${id}`)
         const part = data?.data
         if (!part) {
-          throw new Error(t('parts.errors.notFound'))
+        throw new Error(t('errors.notFound'))
         }
         const values: PartFormValues = {
           name: part.name,

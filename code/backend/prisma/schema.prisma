@@ -165,6 +165,7 @@ model WorkOrder {
   repairActions RepairAction[]
   parts        WorkOrderPart[]
   attachments  Document[]        @relation("WorkOrderDocuments")
+  incidentChunks IncidentChunk[]
 }
 
 model RepairAction {
@@ -262,6 +263,26 @@ model DocumentChunk {
 
   @@index([documentId, chunkIndex])
   @@index([documentId])
+}
+
+model IncidentChunk {
+  id           String   @id @default(uuid())
+  workOrderId  String
+  workOrder    WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  chunkIndex   Int
+  content      String
+  tokens       Int
+  embedding    Unsupported("vector(1536)")
+  machineId    String?
+  machineType  String?
+  language     String?  @default("en")
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@unique([workOrderId, chunkIndex])
+  @@index([workOrderId])
+  @@index([machineId])
+  @@index([machineType])
 }
 
 model ChatConversation {

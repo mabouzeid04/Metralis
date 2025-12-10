@@ -32,6 +32,7 @@
     "warning": "تحذير",
     "in_progress": "قيد التنفيذ",
     "pending": "معلق",
+    "waiting": "قيد الانتظار",
     "down": "متوقف",
     "error": "خطأ",
     "failed": "فشل",

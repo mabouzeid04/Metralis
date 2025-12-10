@@ -452,11 +452,21 @@ const MetralisAI = () => {
                           <div className="mt-3 border-t pt-2 text-xs">
                             <p className="font-semibold">{t('citations.label')}</p>
                             <ul className="mt-1 space-y-1 text-muted-foreground">
-                              {message.citations.map((citation) => (
-                                <li key={citation.chunkId}>
-                                  • {citation.documentTitle ?? citation.documentId} (score {(citation.similarity * 100).toFixed(1)}%)
-                                </li>
-                              ))}
+                              {message.citations.map((citation) => {
+                                const href =
+                                  citation.source === 'INCIDENT'
+                                    ? `/work-orders/${citation.workOrderId ?? citation.documentId}`
+                                    : `/documents/${citation.documentId}`;
+                                return (
+                                  <li key={citation.chunkId}>
+                                    •{' '}
+                                    <a href={href} className="text-primary underline">
+                                      {citation.documentTitle ?? citation.documentId}
+                                    </a>{' '}
+                                    (score {(citation.similarity * 100).toFixed(1)}%)
+                                  </li>
+                                )
+                              })}
                             </ul>
                           </div>
                         )}

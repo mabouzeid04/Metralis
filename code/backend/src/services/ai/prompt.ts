@@ -36,8 +36,12 @@ export const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHis
     retrievedChunks.length > 0
       ? retrievedChunks
           .map((chunk, index) => {
-            const title = chunk.metadata?.documentTitle ?? chunk.metadata?.title ?? chunk.documentId;
-            return `[${index + 1}] ${title}\n${chunk.content.trim()}`;
+            const title =
+              chunk.source === "INCIDENT"
+                ? chunk.metadata?.workOrderTitle ?? chunk.metadata?.title ?? chunk.workOrderId ?? "Incident"
+                : chunk.metadata?.documentTitle ?? chunk.metadata?.title ?? chunk.documentId ?? "Document";
+            const label = chunk.source === "INCIDENT" ? "Incident" : "Document";
+            return `[${index + 1}] ${label}: ${title}\n${chunk.content.trim()}`;
           })
           .join("\n\n")
       : "No relevant documentation was retrieved. Ask clarifying questions before suggesting risky steps.";

@@ -15,8 +15,8 @@ type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>
 
 function buildLoginSchema(t: (key: string) => string) {
   return z.object({
-    email: z.string().email({ message: t('auth.validation.email') }),
-    password: z.string().min(1, { message: t('auth.validation.passwordRequired') }),
+    email: z.string().email({ message: t('validation.email') }),
+    password: z.string().min(1, { message: t('validation.passwordRequired') }),
   })
 }
 

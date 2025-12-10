@@ -6,6 +6,7 @@ import { requireAuth } from "../middleware/auth";
 import { Prisma, DocumentIngestionStatus, DocumentType, type WorkOrderPriority, type WorkOrderStatus, type WorkOrderType } from "../generated/prisma/client";
 import { upload, saveDocumentToS3 } from "../services/storage";
 import { sendWorkOrderAssignmentWhatsapp } from "../services/notifications/whatsapp";
+import { upsertIncidentChunksForWorkOrder } from "../services/incidentIngestion";
 
 const router = Router();
 
@@ -183,6 +184,10 @@ router.post("/", async (req, res) => {
     void notifyAssigneeOfWhatsapp(workOrder);
   }
 
+  void upsertIncidentChunksForWorkOrder(workOrder.id).catch((error) => {
+    console.error("Failed to ingest incident embeddings for new work order", { workOrderId: workOrder.id, error });
+  });
+
   return res.status(201).json({ data: workOrder });
 });
 
@@ -208,6 +213,10 @@ router.patch("/:id", async (req, res) => {
     const workOrder = await prisma.workOrder.update({
       where: { id: req.params.id },
       data,
+    });
+
+    void upsertIncidentChunksForWorkOrder(workOrder.id).catch((error) => {
+      console.error("Failed to ingest incident embeddings after work order update", { workOrderId: workOrder.id, error });
     });
     return res.json({ data: workOrder });
   } catch {
@@ -366,6 +375,10 @@ router.post("/:id/repair", async (req, res) => {
       ),
     );
   }
+
+  void upsertIncidentChunksForWorkOrder(req.params.id).catch((error) => {
+    console.error("Failed to ingest incident embeddings after repair creation", { workOrderId: req.params.id, error });
+  });
 
   return res.status(201).json({ data: repair });
 });

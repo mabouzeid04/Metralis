@@ -27,6 +27,11 @@
   "emptyTitle": "لا توجد مستندات",
   "emptySearchHint": "جرّب مصطلح بحث مختلف",
   "emptyCreateHint": "ابدأ برفع أول مستند لك",
+  "view": "عرض",
+  "download": "تنزيل",
+  "close": "إغلاق",
+  "previewing": "جاري المعاينة",
+  "loadingPreview": "جارٍ تحميل المعاينة...",
   "types": {
     "manual": "دليل",
     "sop": "إجراء تشغيلي",

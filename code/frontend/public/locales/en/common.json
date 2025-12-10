@@ -32,6 +32,7 @@
     "warning": "Warning",
     "in_progress": "In progress",
     "pending": "Pending",
+    "waiting": "Waiting",
     "down": "Down",
     "error": "Error",
     "failed": "Failed",

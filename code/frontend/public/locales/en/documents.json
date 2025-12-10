@@ -27,6 +27,11 @@
   "emptyTitle": "No documents found",
   "emptySearchHint": "Try a different search term",
   "emptyCreateHint": "Get started by uploading your first document",
+  "view": "View",
+  "download": "Download",
+  "close": "Close",
+  "previewing": "Previewing",
+  "loadingPreview": "Loading preview...",
   "types": {
     "manual": "Manual",
     "sop": "SOP",

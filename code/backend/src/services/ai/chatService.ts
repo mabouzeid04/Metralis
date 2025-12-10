@@ -15,17 +15,42 @@ const createTitleFromMessage = (content: string) => {
   return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
 };
 
-const mapCitations = (chunks: RetrievedChunk[]): Citation[] =>
-  chunks.map((chunk) => ({
-    documentId: chunk.documentId,
-    chunkId: chunk.id,
-    similarity: chunk.similarity,
-    documentTitle: chunk.metadata?.documentTitle ?? chunk.metadata?.title,
-    machineId: chunk.metadata?.machineId,
-    machineType: chunk.metadata?.machineType,
-    language: chunk.metadata?.language,
-    version: chunk.metadata?.version,
-  }));
+const mapCitations = (chunks: RetrievedChunk[]): Citation[] => {
+  const dedup = new Map<string, Citation>();
+
+  chunks.forEach((chunk) => {
+    const title =
+      chunk.source === "INCIDENT"
+        ? chunk.metadata?.workOrderTitle ?? chunk.metadata?.title
+        : chunk.metadata?.documentTitle ?? chunk.metadata?.title;
+
+    const documentId = chunk.documentId ?? chunk.workOrderId ?? chunk.id;
+    const key =
+      chunk.source === "INCIDENT"
+        ? `incident:${chunk.workOrderId ?? documentId}`
+        : `doc:${documentId}`;
+
+    const candidate: Citation = {
+      documentId,
+      workOrderId: chunk.workOrderId ?? null,
+      chunkId: chunk.id,
+      similarity: chunk.similarity,
+      documentTitle: title,
+      machineId: chunk.metadata?.machineId,
+      machineType: chunk.metadata?.machineType ?? chunk.metadata?.machineModel,
+      language: chunk.metadata?.language,
+      version: chunk.metadata?.version,
+      source: chunk.source,
+    };
+
+    const existing = dedup.get(key);
+    if (!existing || candidate.similarity > existing.similarity) {
+      dedup.set(key, candidate);
+    }
+  });
+
+  return Array.from(dedup.values());
+};
 
 const structuredOutputSchema = z.object({
   summary: z.string().optional().default(""),
