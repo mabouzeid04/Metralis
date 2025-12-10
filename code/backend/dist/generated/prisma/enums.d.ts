@@ -1,9 +1,14 @@
 export declare const UserRole: {
     readonly ADMIN: "ADMIN";
-    readonly MANAGER: "MANAGER";
     readonly TECHNICIAN: "TECHNICIAN";
 };
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+export declare const UserStatus: {
+    readonly PENDING: "PENDING";
+    readonly APPROVED: "APPROVED";
+    readonly REJECTED: "REJECTED";
+};
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 export declare const MachineStatus: {
     readonly RUNNING: "RUNNING";
     readonly DOWN: "DOWN";
@@ -44,4 +49,23 @@ export declare const DocumentType: {
     readonly OTHER: "OTHER";
 };
 export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType];
+export declare const DocumentIngestionStatus: {
+    readonly PENDING: "PENDING";
+    readonly PROCESSING: "PROCESSING";
+    readonly COMPLETE: "COMPLETE";
+    readonly FAILED: "FAILED";
+};
+export type DocumentIngestionStatus = (typeof DocumentIngestionStatus)[keyof typeof DocumentIngestionStatus];
+export declare const ChatMessageRole: {
+    readonly USER: "USER";
+    readonly ASSISTANT: "ASSISTANT";
+    readonly SYSTEM: "SYSTEM";
+};
+export type ChatMessageRole = (typeof ChatMessageRole)[keyof typeof ChatMessageRole];
+export declare const AiFeedbackValue: {
+    readonly HELPFUL: "HELPFUL";
+    readonly NOT_HELPFUL: "NOT_HELPFUL";
+    readonly CORRECT_CAUSE: "CORRECT_CAUSE";
+};
+export type AiFeedbackValue = (typeof AiFeedbackValue)[keyof typeof AiFeedbackValue];
 //# sourceMappingURL=enums.d.ts.map

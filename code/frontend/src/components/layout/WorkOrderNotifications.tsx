@@ -23,6 +23,7 @@ type WorkOrderAssignment = {
   status: string
   priority: string
   createdAt: string
+  assignedToId?: string | null
   machine?: {
     name?: string | null
   } | null
@@ -32,6 +33,33 @@ type ApiWorkOrder = WorkOrderAssignment & {
   assignedTo?: {
     id?: string | null
   } | null
+  assignedToId?: string | null
+}
+
+const STORAGE_KEY_PREFIX = 'metralis_seen_notifications_'
+
+const loadSeenFromStorage = (userId?: string | null) => {
+  if (!userId) return new Set<string>()
+  try {
+    const raw = localStorage.getItem(`${STORAGE_KEY_PREFIX}${userId}`)
+    if (!raw) return new Set<string>()
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed)) {
+      return new Set<string>(parsed.filter((id) => typeof id === 'string'))
+    }
+  } catch {
+    // ignore malformed storage
+  }
+  return new Set<string>()
+}
+
+const persistSeenToStorage = (userId: string | null | undefined, seen: Set<string>) => {
+  if (!userId) return
+  try {
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}${userId}`, JSON.stringify(Array.from(seen)))
+  } catch {
+    // ignore storage write errors
+  }
 }
 
 export function WorkOrderNotifications() {
@@ -39,6 +67,8 @@ export function WorkOrderNotifications() {
   const userId = user?.id
   const { t } = useTranslation()
   const [assignments, setAssignments] = useState<WorkOrderAssignment[]>([])
+  const [seenIds, setSeenIds] = useState<Set<string>>(new Set())
+  const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -54,7 +84,7 @@ export function WorkOrderNotifications() {
       const response = await api.get('/work-orders')
       const workOrders = (response.data?.data ?? []) as ApiWorkOrder[]
       const assigned = workOrders
-        .filter((wo) => wo.assignedTo?.id === userId && wo.status !== 'CLOSED')
+        .filter((wo) => (wo.assignedToId === userId || wo.assignedTo?.id === userId) && wo.status !== 'CLOSED')
         .sort(
           (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         )
@@ -73,8 +103,35 @@ export function WorkOrderNotifications() {
     void fetchAssignments()
   }, [fetchAssignments])
 
-  const count = assignments.length
-  const badgeLabel = count > 9 ? '9+' : String(count || '')
+  const unreadCount = assignments.filter((wo) => !seenIds.has(wo.id)).length
+  const badgeLabel = unreadCount > 9 ? '9+' : String(unreadCount || '')
+
+  // Load persisted seen IDs when user changes
+  useEffect(() => {
+    setSeenIds(loadSeenFromStorage(userId))
+  }, [userId])
+
+  // Prune seen IDs to current assignments once data is loaded; avoid wiping seen during loading/empty states
+  useEffect(() => {
+    if (!userId) return
+    if (assignments.length === 0) return
+    setSeenIds((prev) => {
+      const assignmentIds = new Set(assignments.map((wo) => wo.id))
+      const next = new Set<string>()
+      let changed = false
+      prev.forEach((id) => {
+        if (assignmentIds.has(id)) {
+          next.add(id)
+        } else {
+          changed = true
+        }
+      })
+      if (changed) {
+        persistSeenToStorage(userId, next)
+      }
+      return next
+    })
+  }, [assignments, userId])
 
   const formatDate = (value?: string) => {
     if (!value) return '-'
@@ -150,12 +207,24 @@ export function WorkOrderNotifications() {
     )
   }
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen)
+    if (nextOpen) {
+      setSeenIds((prev) => {
+        const next = new Set(prev)
+        assignments.forEach((wo) => next.add(wo.id))
+        persistSeenToStorage(userId, next)
+        return next
+      })
+    }
+  }
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
           <Bell className="h-5 w-5" />
-          {count > 0 && (
+          {unreadCount > 0 && (
             <Badge
               variant="destructive"
               className={cn(

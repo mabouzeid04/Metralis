@@ -18,6 +18,7 @@ const requireAuth = (req, res, next) => {
             role: payload.role,
             email: payload.email,
             name: payload.name,
+            status: payload.status,
         };
         return next();
     }

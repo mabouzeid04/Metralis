@@ -188,6 +188,50 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get document(): Prisma.DocumentDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.documentChunk`: Exposes CRUD operations for the **DocumentChunk** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more DocumentChunks
+      * const documentChunks = await prisma.documentChunk.findMany()
+      * ```
+      */
+    get documentChunk(): Prisma.DocumentChunkDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.chatConversation`: Exposes CRUD operations for the **ChatConversation** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more ChatConversations
+      * const chatConversations = await prisma.chatConversation.findMany()
+      * ```
+      */
+    get chatConversation(): Prisma.ChatConversationDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.chatMessage`: Exposes CRUD operations for the **ChatMessage** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more ChatMessages
+      * const chatMessages = await prisma.chatMessage.findMany()
+      * ```
+      */
+    get chatMessage(): Prisma.ChatMessageDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.chatMessageFeedback`: Exposes CRUD operations for the **ChatMessageFeedback** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more ChatMessageFeedbacks
+      * const chatMessageFeedbacks = await prisma.chatMessageFeedback.findMany()
+      * ```
+      */
+    get chatMessageFeedback(): Prisma.ChatMessageFeedbackDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

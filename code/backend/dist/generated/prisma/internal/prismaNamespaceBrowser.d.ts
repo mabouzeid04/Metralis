@@ -48,6 +48,10 @@ export declare const ModelName: {
     readonly Part: "Part";
     readonly WorkOrderPart: "WorkOrderPart";
     readonly Document: "Document";
+    readonly DocumentChunk: "DocumentChunk";
+    readonly ChatConversation: "ChatConversation";
+    readonly ChatMessage: "ChatMessage";
+    readonly ChatMessageFeedback: "ChatMessageFeedback";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -63,9 +67,16 @@ export declare const UserScalarFieldEnum: {
     readonly passwordHash: "passwordHash";
     readonly name: "name";
     readonly role: "role";
+    readonly status: "status";
     readonly active: "active";
     readonly lastLoginAt: "lastLoginAt";
+    readonly approvedById: "approvedById";
+    readonly approvedAt: "approvedAt";
+    readonly rejectedAt: "rejectedAt";
+    readonly rejectionReason: "rejectionReason";
     readonly preferences: "preferences";
+    readonly phoneNumber: "phoneNumber";
+    readonly assignmentWhatsappOptIn: "assignmentWhatsappOptIn";
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
@@ -91,6 +102,7 @@ export declare const MachineScalarFieldEnum: {
 export type MachineScalarFieldEnum = (typeof MachineScalarFieldEnum)[keyof typeof MachineScalarFieldEnum];
 export declare const WorkOrderScalarFieldEnum: {
     readonly id: "id";
+    readonly publicId: "publicId";
     readonly machineId: "machineId";
     readonly title: "title";
     readonly descriptionRaw: "descriptionRaw";
@@ -122,6 +134,7 @@ export declare const RepairActionScalarFieldEnum: {
     readonly verification: "verification";
     readonly success: "success";
     readonly failureNote: "failureNote";
+    readonly rootCause: "rootCause";
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
@@ -159,15 +172,61 @@ export declare const DocumentScalarFieldEnum: {
     readonly fileSize: "fileSize";
     readonly mimeType: "mimeType";
     readonly machineId: "machineId";
+    readonly workOrderId: "workOrderId";
+    readonly repairActionId: "repairActionId";
     readonly machineType: "machineType";
     readonly language: "language";
     readonly version: "version";
     readonly metadata: "metadata";
     readonly uploadedById: "uploadedById";
+    readonly ingestionStatus: "ingestionStatus";
+    readonly ingestedAt: "ingestedAt";
+    readonly ingestionError: "ingestionError";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum];
+export declare const DocumentChunkScalarFieldEnum: {
+    readonly id: "id";
+    readonly documentId: "documentId";
+    readonly chunkIndex: "chunkIndex";
+    readonly content: "content";
+    readonly tokens: "tokens";
+    readonly metadata: "metadata";
+    readonly createdAt: "createdAt";
+};
+export type DocumentChunkScalarFieldEnum = (typeof DocumentChunkScalarFieldEnum)[keyof typeof DocumentChunkScalarFieldEnum];
+export declare const ChatConversationScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly machineId: "machineId";
+    readonly title: "title";
+    readonly summary: "summary";
+    readonly metadata: "metadata";
+    readonly lastMessageAt: "lastMessageAt";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type ChatConversationScalarFieldEnum = (typeof ChatConversationScalarFieldEnum)[keyof typeof ChatConversationScalarFieldEnum];
+export declare const ChatMessageScalarFieldEnum: {
+    readonly id: "id";
+    readonly conversationId: "conversationId";
+    readonly role: "role";
+    readonly content: "content";
+    readonly citations: "citations";
+    readonly contextChunks: "contextChunks";
+    readonly structuredOutput: "structuredOutput";
+    readonly createdAt: "createdAt";
+};
+export type ChatMessageScalarFieldEnum = (typeof ChatMessageScalarFieldEnum)[keyof typeof ChatMessageScalarFieldEnum];
+export declare const ChatMessageFeedbackScalarFieldEnum: {
+    readonly id: "id";
+    readonly messageId: "messageId";
+    readonly userId: "userId";
+    readonly value: "value";
+    readonly createdAt: "createdAt";
+};
+export type ChatMessageFeedbackScalarFieldEnum = (typeof ChatMessageFeedbackScalarFieldEnum)[keyof typeof ChatMessageFeedbackScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

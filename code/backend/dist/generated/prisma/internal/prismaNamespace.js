@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/library"));
 /**
  * Prisma Errors
@@ -109,7 +109,11 @@ exports.ModelName = {
     RepairAction: 'RepairAction',
     Part: 'Part',
     WorkOrderPart: 'WorkOrderPart',
-    Document: 'Document'
+    Document: 'Document',
+    DocumentChunk: 'DocumentChunk',
+    ChatConversation: 'ChatConversation',
+    ChatMessage: 'ChatMessage',
+    ChatMessageFeedback: 'ChatMessageFeedback'
 };
 /**
  * Enums
@@ -126,9 +130,16 @@ exports.UserScalarFieldEnum = {
     passwordHash: 'passwordHash',
     name: 'name',
     role: 'role',
+    status: 'status',
     active: 'active',
     lastLoginAt: 'lastLoginAt',
+    approvedById: 'approvedById',
+    approvedAt: 'approvedAt',
+    rejectedAt: 'rejectedAt',
+    rejectionReason: 'rejectionReason',
     preferences: 'preferences',
+    phoneNumber: 'phoneNumber',
+    assignmentWhatsappOptIn: 'assignmentWhatsappOptIn',
     metadata: 'metadata',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -152,6 +163,7 @@ exports.MachineScalarFieldEnum = {
 };
 exports.WorkOrderScalarFieldEnum = {
     id: 'id',
+    publicId: 'publicId',
     machineId: 'machineId',
     title: 'title',
     descriptionRaw: 'descriptionRaw',
@@ -182,6 +194,7 @@ exports.RepairActionScalarFieldEnum = {
     verification: 'verification',
     success: 'success',
     failureNote: 'failureNote',
+    rootCause: 'rootCause',
     metadata: 'metadata',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -216,13 +229,55 @@ exports.DocumentScalarFieldEnum = {
     fileSize: 'fileSize',
     mimeType: 'mimeType',
     machineId: 'machineId',
+    workOrderId: 'workOrderId',
+    repairActionId: 'repairActionId',
     machineType: 'machineType',
     language: 'language',
     version: 'version',
     metadata: 'metadata',
     uploadedById: 'uploadedById',
+    ingestionStatus: 'ingestionStatus',
+    ingestedAt: 'ingestedAt',
+    ingestionError: 'ingestionError',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+exports.DocumentChunkScalarFieldEnum = {
+    id: 'id',
+    documentId: 'documentId',
+    chunkIndex: 'chunkIndex',
+    content: 'content',
+    tokens: 'tokens',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+};
+exports.ChatConversationScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    machineId: 'machineId',
+    title: 'title',
+    summary: 'summary',
+    metadata: 'metadata',
+    lastMessageAt: 'lastMessageAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.ChatMessageScalarFieldEnum = {
+    id: 'id',
+    conversationId: 'conversationId',
+    role: 'role',
+    content: 'content',
+    citations: 'citations',
+    contextChunks: 'contextChunks',
+    structuredOutput: 'structuredOutput',
+    createdAt: 'createdAt'
+};
+exports.ChatMessageFeedbackScalarFieldEnum = {
+    id: 'id',
+    messageId: 'messageId',
+    userId: 'userId',
+    value: 'value',
+    createdAt: 'createdAt'
 };
 exports.SortOrder = {
     asc: 'asc',

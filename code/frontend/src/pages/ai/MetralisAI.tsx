@@ -8,13 +8,22 @@ import { Badge } from '@/components/ui/badge'
 import { useAIChat } from '@/contexts/AIChatContext'
 import { api } from '@/lib/api'
 import type { ConversationSummary, StructuredAiResponse, AiFeedbackValue, ChatMessage } from '@/lib/aiClient'
-import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, Frown, CheckCircle2 } from 'lucide-react'
+import { History, Loader2, Send, X, Sparkles, User as UserIcon, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, Frown } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 type MachineOption = {
   id: string
   name: string
   model?: string | null
+}
+
+const formatMachineLabel = (machine: { name: string; model?: string | null }) => {
+  const name = machine.name?.trim()
+  const model = machine.model?.trim()
+  if (name && model && model.toLowerCase() !== name.toLowerCase()) {
+    return `${name} • ${model}`
+  }
+  return name
 }
 
 const MetralisAI = () => {
@@ -98,7 +107,6 @@ const MetralisAI = () => {
   const feedbackOptions: Array<{ value: AiFeedbackValue; label: string; Icon: LucideIcon }> = [
     { value: 'HELPFUL', label: t('feedback.helpful', { defaultValue: 'Helpful' }), Icon: ThumbsUp },
     { value: 'NOT_HELPFUL', label: t('feedback.needsWork', { defaultValue: 'Needs work' }), Icon: Frown },
-    { value: 'CORRECT_CAUSE', label: t('feedback.correctCause', { defaultValue: 'Correct cause' }), Icon: CheckCircle2 },
   ]
 
   const handleFeedback = async (messageId: string, value: AiFeedbackValue) => {
@@ -254,14 +262,14 @@ const MetralisAI = () => {
           {feedbackOptions.map(({ value, label, Icon }) => {
             const alreadySent = sent.includes(value)
             return (
-              <Button
-                key={value}
-                size="sm"
-                variant={alreadySent ? 'secondary' : 'ghost'}
-                disabled={alreadySent || Boolean(feedbackSubmitting[message.id])}
-                className="text-xs"
-                onClick={() => handleFeedback(message.id, value)}
-              >
+                <Button
+                  key={value}
+                  size="sm"
+                  variant={alreadySent ? 'secondary' : 'ghost'}
+                  disabled={alreadySent || Boolean(feedbackSubmitting[message.id])}
+                  className="h-8 px-2 text-xs"
+                  onClick={() => handleFeedback(message.id, value)}
+                >
                 <Icon className="mr-1 h-3 w-3" /> {label}
               </Button>
             )
@@ -271,6 +279,8 @@ const MetralisAI = () => {
       </div>
     )
   }
+
+  const tips = useMemo(() => t('active.tips', { returnObjects: true }) as string[], [t])
 
   return (
     <div className="relative space-y-6">
@@ -303,10 +313,7 @@ const MetralisAI = () => {
               >
                 <p className="text-sm font-medium">{conversation.title}</p>
                 {conversation.machine ? (
-                  <p className="text-xs text-muted-foreground">
-                    {conversation.machine.name}
-                    {conversation.machine.model ? ` · ${conversation.machine.model}` : ''}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{formatMachineLabel(conversation.machine)}</p>
                 ) : (
                   <p className="text-xs text-muted-foreground">{t('historyPanel.noMachine')}</p>
                 )}
@@ -341,7 +348,7 @@ const MetralisAI = () => {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[3fr_minmax(220px,260px)]">
         <Card className="p-4 sm:p-6">
           <div className="flex flex-col gap-4">
             <div>
@@ -356,7 +363,7 @@ const MetralisAI = () => {
                   <option value="">{t('selectMachine', { defaultValue: 'Select a machine (optional)' })}</option>
                   {machines.map((machine) => (
                     <option key={machine.id} value={machine.id}>
-                      {machine.name} {machine.model ? `• ${machine.model}` : ''}
+                      {formatMachineLabel(machine)}
                     </option>
                   ))}
                 </select>
@@ -449,39 +456,17 @@ const MetralisAI = () => {
           </div>
         </Card>
 
-        <Card className="p-4 sm:p-6">
+        <Card className="hidden lg:block h-fit w-full max-w-[260px] p-4 sm:p-6">
           <div className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('active.title')}</p>
-              <h2 className="text-xl font-semibold">{currentConversation?.title ?? t('active.defaultTitle')}</h2>
-              <p className="text-sm text-muted-foreground">
-                {currentConversation
-                  ? `${t('active.idLabel')} • ${currentConversation.id.slice(0, 8)}…`
-                  : t('active.noMessages')}
-              </p>
+              <p className="text-sm font-medium text-muted-foreground">{t('active.tipsTitle')}</p>
             </div>
-
             <div className="rounded-lg border bg-muted/30 p-3 text-sm">
-              <p className="font-medium">{t('active.boundMachine')}</p>
-              <p className="text-muted-foreground">
-                {selectedMachine
-                  ? `${selectedMachine.name}${selectedMachine.model ? ` • ${selectedMachine.model}` : ''}`
-                  : t('active.notSpecified')}
-              </p>
-            </div>
-
-            <div className="rounded-lg border bg-muted/30 p-3 text-sm">
-              <p className="font-medium">{t('active.tipsTitle')}</p>
-              {(() => {
-                const tips = t('active.tips', { returnObjects: true }) as string[]
-                return (
-                  <ul className="mt-2 list-disc space-y-1 pl-4 text-muted-foreground">
-                    {tips.map((tip, idx) => (
-                      <li key={idx}>{tip}</li>
-                    ))}
-                  </ul>
-                )
-              })()}
+              <ul className="ml-4 list-disc space-y-2 text-muted-foreground">
+                {tips.map((tip, idx) => (
+                  <li key={idx}>{tip}</li>
+                ))}
+              </ul>
             </div>
           </div>
         </Card>

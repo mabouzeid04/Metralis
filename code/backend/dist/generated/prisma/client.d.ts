@@ -54,4 +54,24 @@ export type WorkOrderPart = Prisma.WorkOrderPartModel;
  *
  */
 export type Document = Prisma.DocumentModel;
+/**
+ * Model DocumentChunk
+ *
+ */
+export type DocumentChunk = Prisma.DocumentChunkModel;
+/**
+ * Model ChatConversation
+ *
+ */
+export type ChatConversation = Prisma.ChatConversationModel;
+/**
+ * Model ChatMessage
+ *
+ */
+export type ChatMessage = Prisma.ChatMessageModel;
+/**
+ * Model ChatMessageFeedback
+ *
+ */
+export type ChatMessageFeedback = Prisma.ChatMessageFeedbackModel;
 //# sourceMappingURL=client.d.ts.map

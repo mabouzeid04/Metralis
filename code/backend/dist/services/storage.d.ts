@@ -5,4 +5,5 @@ export declare const upload: multer.Multer;
 export declare const s3: S3Client;
 export declare const saveDocumentToS3: (file: Express.Multer.File) => Promise<string>;
 export declare const streamDocumentFromS3: (key: string, res: Response) => Promise<any>;
+export declare const downloadDocumentBuffer: (key: string) => Promise<Buffer<any>>;
 //# sourceMappingURL=storage.d.ts.map

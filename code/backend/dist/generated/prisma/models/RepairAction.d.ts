@@ -19,6 +19,7 @@ export type RepairActionMinAggregateOutputType = {
     verification: string | null;
     success: boolean | null;
     failureNote: string | null;
+    rootCause: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -31,6 +32,7 @@ export type RepairActionMaxAggregateOutputType = {
     verification: string | null;
     success: boolean | null;
     failureNote: string | null;
+    rootCause: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -44,6 +46,7 @@ export type RepairActionCountAggregateOutputType = {
     verification: number;
     success: number;
     failureNote: number;
+    rootCause: number;
     metadata: number;
     createdAt: number;
     updatedAt: number;
@@ -58,6 +61,7 @@ export type RepairActionMinAggregateInputType = {
     verification?: true;
     success?: true;
     failureNote?: true;
+    rootCause?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -70,6 +74,7 @@ export type RepairActionMaxAggregateInputType = {
     verification?: true;
     success?: true;
     failureNote?: true;
+    rootCause?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -83,6 +88,7 @@ export type RepairActionCountAggregateInputType = {
     verification?: true;
     success?: true;
     failureNote?: true;
+    rootCause?: true;
     metadata?: true;
     createdAt?: true;
     updatedAt?: true;
@@ -160,6 +166,7 @@ export type RepairActionGroupByOutputType = {
     verification: string | null;
     success: boolean;
     failureNote: string | null;
+    rootCause: string | null;
     metadata: runtime.JsonValue | null;
     createdAt: Date;
     updatedAt: Date;
@@ -183,11 +190,13 @@ export type RepairActionWhereInput = {
     verification?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     success?: Prisma.BoolFilter<"RepairAction"> | boolean;
     failureNote?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
+    rootCause?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"RepairAction">;
     createdAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
     workOrder?: Prisma.XOR<Prisma.WorkOrderScalarRelationFilter, Prisma.WorkOrderWhereInput>;
     performedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    attachments?: Prisma.DocumentListRelationFilter;
 };
 export type RepairActionOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -199,11 +208,13 @@ export type RepairActionOrderByWithRelationInput = {
     verification?: Prisma.SortOrderInput | Prisma.SortOrder;
     success?: Prisma.SortOrder;
     failureNote?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rootCause?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     workOrder?: Prisma.WorkOrderOrderByWithRelationInput;
     performedBy?: Prisma.UserOrderByWithRelationInput;
+    attachments?: Prisma.DocumentOrderByRelationAggregateInput;
 };
 export type RepairActionWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -218,11 +229,13 @@ export type RepairActionWhereUniqueInput = Prisma.AtLeast<{
     verification?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     success?: Prisma.BoolFilter<"RepairAction"> | boolean;
     failureNote?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
+    rootCause?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"RepairAction">;
     createdAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
     workOrder?: Prisma.XOR<Prisma.WorkOrderScalarRelationFilter, Prisma.WorkOrderWhereInput>;
     performedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    attachments?: Prisma.DocumentListRelationFilter;
 }, "id">;
 export type RepairActionOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -234,6 +247,7 @@ export type RepairActionOrderByWithAggregationInput = {
     verification?: Prisma.SortOrderInput | Prisma.SortOrder;
     success?: Prisma.SortOrder;
     failureNote?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rootCause?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -254,6 +268,7 @@ export type RepairActionScalarWhereWithAggregatesInput = {
     verification?: Prisma.StringNullableWithAggregatesFilter<"RepairAction"> | string | null;
     success?: Prisma.BoolWithAggregatesFilter<"RepairAction"> | boolean;
     failureNote?: Prisma.StringNullableWithAggregatesFilter<"RepairAction"> | string | null;
+    rootCause?: Prisma.StringNullableWithAggregatesFilter<"RepairAction"> | string | null;
     metadata?: Prisma.JsonNullableWithAggregatesFilter<"RepairAction">;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"RepairAction"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RepairAction"> | Date | string;
@@ -266,11 +281,13 @@ export type RepairActionCreateInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     workOrder: Prisma.WorkOrderCreateNestedOneWithoutRepairActionsInput;
     performedBy: Prisma.UserCreateNestedOneWithoutRepairActionsInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionUncheckedCreateInput = {
     id?: string;
@@ -282,9 +299,11 @@ export type RepairActionUncheckedCreateInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -294,11 +313,13 @@ export type RepairActionUpdateInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrder?: Prisma.WorkOrderUpdateOneRequiredWithoutRepairActionsNestedInput;
     performedBy?: Prisma.UserUpdateOneRequiredWithoutRepairActionsNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -310,9 +331,11 @@ export type RepairActionUncheckedUpdateInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionCreateManyInput = {
     id?: string;
@@ -324,6 +347,7 @@ export type RepairActionCreateManyInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -336,6 +360,7 @@ export type RepairActionUpdateManyMutationInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -350,6 +375,7 @@ export type RepairActionUncheckedUpdateManyInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -372,6 +398,7 @@ export type RepairActionCountOrderByAggregateInput = {
     verification?: Prisma.SortOrder;
     success?: Prisma.SortOrder;
     failureNote?: Prisma.SortOrder;
+    rootCause?: Prisma.SortOrder;
     metadata?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -385,6 +412,7 @@ export type RepairActionMaxOrderByAggregateInput = {
     verification?: Prisma.SortOrder;
     success?: Prisma.SortOrder;
     failureNote?: Prisma.SortOrder;
+    rootCause?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -397,8 +425,13 @@ export type RepairActionMinOrderByAggregateInput = {
     verification?: Prisma.SortOrder;
     success?: Prisma.SortOrder;
     failureNote?: Prisma.SortOrder;
+    rootCause?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
+};
+export type RepairActionNullableScalarRelationFilter = {
+    is?: Prisma.RepairActionWhereInput | null;
+    isNot?: Prisma.RepairActionWhereInput | null;
 };
 export type RepairActionCreateNestedManyWithoutPerformedByInput = {
     create?: Prisma.XOR<Prisma.RepairActionCreateWithoutPerformedByInput, Prisma.RepairActionUncheckedCreateWithoutPerformedByInput> | Prisma.RepairActionCreateWithoutPerformedByInput[] | Prisma.RepairActionUncheckedCreateWithoutPerformedByInput[];
@@ -476,6 +509,20 @@ export type RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput = {
     updateMany?: Prisma.RepairActionUpdateManyWithWhereWithoutWorkOrderInput | Prisma.RepairActionUpdateManyWithWhereWithoutWorkOrderInput[];
     deleteMany?: Prisma.RepairActionScalarWhereInput | Prisma.RepairActionScalarWhereInput[];
 };
+export type RepairActionCreateNestedOneWithoutAttachmentsInput = {
+    create?: Prisma.XOR<Prisma.RepairActionCreateWithoutAttachmentsInput, Prisma.RepairActionUncheckedCreateWithoutAttachmentsInput>;
+    connectOrCreate?: Prisma.RepairActionCreateOrConnectWithoutAttachmentsInput;
+    connect?: Prisma.RepairActionWhereUniqueInput;
+};
+export type RepairActionUpdateOneWithoutAttachmentsNestedInput = {
+    create?: Prisma.XOR<Prisma.RepairActionCreateWithoutAttachmentsInput, Prisma.RepairActionUncheckedCreateWithoutAttachmentsInput>;
+    connectOrCreate?: Prisma.RepairActionCreateOrConnectWithoutAttachmentsInput;
+    upsert?: Prisma.RepairActionUpsertWithoutAttachmentsInput;
+    disconnect?: Prisma.RepairActionWhereInput | boolean;
+    delete?: Prisma.RepairActionWhereInput | boolean;
+    connect?: Prisma.RepairActionWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.RepairActionUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.RepairActionUpdateWithoutAttachmentsInput>, Prisma.RepairActionUncheckedUpdateWithoutAttachmentsInput>;
+};
 export type RepairActionCreateWithoutPerformedByInput = {
     id?: string;
     actions: string;
@@ -484,10 +531,12 @@ export type RepairActionCreateWithoutPerformedByInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     workOrder: Prisma.WorkOrderCreateNestedOneWithoutRepairActionsInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionUncheckedCreateWithoutPerformedByInput = {
     id?: string;
@@ -498,9 +547,11 @@ export type RepairActionUncheckedCreateWithoutPerformedByInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionCreateOrConnectWithoutPerformedByInput = {
     where: Prisma.RepairActionWhereUniqueInput;
@@ -536,6 +587,7 @@ export type RepairActionScalarWhereInput = {
     verification?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     success?: Prisma.BoolFilter<"RepairAction"> | boolean;
     failureNote?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
+    rootCause?: Prisma.StringNullableFilter<"RepairAction"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"RepairAction">;
     createdAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"RepairAction"> | Date | string;
@@ -548,10 +600,12 @@ export type RepairActionCreateWithoutWorkOrderInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     performedBy: Prisma.UserCreateNestedOneWithoutRepairActionsInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionUncheckedCreateWithoutWorkOrderInput = {
     id?: string;
@@ -562,9 +616,11 @@ export type RepairActionUncheckedCreateWithoutWorkOrderInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutRepairActionInput;
 };
 export type RepairActionCreateOrConnectWithoutWorkOrderInput = {
     where: Prisma.RepairActionWhereUniqueInput;
@@ -587,6 +643,79 @@ export type RepairActionUpdateManyWithWhereWithoutWorkOrderInput = {
     where: Prisma.RepairActionScalarWhereInput;
     data: Prisma.XOR<Prisma.RepairActionUpdateManyMutationInput, Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderInput>;
 };
+export type RepairActionCreateWithoutAttachmentsInput = {
+    id?: string;
+    actions: string;
+    partsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    adjustments?: string | null;
+    verification?: string | null;
+    success: boolean;
+    failureNote?: string | null;
+    rootCause?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workOrder: Prisma.WorkOrderCreateNestedOneWithoutRepairActionsInput;
+    performedBy: Prisma.UserCreateNestedOneWithoutRepairActionsInput;
+};
+export type RepairActionUncheckedCreateWithoutAttachmentsInput = {
+    id?: string;
+    workOrderId: string;
+    performedById: string;
+    actions: string;
+    partsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    adjustments?: string | null;
+    verification?: string | null;
+    success: boolean;
+    failureNote?: string | null;
+    rootCause?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type RepairActionCreateOrConnectWithoutAttachmentsInput = {
+    where: Prisma.RepairActionWhereUniqueInput;
+    create: Prisma.XOR<Prisma.RepairActionCreateWithoutAttachmentsInput, Prisma.RepairActionUncheckedCreateWithoutAttachmentsInput>;
+};
+export type RepairActionUpsertWithoutAttachmentsInput = {
+    update: Prisma.XOR<Prisma.RepairActionUpdateWithoutAttachmentsInput, Prisma.RepairActionUncheckedUpdateWithoutAttachmentsInput>;
+    create: Prisma.XOR<Prisma.RepairActionCreateWithoutAttachmentsInput, Prisma.RepairActionUncheckedCreateWithoutAttachmentsInput>;
+    where?: Prisma.RepairActionWhereInput;
+};
+export type RepairActionUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: Prisma.RepairActionWhereInput;
+    data: Prisma.XOR<Prisma.RepairActionUpdateWithoutAttachmentsInput, Prisma.RepairActionUncheckedUpdateWithoutAttachmentsInput>;
+};
+export type RepairActionUpdateWithoutAttachmentsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    actions?: Prisma.StringFieldUpdateOperationsInput | string;
+    partsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    adjustments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workOrder?: Prisma.WorkOrderUpdateOneRequiredWithoutRepairActionsNestedInput;
+    performedBy?: Prisma.UserUpdateOneRequiredWithoutRepairActionsNestedInput;
+};
+export type RepairActionUncheckedUpdateWithoutAttachmentsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    workOrderId?: Prisma.StringFieldUpdateOperationsInput | string;
+    performedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    actions?: Prisma.StringFieldUpdateOperationsInput | string;
+    partsUsed?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    adjustments?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
 export type RepairActionCreateManyPerformedByInput = {
     id?: string;
     workOrderId: string;
@@ -596,6 +725,7 @@ export type RepairActionCreateManyPerformedByInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -608,10 +738,12 @@ export type RepairActionUpdateWithoutPerformedByInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrder?: Prisma.WorkOrderUpdateOneRequiredWithoutRepairActionsNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionUncheckedUpdateWithoutPerformedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -622,9 +754,11 @@ export type RepairActionUncheckedUpdateWithoutPerformedByInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionUncheckedUpdateManyWithoutPerformedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -635,6 +769,7 @@ export type RepairActionUncheckedUpdateManyWithoutPerformedByInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -648,6 +783,7 @@ export type RepairActionCreateManyWorkOrderInput = {
     verification?: string | null;
     success: boolean;
     failureNote?: string | null;
+    rootCause?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -660,10 +796,12 @@ export type RepairActionUpdateWithoutWorkOrderInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     performedBy?: Prisma.UserUpdateOneRequiredWithoutRepairActionsNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionUncheckedUpdateWithoutWorkOrderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -674,9 +812,11 @@ export type RepairActionUncheckedUpdateWithoutWorkOrderInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutRepairActionNestedInput;
 };
 export type RepairActionUncheckedUpdateManyWithoutWorkOrderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -687,9 +827,34 @@ export type RepairActionUncheckedUpdateManyWithoutWorkOrderInput = {
     verification?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     success?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     failureNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+/**
+ * Count Type RepairActionCountOutputType
+ */
+export type RepairActionCountOutputType = {
+    attachments: number;
+};
+export type RepairActionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    attachments?: boolean | RepairActionCountOutputTypeCountAttachmentsArgs;
+};
+/**
+ * RepairActionCountOutputType without action
+ */
+export type RepairActionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RepairActionCountOutputType
+     */
+    select?: Prisma.RepairActionCountOutputTypeSelect<ExtArgs> | null;
+};
+/**
+ * RepairActionCountOutputType without action
+ */
+export type RepairActionCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.DocumentWhereInput;
 };
 export type RepairActionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -701,11 +866,14 @@ export type RepairActionSelect<ExtArgs extends runtime.Types.Extensions.Internal
     verification?: boolean;
     success?: boolean;
     failureNote?: boolean;
+    rootCause?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
     performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    attachments?: boolean | Prisma.RepairAction$attachmentsArgs<ExtArgs>;
+    _count?: boolean | Prisma.RepairActionCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["repairAction"]>;
 export type RepairActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -717,6 +885,7 @@ export type RepairActionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
     verification?: boolean;
     success?: boolean;
     failureNote?: boolean;
+    rootCause?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
@@ -733,6 +902,7 @@ export type RepairActionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
     verification?: boolean;
     success?: boolean;
     failureNote?: boolean;
+    rootCause?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
@@ -749,14 +919,17 @@ export type RepairActionSelectScalar = {
     verification?: boolean;
     success?: boolean;
     failureNote?: boolean;
+    rootCause?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type RepairActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workOrderId" | "performedById" | "actions" | "partsUsed" | "adjustments" | "verification" | "success" | "failureNote" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["repairAction"]>;
+export type RepairActionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workOrderId" | "performedById" | "actions" | "partsUsed" | "adjustments" | "verification" | "success" | "failureNote" | "rootCause" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["repairAction"]>;
 export type RepairActionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
     performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    attachments?: boolean | Prisma.RepairAction$attachmentsArgs<ExtArgs>;
+    _count?: boolean | Prisma.RepairActionCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type RepairActionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
@@ -771,6 +944,7 @@ export type $RepairActionPayload<ExtArgs extends runtime.Types.Extensions.Intern
     objects: {
         workOrder: Prisma.$WorkOrderPayload<ExtArgs>;
         performedBy: Prisma.$UserPayload<ExtArgs>;
+        attachments: Prisma.$DocumentPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -782,6 +956,7 @@ export type $RepairActionPayload<ExtArgs extends runtime.Types.Extensions.Intern
         verification: string | null;
         success: boolean;
         failureNote: string | null;
+        rootCause: string | null;
         metadata: runtime.JsonValue | null;
         createdAt: Date;
         updatedAt: Date;
@@ -1116,6 +1291,7 @@ export interface Prisma__RepairActionClient<T, Null = never, ExtArgs extends run
     readonly [Symbol.toStringTag]: "PrismaPromise";
     workOrder<T extends Prisma.WorkOrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrderDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkOrderClient<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     performedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    attachments<T extends Prisma.RepairAction$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RepairAction$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1150,6 +1326,7 @@ export interface RepairActionFieldRefs {
     readonly verification: Prisma.FieldRef<"RepairAction", 'String'>;
     readonly success: Prisma.FieldRef<"RepairAction", 'Boolean'>;
     readonly failureNote: Prisma.FieldRef<"RepairAction", 'String'>;
+    readonly rootCause: Prisma.FieldRef<"RepairAction", 'String'>;
     readonly metadata: Prisma.FieldRef<"RepairAction", 'Json'>;
     readonly createdAt: Prisma.FieldRef<"RepairAction", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"RepairAction", 'DateTime'>;
@@ -1530,6 +1707,29 @@ export type RepairActionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
      * Limit how many RepairActions to delete.
      */
     limit?: number;
+};
+/**
+ * RepairAction.attachments
+ */
+export type RepairAction$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: Prisma.DocumentSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: Prisma.DocumentOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.DocumentInclude<ExtArgs> | null;
+    where?: Prisma.DocumentWhereInput;
+    orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[];
+    cursor?: Prisma.DocumentWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[];
 };
 /**
  * RepairAction without action

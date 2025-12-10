@@ -33,10 +33,12 @@
     "noCode": "No code",
     "uncategorized": "Uncategorized",
     "noLocation": "No location",
+    "noActivity": "No recent activity",
     "historyTitle": "History",
     "repairCompleted": "Repair completed",
     "repairFollowUp": "Repair logged - needs follow-up"
   },
+  "workOrders": "Work orders",
   "form": {
     "createTitle": "Add Machine",
     "createDescription": "Capture nameplate info, status, and commissioning details.",

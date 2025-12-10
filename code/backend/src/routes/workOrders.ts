@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
 import { Prisma, DocumentIngestionStatus, DocumentType, type WorkOrderPriority, type WorkOrderStatus, type WorkOrderType } from "../generated/prisma/client";
 import { upload, saveDocumentToS3 } from "../services/storage";
+import { sendWorkOrderAssignmentWhatsapp } from "../services/notifications/whatsapp";
 
 const router = Router();
 
@@ -53,6 +54,34 @@ const createWorkOrderWithShortId = async (data: Prisma.WorkOrderCreateInput) => 
   }
 
   throw new Error("Failed to generate unique work order id after multiple attempts");
+};
+
+const notifyAssigneeOfWhatsapp = async (workOrder: {
+  publicId: string;
+  title: string;
+  priority: WorkOrderPriority;
+  machine: { name: string | null } | null;
+  assignedTo?: { phoneNumber: string | null; assignmentWhatsappOptIn: boolean } | null;
+}) => {
+  if (!workOrder.assignedTo?.assignmentWhatsappOptIn) return;
+  if (!workOrder.assignedTo.phoneNumber) return;
+
+  const result = await sendWorkOrderAssignmentWhatsapp({
+    to: workOrder.assignedTo.phoneNumber,
+    workOrder: {
+      publicId: workOrder.publicId,
+      title: workOrder.title,
+      machineName: workOrder.machine?.name ?? null,
+      priority: workOrder.priority,
+    },
+  });
+
+  if (result.status === "failed") {
+    console.warn("[whatsapp] failed to send work order assignment", {
+      reason: result.reason,
+      details: result.details,
+    });
+  }
 };
 
 router.get("/", async (req, res) => {
@@ -150,6 +179,10 @@ router.post("/", async (req, res) => {
 
   const workOrder = await createWorkOrderWithShortId(data);
 
+  if (workOrder.assignedTo) {
+    void notifyAssigneeOfWhatsapp(workOrder);
+  }
+
   return res.status(201).json({ data: workOrder });
 });
 
@@ -246,6 +279,15 @@ router.patch("/:id/assign", async (req, res) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
+  const current = await prisma.workOrder.findUnique({
+    where: { id: req.params.id },
+    select: { assignedToId: true },
+  });
+
+  if (!current) {
+    return res.status(404).json({ error: { message: "Work order not found" } });
+  }
+
   const data: Prisma.WorkOrderUpdateInput = {};
   if (parsed.data.assignedToId) {
     data.assignedTo = { connect: { id: parsed.data.assignedToId } };
@@ -253,10 +295,23 @@ router.patch("/:id/assign", async (req, res) => {
     data.assignedTo = { disconnect: true };
   }
 
+  const isNewAssignment =
+    parsed.data.assignedToId !== null &&
+    parsed.data.assignedToId !== undefined &&
+    parsed.data.assignedToId !== current.assignedToId;
+
   const workOrder = await prisma.workOrder.update({
     where: { id: req.params.id },
     data,
+    include: {
+      machine: { select: { name: true } },
+      assignedTo: { select: { phoneNumber: true, assignmentWhatsappOptIn: true } },
+    },
   });
+
+  if (isNewAssignment && workOrder.assignedTo) {
+    void notifyAssigneeOfWhatsapp(workOrder);
+  }
 
   return res.json({ data: workOrder });
 });

@@ -8,6 +8,10 @@
     "title": "Title",
     "titlePlaceholder": "Machine manual (English)",
     "type": "Document type",
+    "machine": "Machine",
+    "machinePlaceholder": "Select a machine (optional)",
+    "machineLoading": "Loading machines...",
+    "machineEmpty": "No machines found",
     "file": "File",
     "chooseFile": "Choose file",
     "noFile": "No file selected",
@@ -39,6 +43,7 @@
   },
   "errors": {
     "load": "Failed to load documents",
-    "preview": "Failed to load document preview. Please try again."
+    "preview": "Failed to load document preview. Please try again.",
+    "loadMachines": "Failed to load machines."
   }
 }

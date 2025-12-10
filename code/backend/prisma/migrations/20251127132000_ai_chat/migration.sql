@@ -39,15 +39,33 @@ CREATE INDEX IF NOT EXISTS "ChatConversation_machineId_idx" ON "ChatConversation
 CREATE INDEX IF NOT EXISTS "ChatMessage_conversationId_createdAt_idx" ON "ChatMessage" ("conversationId", "createdAt");
 
 -- Foreign Keys
-ALTER TABLE "ChatConversation"
-    ADD CONSTRAINT IF NOT EXISTS "ChatConversation_userId_fkey"
-    FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ChatConversation_userId_fkey') THEN
+        ALTER TABLE "ChatConversation"
+            ADD CONSTRAINT "ChatConversation_userId_fkey"
+            FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END
+$$;
 
-ALTER TABLE "ChatConversation"
-    ADD CONSTRAINT IF NOT EXISTS "ChatConversation_machineId_fkey"
-    FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ChatConversation_machineId_fkey') THEN
+        ALTER TABLE "ChatConversation"
+            ADD CONSTRAINT "ChatConversation_machineId_fkey"
+            FOREIGN KEY ("machineId") REFERENCES "Machine"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+    END IF;
+END
+$$;
 
-ALTER TABLE "ChatMessage"
-    ADD CONSTRAINT IF NOT EXISTS "ChatMessage_conversationId_fkey"
-    FOREIGN KEY ("conversationId") REFERENCES "ChatConversation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ChatMessage_conversationId_fkey') THEN
+        ALTER TABLE "ChatMessage"
+            ADD CONSTRAINT "ChatMessage_conversationId_fkey"
+            FOREIGN KEY ("conversationId") REFERENCES "ChatConversation"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+    END IF;
+END
+$$;
 

@@ -33,6 +33,11 @@ interface Document {
   } | null
 }
 
+interface Machine {
+  id: string
+  name: string
+}
+
 type DocumentType = 'MANUAL' | 'SOP' | 'TROUBLESHOOTING' | 'OTHER'
 const documentTypes: { value: DocumentType; labelKey: string }[] = [
   { value: 'MANUAL', labelKey: 'types.manual' },
@@ -62,10 +67,14 @@ export default function DocumentsList() {
   const [uploadOpen, setUploadOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
-  const [formValues, setFormValues] = useState<{ title: string; type: DocumentType }>({
+  const [formValues, setFormValues] = useState<{ title: string; type: DocumentType; machineId: string }>({
     title: '',
     type: 'MANUAL',
+    machineId: '',
   })
+  const [machines, setMachines] = useState<Machine[]>([])
+  const [machinesLoading, setMachinesLoading] = useState(false)
+  const [machinesError, setMachinesError] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const previewDocIdRef = useRef<string | null>(null)
@@ -86,10 +95,34 @@ export default function DocumentsList() {
     }
   }, [t])
 
+  const fetchMachines = useCallback(async () => {
+    setMachinesLoading(true)
+    try {
+      setMachinesError(null)
+      const response = await api.get('/machines')
+      const remoteMachines = Array.isArray(response.data?.data) ? response.data.data : []
+      setMachines(
+        remoteMachines
+          .filter((machine: { id?: string; name?: string }) => Boolean(machine?.id) && Boolean(machine?.name))
+          .map((machine: { id: string; name: string }) => ({ id: machine.id, name: machine.name })),
+      )
+    } catch (err) {
+      console.error('Failed to load machines:', err)
+      setMachines([])
+      setMachinesError(t('errors.loadMachines'))
+    } finally {
+      setMachinesLoading(false)
+    }
+  }, [t])
+
   useEffect(() => {
     setLoading(true)
     fetchDocuments().finally(() => setLoading(false))
   }, [fetchDocuments])
+
+  useEffect(() => {
+    fetchMachines()
+  }, [fetchMachines])
 
   useEffect(() => {
     return () => {
@@ -119,7 +152,7 @@ export default function DocumentsList() {
   }
 
   const resetUploadState = () => {
-    setFormValues({ title: '', type: 'MANUAL' })
+    setFormValues({ title: '', type: 'MANUAL', machineId: '' })
     setSelectedFile(null)
     setUploadError(null)
     if (fileInputRef.current) {
@@ -178,6 +211,9 @@ export default function DocumentsList() {
     const formData = new FormData()
     formData.append('title', formValues.title.trim())
     formData.append('type', formValues.type)
+    if (formValues.machineId) {
+      formData.append('machineId', formValues.machineId)
+    }
     formData.append('file', selectedFile)
 
     setUploading(true)
@@ -309,6 +345,33 @@ export default function DocumentsList() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t('form.machine')}</label>
+                <select
+                  className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
+                  value={formValues.machineId}
+                  onChange={(e) =>
+                    setFormValues((prev) => ({ ...prev, machineId: e.target.value }))
+                  }
+                  disabled={machinesLoading || !!machinesError}
+                >
+                  <option value="">{t('form.machinePlaceholder')}</option>
+                  {machines.map((machine) => (
+                    <option key={machine.id} value={machine.id}>
+                      {machine.name}
+                    </option>
+                  ))}
+                </select>
+                {machinesLoading && (
+                  <p className="text-sm text-muted-foreground">{t('form.machineLoading')}</p>
+                )}
+                {!machinesLoading && machinesError && (
+                  <p className="text-sm text-destructive">{machinesError}</p>
+                )}
+                {!machinesLoading && !machinesError && machines.length === 0 && (
+                  <p className="text-sm text-muted-foreground">{t('form.machineEmpty')}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t('form.file')}</label>

@@ -63,7 +63,8 @@ PostgreSQL is now the primary datastore. Document binaries are written to S3 (or
 | `npm run prisma:migrate` | Run migrations |
 | `npm run prisma:generate` | Regenerate Prisma client |
 | `npm run lint` | Type-check via `tsc --noEmit` |
-| `npm test` | Run Vitest unit tests (retrieval + schema coverage) |
+| `npm test` | Run Vitest suites (unit + integration); requires Postgres test DB |
+| `npm test -- --coverage` | Generate coverage reports (thresholds enforced) |
 
 ## API Overview
 

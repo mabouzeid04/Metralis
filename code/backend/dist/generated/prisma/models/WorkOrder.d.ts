@@ -13,6 +13,7 @@ export type AggregateWorkOrder = {
 };
 export type WorkOrderMinAggregateOutputType = {
     id: string | null;
+    publicId: string | null;
     machineId: string | null;
     title: string | null;
     descriptionRaw: string | null;
@@ -32,6 +33,7 @@ export type WorkOrderMinAggregateOutputType = {
 };
 export type WorkOrderMaxAggregateOutputType = {
     id: string | null;
+    publicId: string | null;
     machineId: string | null;
     title: string | null;
     descriptionRaw: string | null;
@@ -51,6 +53,7 @@ export type WorkOrderMaxAggregateOutputType = {
 };
 export type WorkOrderCountAggregateOutputType = {
     id: number;
+    publicId: number;
     machineId: number;
     title: number;
     descriptionRaw: number;
@@ -74,6 +77,7 @@ export type WorkOrderCountAggregateOutputType = {
 };
 export type WorkOrderMinAggregateInputType = {
     id?: true;
+    publicId?: true;
     machineId?: true;
     title?: true;
     descriptionRaw?: true;
@@ -93,6 +97,7 @@ export type WorkOrderMinAggregateInputType = {
 };
 export type WorkOrderMaxAggregateInputType = {
     id?: true;
+    publicId?: true;
     machineId?: true;
     title?: true;
     descriptionRaw?: true;
@@ -112,6 +117,7 @@ export type WorkOrderMaxAggregateInputType = {
 };
 export type WorkOrderCountAggregateInputType = {
     id?: true;
+    publicId?: true;
     machineId?: true;
     title?: true;
     descriptionRaw?: true;
@@ -197,6 +203,7 @@ export type WorkOrderGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 };
 export type WorkOrderGroupByOutputType = {
     id: string;
+    publicId: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -228,6 +235,7 @@ export type WorkOrderWhereInput = {
     OR?: Prisma.WorkOrderWhereInput[];
     NOT?: Prisma.WorkOrderWhereInput | Prisma.WorkOrderWhereInput[];
     id?: Prisma.StringFilter<"WorkOrder"> | string;
+    publicId?: Prisma.StringFilter<"WorkOrder"> | string;
     machineId?: Prisma.StringFilter<"WorkOrder"> | string;
     title?: Prisma.StringFilter<"WorkOrder"> | string;
     descriptionRaw?: Prisma.StringFilter<"WorkOrder"> | string;
@@ -252,9 +260,11 @@ export type WorkOrderWhereInput = {
     assignedTo?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
     repairActions?: Prisma.RepairActionListRelationFilter;
     parts?: Prisma.WorkOrderPartListRelationFilter;
+    attachments?: Prisma.DocumentListRelationFilter;
 };
 export type WorkOrderOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
+    publicId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     descriptionRaw?: Prisma.SortOrder;
@@ -279,9 +289,11 @@ export type WorkOrderOrderByWithRelationInput = {
     assignedTo?: Prisma.UserOrderByWithRelationInput;
     repairActions?: Prisma.RepairActionOrderByRelationAggregateInput;
     parts?: Prisma.WorkOrderPartOrderByRelationAggregateInput;
+    attachments?: Prisma.DocumentOrderByRelationAggregateInput;
 };
 export type WorkOrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
+    publicId?: string;
     AND?: Prisma.WorkOrderWhereInput | Prisma.WorkOrderWhereInput[];
     OR?: Prisma.WorkOrderWhereInput[];
     NOT?: Prisma.WorkOrderWhereInput | Prisma.WorkOrderWhereInput[];
@@ -309,9 +321,11 @@ export type WorkOrderWhereUniqueInput = Prisma.AtLeast<{
     assignedTo?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
     repairActions?: Prisma.RepairActionListRelationFilter;
     parts?: Prisma.WorkOrderPartListRelationFilter;
-}, "id">;
+    attachments?: Prisma.DocumentListRelationFilter;
+}, "id" | "publicId">;
 export type WorkOrderOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
+    publicId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     descriptionRaw?: Prisma.SortOrder;
@@ -340,6 +354,7 @@ export type WorkOrderScalarWhereWithAggregatesInput = {
     OR?: Prisma.WorkOrderScalarWhereWithAggregatesInput[];
     NOT?: Prisma.WorkOrderScalarWhereWithAggregatesInput | Prisma.WorkOrderScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<"WorkOrder"> | string;
+    publicId?: Prisma.StringWithAggregatesFilter<"WorkOrder"> | string;
     machineId?: Prisma.StringWithAggregatesFilter<"WorkOrder"> | string;
     title?: Prisma.StringWithAggregatesFilter<"WorkOrder"> | string;
     descriptionRaw?: Prisma.StringWithAggregatesFilter<"WorkOrder"> | string;
@@ -362,6 +377,7 @@ export type WorkOrderScalarWhereWithAggregatesInput = {
 };
 export type WorkOrderCreateInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -383,9 +399,11 @@ export type WorkOrderCreateInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -407,9 +425,11 @@ export type WorkOrderUncheckedCreateInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -431,9 +451,11 @@ export type WorkOrderUpdateInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -455,9 +477,11 @@ export type WorkOrderUncheckedUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateManyInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -480,6 +504,7 @@ export type WorkOrderCreateManyInput = {
 };
 export type WorkOrderUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -499,6 +524,7 @@ export type WorkOrderUpdateManyMutationInput = {
 };
 export type WorkOrderUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -529,6 +555,7 @@ export type WorkOrderOrderByRelationAggregateInput = {
 };
 export type WorkOrderCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    publicId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     descriptionRaw?: Prisma.SortOrder;
@@ -551,6 +578,7 @@ export type WorkOrderCountOrderByAggregateInput = {
 };
 export type WorkOrderMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    publicId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     descriptionRaw?: Prisma.SortOrder;
@@ -570,6 +598,7 @@ export type WorkOrderMaxOrderByAggregateInput = {
 };
 export type WorkOrderMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
+    publicId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     descriptionRaw?: Prisma.SortOrder;
@@ -590,6 +619,10 @@ export type WorkOrderMinOrderByAggregateInput = {
 export type WorkOrderScalarRelationFilter = {
     is?: Prisma.WorkOrderWhereInput;
     isNot?: Prisma.WorkOrderWhereInput;
+};
+export type WorkOrderNullableScalarRelationFilter = {
+    is?: Prisma.WorkOrderWhereInput | null;
+    isNot?: Prisma.WorkOrderWhereInput | null;
 };
 export type WorkOrderCreateNestedManyWithoutReportedByInput = {
     create?: Prisma.XOR<Prisma.WorkOrderCreateWithoutReportedByInput, Prisma.WorkOrderUncheckedCreateWithoutReportedByInput> | Prisma.WorkOrderCreateWithoutReportedByInput[] | Prisma.WorkOrderUncheckedCreateWithoutReportedByInput[];
@@ -738,8 +771,23 @@ export type WorkOrderUpdateOneRequiredWithoutPartsNestedInput = {
     connect?: Prisma.WorkOrderWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.WorkOrderUpdateToOneWithWhereWithoutPartsInput, Prisma.WorkOrderUpdateWithoutPartsInput>, Prisma.WorkOrderUncheckedUpdateWithoutPartsInput>;
 };
+export type WorkOrderCreateNestedOneWithoutAttachmentsInput = {
+    create?: Prisma.XOR<Prisma.WorkOrderCreateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedCreateWithoutAttachmentsInput>;
+    connectOrCreate?: Prisma.WorkOrderCreateOrConnectWithoutAttachmentsInput;
+    connect?: Prisma.WorkOrderWhereUniqueInput;
+};
+export type WorkOrderUpdateOneWithoutAttachmentsNestedInput = {
+    create?: Prisma.XOR<Prisma.WorkOrderCreateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedCreateWithoutAttachmentsInput>;
+    connectOrCreate?: Prisma.WorkOrderCreateOrConnectWithoutAttachmentsInput;
+    upsert?: Prisma.WorkOrderUpsertWithoutAttachmentsInput;
+    disconnect?: Prisma.WorkOrderWhereInput | boolean;
+    delete?: Prisma.WorkOrderWhereInput | boolean;
+    connect?: Prisma.WorkOrderWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.WorkOrderUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.WorkOrderUpdateWithoutAttachmentsInput>, Prisma.WorkOrderUncheckedUpdateWithoutAttachmentsInput>;
+};
 export type WorkOrderCreateWithoutReportedByInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -760,9 +808,11 @@ export type WorkOrderCreateWithoutReportedByInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutReportedByInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -783,6 +833,7 @@ export type WorkOrderUncheckedCreateWithoutReportedByInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutReportedByInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -794,6 +845,7 @@ export type WorkOrderCreateManyReportedByInputEnvelope = {
 };
 export type WorkOrderCreateWithoutAssignedToInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -814,9 +866,11 @@ export type WorkOrderCreateWithoutAssignedToInput = {
     reportedBy: Prisma.UserCreateNestedOneWithoutReportedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutAssignedToInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -837,6 +891,7 @@ export type WorkOrderUncheckedCreateWithoutAssignedToInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutAssignedToInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -864,6 +919,7 @@ export type WorkOrderScalarWhereInput = {
     OR?: Prisma.WorkOrderScalarWhereInput[];
     NOT?: Prisma.WorkOrderScalarWhereInput | Prisma.WorkOrderScalarWhereInput[];
     id?: Prisma.StringFilter<"WorkOrder"> | string;
+    publicId?: Prisma.StringFilter<"WorkOrder"> | string;
     machineId?: Prisma.StringFilter<"WorkOrder"> | string;
     title?: Prisma.StringFilter<"WorkOrder"> | string;
     descriptionRaw?: Prisma.StringFilter<"WorkOrder"> | string;
@@ -899,6 +955,7 @@ export type WorkOrderUpdateManyWithWhereWithoutAssignedToInput = {
 };
 export type WorkOrderCreateWithoutMachineInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -919,9 +976,11 @@ export type WorkOrderCreateWithoutMachineInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutMachineInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -942,6 +1001,7 @@ export type WorkOrderUncheckedCreateWithoutMachineInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutMachineInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -966,6 +1026,7 @@ export type WorkOrderUpdateManyWithWhereWithoutMachineInput = {
 };
 export type WorkOrderCreateWithoutRepairActionsInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -986,9 +1047,11 @@ export type WorkOrderCreateWithoutRepairActionsInput = {
     reportedBy: Prisma.UserCreateNestedOneWithoutReportedWorkOrdersInput;
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutRepairActionsInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -1009,6 +1072,7 @@ export type WorkOrderUncheckedCreateWithoutRepairActionsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutRepairActionsInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1025,6 +1089,7 @@ export type WorkOrderUpdateToOneWithWhereWithoutRepairActionsInput = {
 };
 export type WorkOrderUpdateWithoutRepairActionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1045,9 +1110,11 @@ export type WorkOrderUpdateWithoutRepairActionsInput = {
     reportedBy?: Prisma.UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput;
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutRepairActionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1068,9 +1135,11 @@ export type WorkOrderUncheckedUpdateWithoutRepairActionsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateWithoutPartsInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -1091,9 +1160,11 @@ export type WorkOrderCreateWithoutPartsInput = {
     reportedBy: Prisma.UserCreateNestedOneWithoutReportedWorkOrdersInput;
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutPartsInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -1114,6 +1185,7 @@ export type WorkOrderUncheckedCreateWithoutPartsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutPartsInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1130,6 +1202,7 @@ export type WorkOrderUpdateToOneWithWhereWithoutPartsInput = {
 };
 export type WorkOrderUpdateWithoutPartsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1150,9 +1223,11 @@ export type WorkOrderUpdateWithoutPartsInput = {
     reportedBy?: Prisma.UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput;
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutPartsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1173,9 +1248,124 @@ export type WorkOrderUncheckedUpdateWithoutPartsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+};
+export type WorkOrderCreateWithoutAttachmentsInput = {
+    id?: string;
+    publicId?: string;
+    title: string;
+    descriptionRaw: string;
+    status?: $Enums.WorkOrderStatus;
+    type?: $Enums.WorkOrderType;
+    priority?: $Enums.WorkOrderPriority;
+    reportedAt?: Date | string;
+    startedAt?: Date | string | null;
+    completedAt?: Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: string | null;
+    rootCause?: string | null;
+    failureMode?: string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    machine: Prisma.MachineCreateNestedOneWithoutWorkOrdersInput;
+    reportedBy: Prisma.UserCreateNestedOneWithoutReportedWorkOrdersInput;
+    assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
+    parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+};
+export type WorkOrderUncheckedCreateWithoutAttachmentsInput = {
+    id?: string;
+    publicId?: string;
+    machineId: string;
+    title: string;
+    descriptionRaw: string;
+    status?: $Enums.WorkOrderStatus;
+    type?: $Enums.WorkOrderType;
+    priority?: $Enums.WorkOrderPriority;
+    reportedAt?: Date | string;
+    reportedById: string;
+    assignedToId?: string | null;
+    startedAt?: Date | string | null;
+    completedAt?: Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: string | null;
+    rootCause?: string | null;
+    failureMode?: string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
+    parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+};
+export type WorkOrderCreateOrConnectWithoutAttachmentsInput = {
+    where: Prisma.WorkOrderWhereUniqueInput;
+    create: Prisma.XOR<Prisma.WorkOrderCreateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedCreateWithoutAttachmentsInput>;
+};
+export type WorkOrderUpsertWithoutAttachmentsInput = {
+    update: Prisma.XOR<Prisma.WorkOrderUpdateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedUpdateWithoutAttachmentsInput>;
+    create: Prisma.XOR<Prisma.WorkOrderCreateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedCreateWithoutAttachmentsInput>;
+    where?: Prisma.WorkOrderWhereInput;
+};
+export type WorkOrderUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: Prisma.WorkOrderWhereInput;
+    data: Prisma.XOR<Prisma.WorkOrderUpdateWithoutAttachmentsInput, Prisma.WorkOrderUncheckedUpdateWithoutAttachmentsInput>;
+};
+export type WorkOrderUpdateWithoutAttachmentsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
+    type?: Prisma.EnumWorkOrderTypeFieldUpdateOperationsInput | $Enums.WorkOrderType;
+    priority?: Prisma.EnumWorkOrderPriorityFieldUpdateOperationsInput | $Enums.WorkOrderPriority;
+    reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    failureMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    machine?: Prisma.MachineUpdateOneRequiredWithoutWorkOrdersNestedInput;
+    reportedBy?: Prisma.UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput;
+    assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
+    parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+};
+export type WorkOrderUncheckedUpdateWithoutAttachmentsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
+    machineId?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
+    type?: Prisma.EnumWorkOrderTypeFieldUpdateOperationsInput | $Enums.WorkOrderType;
+    priority?: Prisma.EnumWorkOrderPriorityFieldUpdateOperationsInput | $Enums.WorkOrderPriority;
+    reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    failureMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateManyReportedByInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -1197,6 +1387,7 @@ export type WorkOrderCreateManyReportedByInput = {
 };
 export type WorkOrderCreateManyAssignedToInput = {
     id?: string;
+    publicId?: string;
     machineId: string;
     title: string;
     descriptionRaw: string;
@@ -1218,6 +1409,7 @@ export type WorkOrderCreateManyAssignedToInput = {
 };
 export type WorkOrderUpdateWithoutReportedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1238,9 +1430,11 @@ export type WorkOrderUpdateWithoutReportedByInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutReportedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1261,9 +1455,11 @@ export type WorkOrderUncheckedUpdateWithoutReportedByInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutReportedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1285,6 +1481,7 @@ export type WorkOrderUncheckedUpdateManyWithoutReportedByInput = {
 };
 export type WorkOrderUpdateWithoutAssignedToInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1305,9 +1502,11 @@ export type WorkOrderUpdateWithoutAssignedToInput = {
     reportedBy?: Prisma.UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutAssignedToInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1328,9 +1527,11 @@ export type WorkOrderUncheckedUpdateWithoutAssignedToInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutAssignedToInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1352,6 +1553,7 @@ export type WorkOrderUncheckedUpdateManyWithoutAssignedToInput = {
 };
 export type WorkOrderCreateManyMachineInput = {
     id?: string;
+    publicId?: string;
     title: string;
     descriptionRaw: string;
     status?: $Enums.WorkOrderStatus;
@@ -1373,6 +1575,7 @@ export type WorkOrderCreateManyMachineInput = {
 };
 export type WorkOrderUpdateWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1393,9 +1596,11 @@ export type WorkOrderUpdateWithoutMachineInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1416,9 +1621,11 @@ export type WorkOrderUncheckedUpdateWithoutMachineInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
     status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
@@ -1444,10 +1651,12 @@ export type WorkOrderUncheckedUpdateManyWithoutMachineInput = {
 export type WorkOrderCountOutputType = {
     repairActions: number;
     parts: number;
+    attachments: number;
 };
 export type WorkOrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     repairActions?: boolean | WorkOrderCountOutputTypeCountRepairActionsArgs;
     parts?: boolean | WorkOrderCountOutputTypeCountPartsArgs;
+    attachments?: boolean | WorkOrderCountOutputTypeCountAttachmentsArgs;
 };
 /**
  * WorkOrderCountOutputType without action
@@ -1470,8 +1679,15 @@ export type WorkOrderCountOutputTypeCountRepairActionsArgs<ExtArgs extends runti
 export type WorkOrderCountOutputTypeCountPartsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.WorkOrderPartWhereInput;
 };
+/**
+ * WorkOrderCountOutputType without action
+ */
+export type WorkOrderCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.DocumentWhereInput;
+};
 export type WorkOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
+    publicId?: boolean;
     machineId?: boolean;
     title?: boolean;
     descriptionRaw?: boolean;
@@ -1496,10 +1712,12 @@ export type WorkOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
     assignedTo?: boolean | Prisma.WorkOrder$assignedToArgs<ExtArgs>;
     repairActions?: boolean | Prisma.WorkOrder$repairActionsArgs<ExtArgs>;
     parts?: boolean | Prisma.WorkOrder$partsArgs<ExtArgs>;
+    attachments?: boolean | Prisma.WorkOrder$attachmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.WorkOrderCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["workOrder"]>;
 export type WorkOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
+    publicId?: boolean;
     machineId?: boolean;
     title?: boolean;
     descriptionRaw?: boolean;
@@ -1525,6 +1743,7 @@ export type WorkOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 }, ExtArgs["result"]["workOrder"]>;
 export type WorkOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
+    publicId?: boolean;
     machineId?: boolean;
     title?: boolean;
     descriptionRaw?: boolean;
@@ -1550,6 +1769,7 @@ export type WorkOrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 }, ExtArgs["result"]["workOrder"]>;
 export type WorkOrderSelectScalar = {
     id?: boolean;
+    publicId?: boolean;
     machineId?: boolean;
     title?: boolean;
     descriptionRaw?: boolean;
@@ -1570,13 +1790,14 @@ export type WorkOrderSelectScalar = {
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type WorkOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "machineId" | "title" | "descriptionRaw" | "status" | "type" | "priority" | "reportedAt" | "reportedById" | "assignedToId" | "startedAt" | "completedAt" | "symptoms" | "suspectedCause" | "rootCause" | "failureMode" | "environmentContext" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["workOrder"]>;
+export type WorkOrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "publicId" | "machineId" | "title" | "descriptionRaw" | "status" | "type" | "priority" | "reportedAt" | "reportedById" | "assignedToId" | "startedAt" | "completedAt" | "symptoms" | "suspectedCause" | "rootCause" | "failureMode" | "environmentContext" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["workOrder"]>;
 export type WorkOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     machine?: boolean | Prisma.MachineDefaultArgs<ExtArgs>;
     reportedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     assignedTo?: boolean | Prisma.WorkOrder$assignedToArgs<ExtArgs>;
     repairActions?: boolean | Prisma.WorkOrder$repairActionsArgs<ExtArgs>;
     parts?: boolean | Prisma.WorkOrder$partsArgs<ExtArgs>;
+    attachments?: boolean | Prisma.WorkOrder$attachmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.WorkOrderCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type WorkOrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1597,9 +1818,11 @@ export type $WorkOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalA
         assignedTo: Prisma.$UserPayload<ExtArgs> | null;
         repairActions: Prisma.$RepairActionPayload<ExtArgs>[];
         parts: Prisma.$WorkOrderPartPayload<ExtArgs>[];
+        attachments: Prisma.$DocumentPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
+        publicId: string;
         machineId: string;
         title: string;
         descriptionRaw: string;
@@ -1953,6 +2176,7 @@ export interface Prisma__WorkOrderClient<T, Null = never, ExtArgs extends runtim
     assignedTo<T extends Prisma.WorkOrder$assignedToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$assignedToArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     repairActions<T extends Prisma.WorkOrder$repairActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$repairActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RepairActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     parts<T extends Prisma.WorkOrder$partsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$partsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    attachments<T extends Prisma.WorkOrder$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1979,6 +2203,7 @@ export interface Prisma__WorkOrderClient<T, Null = never, ExtArgs extends runtim
  */
 export interface WorkOrderFieldRefs {
     readonly id: Prisma.FieldRef<"WorkOrder", 'String'>;
+    readonly publicId: Prisma.FieldRef<"WorkOrder", 'String'>;
     readonly machineId: Prisma.FieldRef<"WorkOrder", 'String'>;
     readonly title: Prisma.FieldRef<"WorkOrder", 'String'>;
     readonly descriptionRaw: Prisma.FieldRef<"WorkOrder", 'String'>;
@@ -2439,6 +2664,29 @@ export type WorkOrder$partsArgs<ExtArgs extends runtime.Types.Extensions.Interna
     take?: number;
     skip?: number;
     distinct?: Prisma.WorkOrderPartScalarFieldEnum | Prisma.WorkOrderPartScalarFieldEnum[];
+};
+/**
+ * WorkOrder.attachments
+ */
+export type WorkOrder$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: Prisma.DocumentSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: Prisma.DocumentOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.DocumentInclude<ExtArgs> | null;
+    where?: Prisma.DocumentWhereInput;
+    orderBy?: Prisma.DocumentOrderByWithRelationInput | Prisma.DocumentOrderByWithRelationInput[];
+    cursor?: Prisma.DocumentWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[];
 };
 /**
  * WorkOrder without action
