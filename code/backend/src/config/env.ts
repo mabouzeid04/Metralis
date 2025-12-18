@@ -62,15 +62,15 @@ export const env = {
   },
   ai: {
     provider: process.env.AI_PROVIDER || "gemini",
-    temperature: Number(process.env.AI_TEMPERATURE ?? "0.2"),
+    temperature: Number(process.env.AI_TEMPERATURE ?? "0.4"),
     maxTokens: Number(process.env.AI_MAX_TOKENS ?? "1024"),
     gemini: {
       apiKey: process.env.GEMINI_API_KEY as string,
-      model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+      model: process.env.GEMINI_MODEL || "gemini-3-flash-preview",
     },
     openai: {
       apiKey: process.env.OPENAI_API_KEY as string,
-      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      model: process.env.OPENAI_MODEL || "gpt-5.1-2025-11-13",
     },
   },
   whatsapp: whatsappConfig,

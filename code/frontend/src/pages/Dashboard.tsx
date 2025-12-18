@@ -1,94 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   Cell
 } from 'recharts'
-import { 
-  Activity, 
-  AlertCircle, 
-  CheckCircle2, 
+import {
+  Activity,
+  AlertCircle,
+  CheckCircle2,
   Clock,
   Loader2
 } from 'lucide-react'
-import { api } from '@/lib/api'
-
-interface DashboardStats {
-  openWorkOrders: number
-  machinesDown: number
-  completedToday: number
-}
-
-interface MachineStatusChartData {
-  name: string
-  value: number
-  color: string
-}
+import { useDashboardStats, useMachines, getMachineStatusChartData } from '@/lib/hooks/useDashboard'
 
 export default function Dashboard() {
   const { t } = useTranslation(['dashboard', 'common'])
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [machineStatusData, setMachineStatusData] = useState<MachineStatusChartData[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        // Fetch dashboard stats
-        const statsResponse = await api.get('/dashboard/stats')
-        setStats(statsResponse.data.data)
+  // React Query - data cached, instant on back navigation
+  const { data: stats, isLoading: statsLoading } = useDashboardStats()
+  const { data: machines, isLoading: machinesLoading } = useMachines()
 
-        // Fetch machine status counts
-        try {
-          const machinesResponse = await api.get('/machines')
-          const machines = machinesResponse.data.data || []
-          
-          // Count machines by status
-          const statusCounts: Record<string, number> = {}
-          machines.forEach((machine: { status: string }) => {
-            const status = machine.status || 'UNKNOWN'
-            statusCounts[status] = (statusCounts[status] || 0) + 1
-          })
-          
-          // Convert to chart data format
-          const statusColors: Record<string, string> = {
-            'RUNNING': '#10B981',
-            'MAINTENANCE': '#F59E0B',
-            'DOWN': '#EF4444',
-            'RETIRED': '#94A3B8',
-          }
-          
-          const chartData = Object.entries(statusCounts).map(([status, count]) => {
-            const normalized = status.toLowerCase()
-            return {
-              name: t(`common:status.${normalized}`, {
-                defaultValue: status.charAt(0) + status.slice(1).toLowerCase(),
-              }),
-              value: count,
-              color: statusColors[status] || '#94A3B8',
-            }
-          })
-          
-          setMachineStatusData(chartData)
-        } catch {
-          // Ignore machine fetch errors, keep empty chart
-        }
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  const loading = statsLoading || machinesLoading
 
-    fetchDashboardData()
-  }, [t])
+  // Transform machines to chart data
+  const machineStatusData = useMemo(() => {
+    if (!machines) return []
+    return getMachineStatusChartData(machines, t)
+  }, [machines, t])
 
   const statsCards = [
     {
@@ -177,21 +122,21 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={workOrderData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis 
-                    dataKey="name" 
-                    stroke="#888888" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false} 
+                  <XAxis
+                    dataKey="name"
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
                   />
-                  <YAxis 
-                    stroke="#888888" 
-                    fontSize={12} 
-                    tickLine={false} 
-                    axisLine={false} 
-                    tickFormatter={(value) => `${value}`} 
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(value) => `${value}`}
                   />
-                  <Tooltip 
+                  <Tooltip
                     cursor={{ fill: 'transparent' }}
                     contentStyle={{ borderRadius: '8px' }}
                   />
@@ -215,12 +160,12 @@ export default function Dashboard() {
                   <BarChart data={machineStatusData} layout="vertical" margin={{ left: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                     <XAxis type="number" hide />
-                    <YAxis 
-                      dataKey="name" 
-                      type="category" 
-                      stroke="#888888" 
-                      fontSize={12} 
-                      tickLine={false} 
+                    <YAxis
+                      dataKey="name"
+                      type="category"
+                      stroke="#888888"
+                      fontSize={12}
+                      tickLine={false}
                       axisLine={false}
                       width={100}
                     />

@@ -79,6 +79,13 @@ router.post("/login", async (req, res) => {
     if (!user) {
         return res.status(401).json({ error: { message: "Invalid credentials" } });
     }
+    if (!user.active) {
+        return res.status(403).json({
+            error: {
+                message: "Your account has been deactivated. Please contact an administrator.",
+            },
+        });
+    }
     const valid = await (0, password_1.comparePassword)(password, user.passwordHash);
     if (!valid) {
         return res.status(401).json({ error: { message: "Invalid credentials" } });

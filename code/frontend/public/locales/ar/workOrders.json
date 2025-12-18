@@ -6,6 +6,15 @@
   "emptyTitle": "لا توجد أوامر عمل",
   "emptySearchHint": "جرّب مصطلح بحث مختلف",
   "emptyCreateHint": "ابدأ بإنشاء أول أمر عمل",
+  "filters": {
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "type": "النوع",
+    "machine": "الآلة",
+    "any": "أي",
+    "apply": "تطبيق",
+    "clear": "مسح"
+  },
   "table": {
     "id": "المعرف",
     "status": "الحالة",

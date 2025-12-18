@@ -22,6 +22,7 @@ import NotFound from '@/pages/NotFound'
 import { ProtectedRoute, AdminRoute } from '@/components/auth/ProtectedRoute'
 import { AIChatProvider } from '@/contexts/AIChatContext'
 import MetralisAI from '@/pages/ai/MetralisAI'
+import AdminAnalytics from '@/pages/analytics/AdminAnalytics'
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/awaiting-approval" element={<AwaitingApproval />} />
-        
+
         {/* Protected Routes */}
         <Route element={<ProtectedRoute><AIChatProvider><AppLayout /></AIChatProvider></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
@@ -60,6 +61,14 @@ function App() {
           <Route path="/parts/:id/edit" element={<EditPart />} />
           <Route path="/parts/:id" element={<PartDetail />} />
           <Route path="/documents" element={<DocumentsList />} />
+          <Route
+            path="/admin/analytics"
+            element={
+              <AdminRoute>
+                <AdminAnalytics />
+              </AdminRoute>
+            }
+          />
           <Route
             path="/users"
             element={

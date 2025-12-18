@@ -32,6 +32,7 @@ router.get("/list", auth_1.requireAuth, async (_req, res) => {
 router.use(auth_1.requireAuth, (0, auth_1.requireRole)(["ADMIN"]));
 router.get("/", async (_req, res) => {
     const users = await prisma_1.prisma.user.findMany({
+        where: { active: true },
         orderBy: { createdAt: "desc" },
         select: {
             id: true,
@@ -155,6 +156,33 @@ router.patch("/:id/reject", async (req, res) => {
     }
     try {
         const user = await transitionStatus(req.params.id, "REJECTED", req.user.id, parsed.data.reason);
+        return res.json({ data: user });
+    }
+    catch {
+        return res.status(404).json({ error: { message: "User not found" } });
+    }
+});
+router.delete("/:id", async (req, res) => {
+    if (req.user.id === req.params.id) {
+        return res.status(400).json({ error: { message: "You cannot delete your own account" } });
+    }
+    try {
+        const user = await prisma_1.prisma.user.update({
+            where: { id: req.params.id },
+            data: {
+                active: false,
+                status: "REJECTED",
+                rejectedAt: new Date(),
+                rejectionReason: "Deleted by admin",
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                status: true,
+                active: true,
+            },
+        });
         return res.json({ data: user });
     }
     catch {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Loader2, ClipboardList } from 'lucide-react'
@@ -12,66 +12,57 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { api } from '@/lib/api'
-
-interface WorkOrder {
-  id: string
-  publicId?: string
-  title: string
-  status: string
-  type: string
-  priority: string
-  createdAt: string
-  completedAt: string | null
-  machine: {
-    id: string
-    name: string
-  } | null
-  assignedTo: {
-    id: string
-    name: string
-  } | null
-}
+import { useWorkOrders, type WorkOrderFilters } from '@/lib/hooks/useWorkOrders'
 
 export default function WorkOrdersList() {
-  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [filters, setFilters] = useState<WorkOrderFilters>({})
   const { t } = useTranslation(['workOrders', 'common'])
 
+  // Debounce search input
   useEffect(() => {
-    const fetchWorkOrders = async () => {
-      try {
-        const response = await api.get('/work-orders')
-        setWorkOrders(response.data.data || [])
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch work orders:', err)
-        setError(t('errors.load'))
-      } finally {
-        setLoading(false)
-      }
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
+
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data, isLoading, error } = useWorkOrders({ ...filters, q: debouncedSearch || undefined })
+  const workOrders = useMemo(() => data?.data || [], [data])
+
+  // Client-side filtering for immediate search feedback
+  const filteredWOs = useMemo(() => {
+    if (!searchInput || searchInput === debouncedSearch) {
+      return workOrders
     }
+    // While debounce is pending, filter client-side for instant feedback
+    const search = searchInput.toLowerCase()
+    return workOrders.filter((wo) => {
+      const displayId = (wo.publicId || wo.id || '').toLowerCase()
+      return (
+        wo.title.toLowerCase().includes(search) ||
+        displayId.includes(search) ||
+        (wo.machine?.name && wo.machine.name.toLowerCase().includes(search))
+      )
+    })
+  }, [workOrders, searchInput, debouncedSearch])
 
-    fetchWorkOrders()
-  }, [])
-
-  const filteredWOs = workOrders.filter((wo) => {
-    const displayId = (wo.publicId || wo.id || '').toLowerCase()
-    const search = searchTerm.toLowerCase()
-
-    return (
-      wo.title.toLowerCase().includes(search) ||
-      displayId.includes(search) ||
-      (wo.machine?.name && wo.machine.name.toLowerCase().includes(search))
-    )
-  })
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -83,7 +74,7 @@ export default function WorkOrdersList() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <ClipboardList className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error}</p>
+        <p className="text-muted-foreground">{error.message || t('errors.load')}</p>
         <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
@@ -111,13 +102,65 @@ export default function WorkOrdersList() {
               <Input
                 placeholder={t('searchPlaceholder')}
                 className="pl-9"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{t('filters.status')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {['OPEN', 'IN_PROGRESS', 'COMPLETED'].map((status) => (
+                    <DropdownMenuCheckboxItem
+                      key={status}
+                      checked={filters.status === status}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          status: checked ? status : undefined,
+                        }))
+                      }}
+                    >
+                      {status.replace('_', ' ')}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>{t('filters.priority')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((priority) => (
+                    <DropdownMenuCheckboxItem
+                      key={priority}
+                      checked={filters.priority === priority}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          priority: checked ? priority : undefined,
+                        }))
+                      }}
+                    >
+                      {priority}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                {(filters.status || filters.priority) && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onSelect={() => setFilters({})}
+                      className="justify-center text-center"
+                    >
+                      {t('filters.clear')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -126,9 +169,9 @@ export default function WorkOrdersList() {
               <ClipboardList className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
+                {searchInput ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
-              {!searchTerm && (
+              {!searchInput && (
                 <Button asChild>
                   <Link to="/work-orders/new">
                     <Plus className="mr-2 h-4 w-4" /> {t('create')}

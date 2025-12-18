@@ -6,6 +6,15 @@
   "emptyTitle": "No work orders found",
   "emptySearchHint": "Try a different search term",
   "emptyCreateHint": "Get started by creating your first work order",
+  "filters": {
+    "status": "Status",
+    "priority": "Priority",
+    "type": "Type",
+    "machine": "Machine",
+    "any": "Any",
+    "apply": "Apply",
+    "clear": "Clear"
+  },
   "table": {
     "id": "ID",
     "status": "Status",

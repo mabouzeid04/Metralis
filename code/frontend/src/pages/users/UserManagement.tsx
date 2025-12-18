@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon } from 'lucide-react'
+import { ChevronDown, Check, Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 type UserStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
@@ -190,6 +196,10 @@ export default function UserManagement() {
     setFormState((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleRoleChange = (role: UserRecord['role']) => {
+    setFormState((prev) => ({ ...prev, role }))
+  }
+
   const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitting(true)
@@ -340,19 +350,29 @@ export default function UserManagement() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="role">{t('form.role')}</Label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formState.role}
-                  onChange={handleInputChange}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  {roleOptions.map((role) => (
-                    <option key={role} value={role}>
-                      {t(`common:roles.${role.toLowerCase()}`, { defaultValue: role })}
-                    </option>
-                  ))}
-                </select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between font-normal"
+                    >
+                      {t(`common:roles.${formState.role.toLowerCase()}`, { defaultValue: formState.role })}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[calc(100%-2rem)] min-w-[200px] p-1">
+                    {roleOptions.map((role) => (
+                      <DropdownMenuItem
+                        key={role}
+                        onSelect={() => handleRoleChange(role)}
+                        className="cursor-pointer flex items-center justify-between"
+                      >
+                        {t(`common:roles.${role.toLowerCase()}`, { defaultValue: role })}
+                        {formState.role === role && <Check className="h-4 w-4 opacity-50" />}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">{t('form.password')}</Label>

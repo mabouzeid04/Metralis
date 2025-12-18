@@ -45,9 +45,8 @@ const createPoolMock = () => {
     return poolSpy;
 };
 const importPgModule = async () => {
-    return vitest_1.vi.isolateModulesAsync(async () => {
-        return Promise.resolve().then(() => __importStar(require("./pg")));
-    });
+    vitest_1.vi.resetModules();
+    return Promise.resolve().then(() => __importStar(require("./pg")));
 };
 (0, vitest_1.afterEach)(() => {
     vitest_1.vi.resetModules();

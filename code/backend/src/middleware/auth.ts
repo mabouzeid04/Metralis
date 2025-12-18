@@ -39,4 +39,10 @@ export const requireRole = (roles: UserRole[]) => {
   };
 };
 
-
+// Convenience middleware for admin-only routes
+export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user || req.user.role !== "ADMIN") {
+    return res.status(403).json({ error: { message: "Admin access required" } });
+  }
+  return next();
+};

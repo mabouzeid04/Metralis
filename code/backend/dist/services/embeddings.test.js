@@ -44,6 +44,7 @@ const vitest_1 = require("vitest");
         await (0, vitest_1.expect)(embedTexts([])).resolves.toEqual([]);
     });
     (0, vitest_1.it)("throws when provider returns missing embeddings", async () => {
+        vitest_1.vi.resetModules();
         vitest_1.vi.doMock("openai", () => ({
             default: class OpenAI {
                 constructor() {
@@ -55,10 +56,8 @@ const vitest_1 = require("vitest");
                 }
             },
         }));
-        await vitest_1.vi.isolateModulesAsync(async () => {
-            const { embedTexts } = await Promise.resolve().then(() => __importStar(require("./embeddings")));
-            await (0, vitest_1.expect)(embedTexts(["Hello"])).rejects.toThrow("Embedding provider returned empty vector");
-        });
+        const { embedTexts } = await Promise.resolve().then(() => __importStar(require("./embeddings")));
+        await (0, vitest_1.expect)(embedTexts(["Hello"])).rejects.toThrow("Embedding provider returned empty vector");
     });
 });
 //# sourceMappingURL=embeddings.test.js.map

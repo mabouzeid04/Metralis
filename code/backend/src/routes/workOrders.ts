@@ -20,6 +20,23 @@ const workOrderSchema = z.object({
   assignedToId: z.string().uuid().nullable().optional(),
 });
 
+const workOrderListQuerySchema = z.object({
+  status: z.enum(["OPEN", "IN_PROGRESS", "WAITING", "CLOSED"]).optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  type: z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
+  machineId: z.string().uuid().optional(),
+  assignedToId: z.string().uuid().optional(),
+  q: z.string().trim().optional(),
+  reportedFrom: z.coerce.date().optional(),
+  reportedTo: z.coerce.date().optional(),
+  startedFrom: z.coerce.date().optional(),
+  startedTo: z.coerce.date().optional(),
+  completedFrom: z.coerce.date().optional(),
+  completedTo: z.coerce.date().optional(),
+  take: z.coerce.number().int().positive().max(200).optional(),
+  skip: z.coerce.number().int().min(0).optional(),
+});
+
 router.use(requireAuth);
 
 const generateWorkOrderPublicId = () => crypto.randomBytes(4).toString("hex").toUpperCase();
@@ -86,33 +103,92 @@ const notifyAssigneeOfWhatsapp = async (workOrder: {
 };
 
 router.get("/", async (req, res) => {
-  const { status, priority, machineId } = req.query;
-
   const where: Prisma.WorkOrderWhereInput = {};
-  if (status) {
-    where.status = String(status).toUpperCase() as WorkOrderStatus;
+  const parsed = workOrderListQuerySchema.safeParse(req.query);
+
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
   }
-  if (priority) {
-    where.priority = String(priority).toUpperCase() as WorkOrderPriority;
+
+  const {
+    status: statusFilter,
+    priority: priorityFilter,
+    type: typeFilter,
+    machineId: machineIdFilter,
+    assignedToId,
+    q,
+    reportedFrom,
+    reportedTo,
+    startedFrom,
+    startedTo,
+    completedFrom,
+    completedTo,
+    take: takeParam,
+    skip: skipParam,
+  } = parsed.data;
+
+  if (statusFilter) {
+    where.status = statusFilter as WorkOrderStatus;
   }
-  if (machineId) {
-    where.machineId = { equals: String(machineId) };
+  if (priorityFilter) {
+    where.priority = priorityFilter as WorkOrderPriority;
   }
+  if (typeFilter) {
+    where.type = typeFilter as WorkOrderType;
+  }
+  if (machineIdFilter) {
+    where.machineId = { equals: machineIdFilter };
+  }
+  if (assignedToId) {
+    where.assignedToId = assignedToId;
+  }
+  if (q) {
+    const term = q.trim();
+    if (term) {
+      // Note: descriptionRaw removed from search for performance
+      // Use title and publicId for quick list searches
+      where.OR = [
+        { title: { contains: term, mode: "insensitive" } },
+        { publicId: { contains: term, mode: "insensitive" } },
+      ];
+    }
+  }
+  if (reportedFrom || reportedTo) {
+    where.reportedAt = {
+      ...(reportedFrom ? { gte: reportedFrom } : {}),
+      ...(reportedTo ? { lte: reportedTo } : {}),
+    };
+  }
+  if (startedFrom || startedTo) {
+    where.startedAt = {
+      ...(startedFrom ? { gte: startedFrom } : {}),
+      ...(startedTo ? { lte: startedTo } : {}),
+    };
+  }
+  if (completedFrom || completedTo) {
+    where.completedAt = {
+      ...(completedFrom ? { gte: completedFrom } : {}),
+      ...(completedTo ? { lte: completedTo } : {}),
+    };
+  }
+
+  const take = takeParam ?? 50;
+  const skip = skipParam ?? 0;
 
   const workOrders = await prisma.workOrder.findMany({
     where,
     orderBy: { reportedAt: "desc" },
+    take,
+    skip,
     include: {
-      machine: true,
-      assignedTo: true,
-      repairActions: true,
-      parts: {
-        include: { part: true },
-      },
+      machine: { select: { id: true, name: true } },
+      assignedTo: { select: { id: true, name: true } },
     },
   });
 
-  return res.json({ data: workOrders });
+  const total = await prisma.workOrder.count({ where });
+
+  return res.json({ data: workOrders, meta: { total, take, skip } });
 });
 
 router.get("/:id", async (req, res) => {

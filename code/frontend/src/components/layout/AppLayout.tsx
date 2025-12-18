@@ -14,12 +14,12 @@ export default function AppLayout() {
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div 
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
-            onClick={() => setSidebarOpen(false)}
+        <div
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
         />
       )}
-      
+
       {/* Mobile Sidebar */}
       <div
         className={cn(

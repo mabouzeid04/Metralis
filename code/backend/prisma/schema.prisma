@@ -81,6 +81,26 @@ enum AiFeedbackValue {
   CORRECT_CAUSE
 }
 
+enum InsightCategory {
+  MAINTENANCE
+  INVENTORY
+  DOCUMENTATION
+  TRAINING
+}
+
+enum InsightPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum InsightStatus {
+  NEW
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -166,6 +186,13 @@ model WorkOrder {
   parts        WorkOrderPart[]
   attachments  Document[]        @relation("WorkOrderDocuments")
   incidentChunks IncidentChunk[]
+
+  @@index([reportedAt])
+  @@index([machineId])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([priority])
+  @@index([type])
 }
 
 model RepairAction {
@@ -186,6 +213,8 @@ model RepairAction {
   updatedAt       DateTime    @updatedAt
 
   attachments Document[] @relation("RepairActionDocuments")
+
+  @@index([workOrderId])
 }
 
 model Part {
@@ -333,3 +362,19 @@ model ChatMessageFeedback {
   @@index([userId])
 }
 
+model SystemInsight {
+  id        String          @id @default(uuid())
+  title     String
+  content   String
+  category  InsightCategory
+  priority  InsightPriority
+  status    InsightStatus   @default(NEW)
+  metadata  Json?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([createdAt])
+}

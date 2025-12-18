@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, FileText, Download, Eye, Loader2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,34 +11,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/api'
+import { useDocuments, useInvalidateDocuments, type Document, type DocumentType } from '@/lib/hooks/useDocuments'
+import { useMachines } from '@/lib/hooks/useDashboard'
 
-interface Document {
-  id: string
-  title: string
-  type: DocumentType
-  filename: string
-  fileSize: number | null
-  mimeType: string | null
-  createdAt: string
-  machine: {
-    id: string
-    name: string
-  } | null
-  uploadedBy: {
-    id: string
-    name: string
-  } | null
-}
-
-interface Machine {
-  id: string
-  name: string
-}
-
-type DocumentType = 'MANUAL' | 'SOP' | 'TROUBLESHOOTING' | 'OTHER'
 const documentTypes: { value: DocumentType; labelKey: string }[] = [
   { value: 'MANUAL', labelKey: 'types.manual' },
   { value: 'SOP', labelKey: 'types.sop' },
@@ -60,10 +48,9 @@ function formatFileSize(bytes: number | null): string {
 }
 
 export default function DocumentsList() {
-  const [documents, setDocuments] = useState<Document[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [filters, setFilters] = useState<{ machineId?: string; type?: DocumentType }>({})
+  const [machineSearch, setMachineSearch] = useState('')
   const [uploadOpen, setUploadOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -72,9 +59,6 @@ export default function DocumentsList() {
     type: 'MANUAL',
     machineId: '',
   })
-  const [machines, setMachines] = useState<Machine[]>([])
-  const [machinesLoading, setMachinesLoading] = useState(false)
-  const [machinesError, setMachinesError] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const previewDocIdRef = useRef<string | null>(null)
@@ -84,60 +68,33 @@ export default function DocumentsList() {
   const [previewError, setPreviewError] = useState<string | null>(null)
   const { t } = useTranslation(['documents', 'common'])
 
-  const fetchDocuments = useCallback(async () => {
-    try {
-      const response = await api.get('/documents')
-      setDocuments(response.data.data || [])
-      setError(null)
-    } catch (err) {
-      console.error('Failed to fetch documents:', err)
-      setError(t('errors.load'))
-    }
-  }, [t])
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data: documents = [], isLoading: loading, error } = useDocuments()
+  const invalidateDocuments = useInvalidateDocuments()
 
-  const fetchMachines = useCallback(async () => {
-    setMachinesLoading(true)
-    try {
-      setMachinesError(null)
-      const response = await api.get('/machines')
-      const remoteMachines = Array.isArray(response.data?.data) ? response.data.data : []
-      setMachines(
-        remoteMachines
-          .filter((machine: { id?: string; name?: string }) => Boolean(machine?.id) && Boolean(machine?.name))
-          .map((machine: { id: string; name: string }) => ({ id: machine.id, name: machine.name })),
-      )
-    } catch (err) {
-      console.error('Failed to load machines:', err)
-      setMachines([])
-      setMachinesError(t('errors.loadMachines'))
-    } finally {
-      setMachinesLoading(false)
-    }
-  }, [t])
+  // Machines for upload form (also cached)
+  const { data: machines = [], isLoading: machinesLoading, error: machinesError } = useMachines()
 
-  useEffect(() => {
-    setLoading(true)
-    fetchDocuments().finally(() => setLoading(false))
-  }, [fetchDocuments])
+  const filteredDocs = useMemo(() =>
+    documents.filter((doc) => {
+      const matchesSearch =
+        doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
-  useEffect(() => {
-    fetchMachines()
-  }, [fetchMachines])
+      const matchesMachine = !filters.machineId || doc.machine?.id === filters.machineId
+      const matchesType = !filters.type || doc.type === filters.type
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl)
-      }
-    }
-  }, [previewUrl])
+      return matchesSearch && matchesMachine && matchesType
+    }),
+    [documents, searchTerm, filters]
+  )
 
   const handleDownload = async (doc: Document) => {
     try {
       const response = await api.get(`/documents/${doc.id}/file`, {
         responseType: 'blob'
       })
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
@@ -222,7 +179,7 @@ export default function DocumentsList() {
       await api.post('/documents', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-      await fetchDocuments()
+      await invalidateDocuments()
       closeUploader()
     } catch (err) {
       console.error('Failed to upload document:', err)
@@ -232,10 +189,7 @@ export default function DocumentsList() {
     }
   }
 
-  const filteredDocs = documents.filter(doc => 
-    doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
+
 
   const canPreviewDocument = (doc?: Document | null) => {
     if (!doc) return false
@@ -295,7 +249,7 @@ export default function DocumentsList() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <FileText className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error}</p>
+        <p className="text-muted-foreground">{error.message || t('errors.load')}</p>
         <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
@@ -367,7 +321,7 @@ export default function DocumentsList() {
                   <p className="text-sm text-muted-foreground">{t('form.machineLoading')}</p>
                 )}
                 {!machinesLoading && machinesError && (
-                  <p className="text-sm text-destructive">{machinesError}</p>
+                  <p className="text-sm text-destructive">{machinesError.message || t('errors.loadMachines')}</p>
                 )}
                 {!machinesLoading && !machinesError && machines.length === 0 && (
                   <p className="text-sm text-muted-foreground">{t('form.machineEmpty')}</p>
@@ -427,9 +381,74 @@ export default function DocumentsList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{t('table.type')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {documentTypes.map((type) => (
+                    <DropdownMenuCheckboxItem
+                      key={type.value}
+                      checked={filters.type === type.value}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          type: checked ? type.value : undefined,
+                        }))
+                      }}
+                    >
+                      {t(type.labelKey)}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>{t('table.machine')}</DropdownMenuLabel>
+                <div className="px-2 py-1.5" onKeyDown={(e) => e.stopPropagation()}>
+                  <Input
+                    placeholder={t('searchMachinesPlaceholder')}
+                    value={machineSearch}
+                    onChange={(e) => setMachineSearch(e.target.value)}
+                    className="h-8"
+                  />
+                </div>
+                <DropdownMenuGroup className="max-h-[200px] overflow-yscroll">
+                  {machines
+                    .filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase()))
+                    .map((machine) => (
+                      <DropdownMenuCheckboxItem
+                        key={machine.id}
+                        checked={filters.machineId === machine.id}
+                        onCheckedChange={(checked) => {
+                          setFilters((prev) => ({
+                            ...prev,
+                            machineId: checked ? machine.id : undefined,
+                          }))
+                        }}
+                      >
+                        {machine.name}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  {machines.filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase())).length === 0 && (
+                    <div className="px-2 py-1.5 text-sm text-muted-foreground">{t('noMachinesFound')}</div>
+                  )}
+                </DropdownMenuGroup>
+                {(filters.type || filters.machineId) && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onSelect={() => setFilters({})}
+                      className="justify-center text-center"
+                    >
+                      {t('filters.clear')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -467,10 +486,10 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="font-medium">
                       <div className="flex flex-col">
-                          <span>{doc.title}</span>
-                          <span className="text-xs text-muted-foreground md:hidden">
-                            {doc.type} • {formatFileSize(doc.fileSize)}
-                          </span>
+                        <span>{doc.title}</span>
+                        <span className="text-xs text-muted-foreground md:hidden">
+                          {doc.type} {' • '} {formatFileSize(doc.fileSize)}
+                        </span>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
@@ -485,17 +504,17 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon" title={t('view')} onClick={() => handlePreview(doc)}>
-                              <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            title={t('download')}
-                            onClick={() => handleDownload(doc)}
-                          >
-                              <Download className="h-4 w-4" />
-                          </Button>
+                        <Button variant="ghost" size="icon" title={t('view')} onClick={() => handlePreview(doc)}>
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title={t('download')}
+                          onClick={() => handleDownload(doc)}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -544,9 +563,9 @@ export default function DocumentsList() {
                 <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
                   <p className="text-sm text-destructive">{previewError}</p>
                   <div className="flex gap-2">
-                    <Button onClick={() => handlePreview(previewDoc)}>Retry</Button>
+                    <Button onClick={() => handlePreview(previewDoc)}>{t('common:actions.retry')}</Button>
                     <Button variant="ghost" onClick={closePreview}>
-                      Close
+                      {t('common:actions.close')}
                     </Button>
                   </div>
                 </div>
@@ -565,10 +584,10 @@ export default function DocumentsList() {
                 previewDoc &&
                 !canPreviewDocument(previewDoc) && (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-center text-sm text-muted-foreground px-6">
-                    <p>Preview is unavailable for this file type. Please download it instead.</p>
+                    <p>{t('previewUnavailable')}</p>
                     <Button onClick={() => handleDownload(previewDoc)}>
                       <Download className="h-4 w-4 mr-2" />
-                      Download document
+                      {t('downloadDocument')}
                     </Button>
                   </div>
                 )}

@@ -24,6 +24,10 @@
     "failed": "Failed to upload document. Please try again."
   },
   "searchPlaceholder": "Search documents...",
+  "searchMachinesPlaceholder": "Search machines...",
+  "noMachinesFound": "No machines found",
+  "previewUnavailable": "Preview is unavailable for this file type. Please download it instead.",
+  "downloadDocument": "Download document",
   "emptyTitle": "No documents found",
   "emptySearchHint": "Try a different search term",
   "emptyCreateHint": "Get started by uploading your first document",

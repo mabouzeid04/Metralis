@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Package, Loader2 } from 'lucide-react'
@@ -14,50 +14,24 @@ import {
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { api } from '@/lib/api'
+import { useParts } from '@/lib/hooks/useParts'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface Part {
-  id: string
-  name: string
-  partNumber: string | null
-  category: string | null
-  stockQuantity: number
-  minStock: number
-  manufacturer: string | null
-  location: string | null
-  unitCost: number | null
-}
-
 export default function PartsList() {
-  const [parts, setParts] = useState<Part[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const { isApproved } = useAuth()
   const { t } = useTranslation(['parts', 'common'])
 
-  useEffect(() => {
-    const fetchParts = async () => {
-      try {
-        const response = await api.get('/parts')
-        setParts(response.data.data || [])
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch parts:', err)
-        setError(t('errors.loadList'))
-      } finally {
-        setLoading(false)
-      }
-    }
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data: parts = [], isLoading: loading, error } = useParts()
 
-    fetchParts()
-  }, [t])
-
-  const filteredParts = parts.filter(part => 
-    part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (part.category && part.category.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredParts = useMemo(() =>
+    parts.filter(part =>
+      part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (part.category && part.category.toLowerCase().includes(searchTerm.toLowerCase()))
+    ),
+    [parts, searchTerm]
   )
 
   if (loading) {
@@ -72,7 +46,7 @@ export default function PartsList() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Package className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error}</p>
+        <p className="text-muted-foreground">{error.message || t('errors.loadList')}</p>
         <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
@@ -119,20 +93,20 @@ export default function PartsList() {
           {filteredParts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Package className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold">{t('noPartsTitle')}</h3>
+              <h3 className="text-lg font-semibold">{t('noPartsTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                  {searchTerm ? t('noPartsSearch') : t('noPartsEmpty')}
+                {searchTerm ? t('noPartsSearch') : t('noPartsEmpty')}
               </p>
               {!searchTerm &&
                 (isApproved ? (
                   <Button asChild>
                     <Link to="/parts/new">
-                        <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
+                      <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
                     </Link>
                   </Button>
                 ) : (
                   <Button variant="outline" disabled title="Awaiting approval">
-                      <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
+                    <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
                   </Button>
                 ))}
             </div>

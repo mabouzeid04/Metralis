@@ -48,19 +48,17 @@ vitest_1.vi.doMock("./openai", () => ({
 }));
 (0, vitest_1.describe)("getLLMProvider", () => {
     (0, vitest_1.it)("returns cached provider instances and supports aliases", async () => {
-        await vitest_1.vi.isolateModulesAsync(async () => {
-            const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
-            const first = getLLMProvider("gemini");
-            const second = getLLMProvider("google-gemini");
-            (0, vitest_1.expect)(first).toBe(second);
-            (0, vitest_1.expect)(geminiFactory).toHaveBeenCalledTimes(1);
-        });
+        vitest_1.vi.resetModules();
+        const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
+        const first = getLLMProvider("gemini");
+        const second = getLLMProvider("google-gemini");
+        (0, vitest_1.expect)(first).toBe(second);
+        (0, vitest_1.expect)(geminiFactory).toHaveBeenCalledTimes(1);
     });
     (0, vitest_1.it)("throws for unsupported providers", async () => {
-        await vitest_1.vi.isolateModulesAsync(async () => {
-            const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
-            (0, vitest_1.expect)(() => getLLMProvider("unknown")).toThrow("Unsupported AI provider");
-        });
+        vitest_1.vi.resetModules();
+        const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
+        (0, vitest_1.expect)(() => getLLMProvider("unknown")).toThrow("Unsupported AI provider");
     });
 });
 //# sourceMappingURL=index.test.js.map
