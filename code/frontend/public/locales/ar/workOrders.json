@@ -1,0 +1,34 @@
+{
+  "title": "أوامر العمل",
+  "subtitle": "تتبع مهام الصيانة والإصلاحات.",
+  "create": "إنشاء أمر عمل",
+  "searchPlaceholder": "ابحث في أوامر العمل...",
+  "emptyTitle": "لا توجد أوامر عمل",
+  "emptySearchHint": "جرّب مصطلح بحث مختلف",
+  "emptyCreateHint": "ابدأ بإنشاء أول أمر عمل",
+  "filters": {
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "type": "النوع",
+    "machine": "الآلة",
+    "any": "أي",
+    "apply": "تطبيق",
+    "clear": "مسح"
+  },
+  "table": {
+    "id": "المعرف",
+    "status": "الحالة",
+    "title": "العنوان",
+    "machine": "الآلة",
+    "priority": "الأولوية",
+    "assignee": "المُسند إليه",
+    "created": "تاريخ الإنشاء",
+    "resolved": "تاريخ الإغلاق",
+    "actions": "الإجراءات"
+  },
+  "unassigned": "غير مسند",
+  "view": "عرض",
+  "errors": {
+    "load": "فشل تحميل أوامر العمل"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "title": "Dashboard",
+  "stats": {
+    "activeWorkOrders": "Active Work Orders",
+    "activeSubtitle": "Open tasks",
+    "machinesDown": "Machines Down",
+    "machinesDownAlert": "Critical Alert",
+    "machinesDownOk": "All operational",
+    "completedToday": "Completed Today",
+    "completedSubtitle": "Closed work orders",
+    "systemStatus": "System Status",
+    "online": "Online",
+    "allOperational": "All systems operational"
+  },
+  "charts": {
+    "weeklyOverview": "Weekly Overview",
+    "created": "Created",
+    "completed": "Completed",
+    "machineStatus": "Machine Status",
+    "noMachines": "No machines registered yet",
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
+  }
+}

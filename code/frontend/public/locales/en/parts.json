@@ -1,0 +1,90 @@
+{
+  "inventoryTitle": "Parts Inventory",
+  "inventorySubtitle": "Manage spare parts and stock levels.",
+  "addPart": "Add Part",
+  "searchPlaceholder": "Search parts...",
+  "noPartsTitle": "No parts found",
+  "noPartsEmpty": "Get started by adding your first part",
+  "noPartsSearch": "Try a different search term",
+  "actions": {
+    "backToPart": "Back to Part",
+    "backToParts": "Back to Parts",
+    "adjustStock": "Adjust Stock",
+    "editPart": "Edit Part",
+    "view": "View"
+  },
+  "list": {
+    "table": {
+      "name": "Part Name",
+      "partNumber": "Part Number",
+      "category": "Category",
+      "stock": "Stock",
+      "location": "Location",
+      "cost": "Cost",
+      "actions": "Actions"
+    },
+    "lowStock": "Low"
+  },
+  "form": {
+    "createTitle": "Add Part",
+    "createSubtitle": "Capture spec, stocking, and costing data for new spare parts.",
+    "editTitle": "Edit Part",
+    "editSubtitle": "Update spec, stocking, and costing details for this part.",
+    "fields": {
+      "name": "Name *",
+      "partNumber": "Part Number",
+      "category": "Category",
+      "manufacturer": "Manufacturer",
+      "location": "Storage Location",
+      "description": "Description",
+      "stockQty": "Current Stock",
+      "minStock": "Minimum Stock",
+      "cost": "Unit Cost"
+    },
+    "placeholders": {
+      "name": "e.g. Bearing 6203",
+      "partNumber": "OEM reference",
+      "category": "e.g. Bearings",
+      "manufacturer": "OEM or supplier",
+      "location": "Aisle 4, Bin 12",
+      "description": "Materials, compatible machines, sourcing notes...",
+      "cost": "0.00",
+      "stock": "0",
+      "minStock": "0"
+    },
+    "submitCreate": "Save Part",
+    "submitEdit": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "detail": {
+    "partDetails": "Part Details",
+    "inventoryStatus": "Inventory Status",
+    "manufacturer": "Manufacturer",
+    "supplier": "Supplier",
+    "cost": "Cost",
+    "location": "Location",
+    "description": "Description",
+    "noDescription": "No description",
+    "currentStock": "Current Stock",
+    "minLevel": "Min Level",
+    "lowStock": "Low Stock",
+    "inStock": "In Stock",
+    "recentActivity": "Recent Activity",
+    "noActivity": "No recent activity",
+    "partNumberMissing": "No part #",
+    "uncategorized": "Uncategorized"
+  },
+  "errors": {
+    "loadList": "Failed to load parts",
+    "loadDetail": "Failed to load part details",
+    "notFound": "Part not found",
+    "update": "Failed to update part",
+    "create": "Failed to create part"
+  },
+  "validation": {
+    "nameMin": "Name must be at least 2 characters",
+    "stockMin": "Stock must be 0 or greater",
+    "minStockMin": "Min stock must be 0 or greater",
+    "costMin": "Must be 0 or greater"
+  }
+}

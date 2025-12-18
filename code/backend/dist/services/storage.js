@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.streamDocumentFromS3 = exports.saveDocumentToS3 = exports.s3 = exports.upload = void 0;
+exports.downloadDocumentBuffer = exports.streamDocumentFromS3 = exports.saveDocumentToS3 = exports.s3 = exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const client_s3_1 = require("@aws-sdk/client-s3");
 const env_1 = require("../config/env");
@@ -56,4 +56,33 @@ const streamDocumentFromS3 = async (key, res) => {
     return res.send(Buffer.from(buffer));
 };
 exports.streamDocumentFromS3 = streamDocumentFromS3;
+const readableToBuffer = async (stream) => {
+    const chunks = [];
+    for await (const chunk of stream) {
+        chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+    }
+    return Buffer.concat(chunks);
+};
+const downloadDocumentBuffer = async (key) => {
+    const object = await exports.s3.send(new client_s3_1.GetObjectCommand({
+        Bucket: env_1.env.s3.bucket,
+        Key: key,
+    }));
+    const body = object.Body;
+    if (!body) {
+        throw new Error("Empty S3 object");
+    }
+    if (body instanceof stream_1.Readable) {
+        return readableToBuffer(body);
+    }
+    if (Buffer.isBuffer(body)) {
+        return body;
+    }
+    if (typeof body.transformToByteArray === "function") {
+        const arr = await body.transformToByteArray();
+        return Buffer.from(arr);
+    }
+    throw new Error("Unsupported S3 body type");
+};
+exports.downloadDocumentBuffer = downloadDocumentBuffer;
 //# sourceMappingURL=storage.js.map

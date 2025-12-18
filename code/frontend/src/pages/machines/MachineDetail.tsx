@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Wrench, AlertTriangle, CheckCircle2, Loader2, ServerOff } from 'lucide-react'
+import { useParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Wrench, AlertTriangle, CheckCircle2, Loader2, ServerOff, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/shared/StatusBadge'
@@ -41,14 +42,12 @@ interface Machine {
 
 export default function MachineDetail() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const [machine, setMachine] = useState<Machine | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [deleting, setDeleting] = useState(false)
-  const [deleteError, setDeleteError] = useState<string | null>(null)
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
+  const { t } = useTranslation(['machines', 'common'])
 
   useEffect(() => {
     const fetchMachine = async () => {
@@ -60,7 +59,7 @@ export default function MachineDetail() {
         setError(null)
       } catch (err) {
         console.error('Failed to fetch machine:', err)
-        setError('Failed to load machine details')
+        setError(t('errors.notFound'))
       } finally {
         setLoading(false)
       }
@@ -68,25 +67,6 @@ export default function MachineDetail() {
 
     fetchMachine()
   }, [id])
-
-  const handleDelete = async () => {
-    if (!machine || deleting) return
-
-    const confirmed = window.confirm('Delete this machine? This cannot be undone.')
-    if (!confirmed) return
-
-    setDeleting(true)
-    setDeleteError(null)
-    try {
-      await api.delete(`/machines/${machine.id}`)
-      navigate('/machines')
-    } catch (err: unknown) {
-      const apiError = err as { response?: { data?: { error?: { message?: string } } } }
-      setDeleteError(apiError?.response?.data?.error?.message || 'Failed to delete machine')
-    } finally {
-      setDeleting(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -100,9 +80,9 @@ export default function MachineDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <ServerOff className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error || 'Machine not found'}</p>
+        <p className="text-muted-foreground">{error || t('errors.notFound')}</p>
         <Button asChild>
-          <Link to="/machines">Back to Machines</Link>
+          <Link to="/machines">{t('form.back')}</Link>
         </Button>
       </div>
     )
@@ -154,80 +134,78 @@ export default function MachineDetail() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-            <div className="flex items-center gap-3 mb-1">
-                <h2 className="text-3xl font-bold tracking-tight">{machine.name}</h2>
-                <StatusBadge status={machine.status} />
+        <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" asChild>
+                <Link to="/machines">
+                  <ArrowLeft className="h-5 w-5" />
+                </Link>
+              </Button>
+              <div>
+                <div className="flex items-center gap-3 mb-1">
+                  <h2 className="text-3xl font-bold tracking-tight">{machine.name}</h2>
+                  <StatusBadge status={machine.status} />
+                </div>
+                <p className="text-muted-foreground flex items-center gap-2">
+                    <span>{machine.code || t('detail.noCode')}</span> • <span>{machine.category || t('detail.uncategorized')}</span> • <span>{machine.area || machine.line || t('detail.noLocation')}</span>
+                </p>
+              </div>
             </div>
-            <p className="text-muted-foreground flex items-center gap-2">
-                <span>{machine.code || 'No code'}</span> • <span>{machine.category || 'Uncategorized'}</span> • <span>{machine.area || machine.line || 'No location'}</span>
-            </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" asChild>
-            <Link to={`/documents?machine=${machine.id}`}>View Docs</Link>
+            <Link to={`/documents?machine=${machine.id}`}>{t('actions.viewDocs')}</Link>
           </Button>
           <Button asChild>
-            <Link to={`/work-orders/new?machine=${machine.id}`}>Create Work Order</Link>
+            <Link to={`/work-orders/new?machine=${machine.id}`}>{t('actions.createWO')}</Link>
           </Button>
           {isAdmin && (
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={deleting}
-            >
-              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Delete Machine
+            <Button variant="secondary" asChild>
+              <Link to={`/machines/${machine.id}/edit`}>{t('common:actions.edit')}</Link>
             </Button>
           )}
         </div>
       </div>
 
-      {deleteError && (
-        <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
-          {deleteError}
-        </div>
-      )}
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Machine Info */}
         <Card className="md:col-span-1 h-fit">
           <CardHeader>
-            <CardTitle className="text-lg">Machine Details</CardTitle>
+            <CardTitle className="text-lg">{t('detail.overviewTitle')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <span className="text-muted-foreground">Manufacturer</span>
-              <span className="font-medium text-right">{machine.manufacturer || '-'}</span>
+              <span className="text-muted-foreground">{t('detail.manufacturer')}</span>
+              <span className="font-medium text-right">{machine.manufacturer || t('detail.notAvailable')}</span>
               
-              <span className="text-muted-foreground">Model</span>
-              <span className="font-medium text-right">{machine.model || '-'}</span>
+              <span className="text-muted-foreground">{t('detail.model')}</span>
+              <span className="font-medium text-right">{machine.model || t('detail.notAvailable')}</span>
               
-              <span className="text-muted-foreground">Serial #</span>
-              <span className="font-medium text-right">{machine.serialNumber || '-'}</span>
+              <span className="text-muted-foreground">{t('detail.serialNumber')}</span>
+              <span className="font-medium text-right">{machine.serialNumber || t('detail.notAvailable')}</span>
               
-              <span className="text-muted-foreground">Commissioned</span>
+              <span className="text-muted-foreground">{t('detail.commissionedAt')}</span>
               <span className="font-medium text-right">
-                {machine.commissionedAt ? new Date(machine.commissionedAt).toLocaleDateString() : '-'}
+                {machine.commissionedAt ? new Date(machine.commissionedAt).toLocaleDateString() : t('detail.notAvailable')}
               </span>
             </div>
             
             <div className="pt-4 border-t">
-                <h4 className="text-sm font-medium mb-3">Status</h4>
+                <h4 className="text-sm font-medium mb-3">{t('detail.status')}</h4>
                 <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Current Status</span>
+                        <span className="text-muted-foreground">{t('detail.status')}</span>
                         <Badge variant="outline" className={
                           machine.status === 'RUNNING' ? 'text-emerald-600 border-emerald-200 bg-emerald-50' :
                           machine.status === 'DOWN' ? 'text-red-600 border-red-200 bg-red-50' :
                           machine.status === 'MAINTENANCE' ? 'text-amber-600 border-amber-200 bg-amber-50' :
                           ''
                         }>
-                          {machine.status}
+                          {t(`common:status.${machine.status.toLowerCase()}`, { defaultValue: machine.status })}
                         </Badge>
                     </div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Work Orders</span>
+                        <span className="text-muted-foreground">{t('workOrders')}</span>
                         <span>{machine.workOrders?.length || 0}</span>
                     </div>
                 </div>
@@ -238,7 +216,7 @@ export default function MachineDetail() {
         {/* History Timeline */}
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg">History & Activity</CardTitle>
+            <CardTitle className="text-lg">{t('detail.historyTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             {historyItems.length > 0 ? (
@@ -246,7 +224,7 @@ export default function MachineDetail() {
             ) : (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <Wrench className="h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No work orders yet</p>
+                <p className="text-muted-foreground">{t('detail.noActivity')}</p>
               </div>
             )}
           </CardContent>

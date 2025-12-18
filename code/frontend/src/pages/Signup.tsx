@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,21 +11,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
-const signupSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+type SignupFormValues = z.infer<ReturnType<typeof buildSignupSchema>>
 
-type SignupFormValues = z.infer<typeof signupSchema>
+function buildSignupSchema(t: (key: string) => string) {
+  return z
+    .object({
+      name: z.string().min(2, { message: t('auth:validation.nameLength') }),
+      email: z.string().email({ message: t('auth:validation.email') }),
+      password: z.string().min(8, { message: t('auth:validation.passwordLength') }),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('auth:validation.passwordsMatch'),
+      path: ['confirmPassword'],
+    })
+}
 
 export default function Signup() {
   const navigate = useNavigate()
   const { signup, user } = useAuth()
+  const { t } = useTranslation(['auth', 'common'])
+  const signupSchema = useMemo(() => buildSignupSchema(t), [t])
   const [isLoading, setIsLoading] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -52,11 +59,11 @@ export default function Signup() {
       if (result?.status === 'APPROVED') {
         navigate('/')
       } else {
-        setSuccessMessage('Thanks! Your technician account request was submitted and is awaiting admin approval.')
+        setSuccessMessage(t('auth:signup.successPending'))
         navigate('/awaiting-approval', { state: { email: data.email } })
       }
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'Failed to sign up')
+      setFormError(error instanceof Error ? error.message : t('auth:signup.error'))
     } finally {
       setIsLoading(false)
     }
@@ -71,12 +78,12 @@ export default function Signup() {
             </div>
             <div className="flex-1 flex items-center">
                 <div className="space-y-4 max-w-lg">
-                    <h1 className="text-4xl font-bold leading-tight">Join the Future of Manufacturing.</h1>
-                    <p className="text-slate-400 text-lg">Create an account to start managing your factory smarter, faster, and better.</p>
+                    <h1 className="text-4xl font-bold leading-tight">{t('auth:signup.heroTitle')}</h1>
+                    <p className="text-slate-400 text-lg">{t('auth:signup.heroBody')}</p>
                 </div>
             </div>
             <div className="text-sm text-slate-500">
-                © 2025 Metralis Inc. All rights reserved.
+                {t('auth:signup.footer')}
             </div>
         </div>
 
@@ -84,15 +91,15 @@ export default function Signup() {
         <div className="flex-1 flex items-center justify-center bg-background p-8">
             <Card className="w-full max-w-md border-0 shadow-none sm:border sm:shadow-sm">
                 <CardHeader className="space-y-1 text-center sm:text-left">
-                    <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+                    <CardTitle className="text-2xl font-bold">{t('auth:signup.title')}</CardTitle>
                     <CardDescription>
-                        Technician accounts require admin approval before access is granted.
+                        {t('auth:signup.subtitle')}
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="name">Full Name</Label>
+                            <Label htmlFor="name">{t('auth:signup.nameLabel')}</Label>
                             <Input 
                                 id="name" 
                                 placeholder="John Doe" 
@@ -104,7 +111,7 @@ export default function Signup() {
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">{t('auth:signup.emailLabel')}</Label>
                             <Input 
                                 id="email" 
                                 type="email" 
@@ -117,7 +124,7 @@ export default function Signup() {
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{t('auth:signup.passwordLabel')}</Label>
                             <Input 
                                 id="password" 
                                 type="password" 
@@ -129,7 +136,7 @@ export default function Signup() {
                             )}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm Password</Label>
+                            <Label htmlFor="confirmPassword">{t('auth:signup.confirmPasswordLabel')}</Label>
                             <Input 
                                 id="confirmPassword" 
                                 type="password" 
@@ -154,12 +161,12 @@ export default function Signup() {
                         )}
                         <Button className="w-full h-10" type="submit" disabled={isLoading}>
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Create Account
+                            {t('auth:signup.submit')}
                         </Button>
                         <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{" "}
+                            {t('auth:signup.existing')}{' '}
                             <Link to="/login" className="font-medium text-primary hover:underline underline-offset-4">
-                                Sign in
+                                {t('auth:signup.signin')}
                             </Link>
                         </div>
                     </CardFooter>

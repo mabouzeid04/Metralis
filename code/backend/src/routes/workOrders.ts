@@ -1,15 +1,17 @@
 import { Router } from "express";
 import { z } from "zod";
+import crypto from "crypto";
 import { prisma } from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
-import type { Prisma, WorkOrderPriority, WorkOrderStatus, WorkOrderType } from "../generated/prisma/client";
-import { DocumentIngestionStatus, DocumentType } from "../generated/prisma/client";
+import { Prisma, DocumentIngestionStatus, DocumentType, type WorkOrderPriority, type WorkOrderStatus, type WorkOrderType } from "../generated/prisma/client";
 import { upload, saveDocumentToS3 } from "../services/storage";
+import { sendWorkOrderAssignmentWhatsapp } from "../services/notifications/whatsapp";
+import { upsertIncidentChunksForWorkOrder } from "../services/incidentIngestion";
 
 const router = Router();
 
 const workOrderSchema = z.object({
-  machineId: z.string().uuid(),
+  machineId: z.string(),
   title: z.string().min(1),
   descriptionRaw: z.string().min(1),
   type: z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
@@ -18,36 +20,175 @@ const workOrderSchema = z.object({
   assignedToId: z.string().uuid().nullable().optional(),
 });
 
+const workOrderListQuerySchema = z.object({
+  status: z.enum(["OPEN", "IN_PROGRESS", "WAITING", "CLOSED"]).optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+  type: z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
+  machineId: z.string().uuid().optional(),
+  assignedToId: z.string().uuid().optional(),
+  q: z.string().trim().optional(),
+  reportedFrom: z.coerce.date().optional(),
+  reportedTo: z.coerce.date().optional(),
+  startedFrom: z.coerce.date().optional(),
+  startedTo: z.coerce.date().optional(),
+  completedFrom: z.coerce.date().optional(),
+  completedTo: z.coerce.date().optional(),
+  take: z.coerce.number().int().positive().max(200).optional(),
+  skip: z.coerce.number().int().min(0).optional(),
+});
+
 router.use(requireAuth);
 
-router.get("/", async (req, res) => {
-  const { status, priority, machineId } = req.query;
+const generateWorkOrderPublicId = () => crypto.randomBytes(4).toString("hex").toUpperCase();
 
+const createWorkOrderWithShortId = async (data: Prisma.WorkOrderCreateInput) => {
+  let attempts = 0;
+
+  while (attempts < 5) {
+    const publicId = generateWorkOrderPublicId();
+
+    try {
+      return await prisma.workOrder.create({
+        data: { ...data, publicId },
+        include: {
+          machine: true,
+          reportedBy: true,
+          assignedTo: true,
+        },
+      });
+    } catch (err: unknown) {
+      const isUniqueViolation =
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === "P2002" &&
+        Array.isArray((err.meta as { target?: unknown } | undefined)?.target) &&
+        ((err.meta as { target?: unknown } | undefined)?.target as string[]).includes("publicId");
+
+      if (!isUniqueViolation) {
+        throw err;
+      }
+
+      attempts += 1;
+    }
+  }
+
+  throw new Error("Failed to generate unique work order id after multiple attempts");
+};
+
+const notifyAssigneeOfWhatsapp = async (workOrder: {
+  publicId: string;
+  title: string;
+  priority: WorkOrderPriority;
+  machine: { name: string | null } | null;
+  assignedTo?: { phoneNumber: string | null; assignmentWhatsappOptIn: boolean } | null;
+}) => {
+  if (!workOrder.assignedTo?.assignmentWhatsappOptIn) return;
+  if (!workOrder.assignedTo.phoneNumber) return;
+
+  const result = await sendWorkOrderAssignmentWhatsapp({
+    to: workOrder.assignedTo.phoneNumber,
+    workOrder: {
+      publicId: workOrder.publicId,
+      title: workOrder.title,
+      machineName: workOrder.machine?.name ?? null,
+      priority: workOrder.priority,
+    },
+  });
+
+  if (result.status === "failed") {
+    console.warn("[whatsapp] failed to send work order assignment", {
+      reason: result.reason,
+      details: result.details,
+    });
+  }
+};
+
+router.get("/", async (req, res) => {
   const where: Prisma.WorkOrderWhereInput = {};
-  if (status) {
-    where.status = String(status).toUpperCase() as WorkOrderStatus;
+  const parsed = workOrderListQuerySchema.safeParse(req.query);
+
+  if (!parsed.success) {
+    return res.status(400).json({ error: parsed.error.flatten() });
   }
-  if (priority) {
-    where.priority = String(priority).toUpperCase() as WorkOrderPriority;
+
+  const {
+    status: statusFilter,
+    priority: priorityFilter,
+    type: typeFilter,
+    machineId: machineIdFilter,
+    assignedToId,
+    q,
+    reportedFrom,
+    reportedTo,
+    startedFrom,
+    startedTo,
+    completedFrom,
+    completedTo,
+    take: takeParam,
+    skip: skipParam,
+  } = parsed.data;
+
+  if (statusFilter) {
+    where.status = statusFilter as WorkOrderStatus;
   }
-  if (machineId) {
-    where.machineId = { equals: String(machineId) };
+  if (priorityFilter) {
+    where.priority = priorityFilter as WorkOrderPriority;
   }
+  if (typeFilter) {
+    where.type = typeFilter as WorkOrderType;
+  }
+  if (machineIdFilter) {
+    where.machineId = { equals: machineIdFilter };
+  }
+  if (assignedToId) {
+    where.assignedToId = assignedToId;
+  }
+  if (q) {
+    const term = q.trim();
+    if (term) {
+      // Note: descriptionRaw removed from search for performance
+      // Use title and publicId for quick list searches
+      where.OR = [
+        { title: { contains: term, mode: "insensitive" } },
+        { publicId: { contains: term, mode: "insensitive" } },
+      ];
+    }
+  }
+  if (reportedFrom || reportedTo) {
+    where.reportedAt = {
+      ...(reportedFrom ? { gte: reportedFrom } : {}),
+      ...(reportedTo ? { lte: reportedTo } : {}),
+    };
+  }
+  if (startedFrom || startedTo) {
+    where.startedAt = {
+      ...(startedFrom ? { gte: startedFrom } : {}),
+      ...(startedTo ? { lte: startedTo } : {}),
+    };
+  }
+  if (completedFrom || completedTo) {
+    where.completedAt = {
+      ...(completedFrom ? { gte: completedFrom } : {}),
+      ...(completedTo ? { lte: completedTo } : {}),
+    };
+  }
+
+  const take = takeParam ?? 50;
+  const skip = skipParam ?? 0;
 
   const workOrders = await prisma.workOrder.findMany({
     where,
     orderBy: { reportedAt: "desc" },
+    take,
+    skip,
     include: {
-      machine: true,
-      assignedTo: true,
-      repairActions: true,
-      parts: {
-        include: { part: true },
-      },
+      machine: { select: { id: true, name: true } },
+      assignedTo: { select: { id: true, name: true } },
     },
   });
 
-  return res.json({ data: workOrders });
+  const total = await prisma.workOrder.count({ where });
+
+  return res.json({ data: workOrders, meta: { total, take, skip } });
 });
 
 router.get("/:id", async (req, res) => {
@@ -113,13 +254,14 @@ router.post("/", async (req, res) => {
     data.assignedTo = { connect: { id: parsed.data.assignedToId } };
   }
 
-  const workOrder = await prisma.workOrder.create({
-    data,
-    include: {
-      machine: true,
-      reportedBy: true,
-      assignedTo: true,
-    },
+  const workOrder = await createWorkOrderWithShortId(data);
+
+  if (workOrder.assignedTo) {
+    void notifyAssigneeOfWhatsapp(workOrder);
+  }
+
+  void upsertIncidentChunksForWorkOrder(workOrder.id).catch((error) => {
+    console.error("Failed to ingest incident embeddings for new work order", { workOrderId: workOrder.id, error });
   });
 
   return res.status(201).json({ data: workOrder });
@@ -147,6 +289,10 @@ router.patch("/:id", async (req, res) => {
     const workOrder = await prisma.workOrder.update({
       where: { id: req.params.id },
       data,
+    });
+
+    void upsertIncidentChunksForWorkOrder(workOrder.id).catch((error) => {
+      console.error("Failed to ingest incident embeddings after work order update", { workOrderId: workOrder.id, error });
     });
     return res.json({ data: workOrder });
   } catch {
@@ -218,6 +364,15 @@ router.patch("/:id/assign", async (req, res) => {
     return res.status(400).json({ error: parsed.error.flatten() });
   }
 
+  const current = await prisma.workOrder.findUnique({
+    where: { id: req.params.id },
+    select: { assignedToId: true },
+  });
+
+  if (!current) {
+    return res.status(404).json({ error: { message: "Work order not found" } });
+  }
+
   const data: Prisma.WorkOrderUpdateInput = {};
   if (parsed.data.assignedToId) {
     data.assignedTo = { connect: { id: parsed.data.assignedToId } };
@@ -225,10 +380,23 @@ router.patch("/:id/assign", async (req, res) => {
     data.assignedTo = { disconnect: true };
   }
 
+  const isNewAssignment =
+    parsed.data.assignedToId !== null &&
+    parsed.data.assignedToId !== undefined &&
+    parsed.data.assignedToId !== current.assignedToId;
+
   const workOrder = await prisma.workOrder.update({
     where: { id: req.params.id },
     data,
+    include: {
+      machine: { select: { name: true } },
+      assignedTo: { select: { phoneNumber: true, assignmentWhatsappOptIn: true } },
+    },
   });
+
+  if (isNewAssignment && workOrder.assignedTo) {
+    void notifyAssigneeOfWhatsapp(workOrder);
+  }
 
   return res.json({ data: workOrder });
 });
@@ -283,6 +451,10 @@ router.post("/:id/repair", async (req, res) => {
       ),
     );
   }
+
+  void upsertIncidentChunksForWorkOrder(req.params.id).catch((error) => {
+    console.error("Failed to ingest incident embeddings after repair creation", { workOrderId: req.params.id, error });
+  });
 
   return res.status(201).json({ data: repair });
 });

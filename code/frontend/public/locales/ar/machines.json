@@ -1,0 +1,89 @@
+{
+  "title": "الآلات",
+  "subtitle": "إدارة أصول ومعدات المصنع.",
+  "add": "إضافة آلة",
+  "adminsOnly": "للمسؤولين فقط",
+  "searchPlaceholder": "ابحث عن الآلات...",
+  "emptyTitle": "لا توجد آلات",
+  "emptySearchHint": "جرّب مصطلح بحث آخر",
+  "emptyCreateHint": "ابدأ بإضافة أول آلة",
+  "table": {
+    "status": "الحالة",
+    "name": "الاسم",
+    "code": "الرمز",
+    "category": "الفئة",
+    "location": "الموقع",
+    "updated": "آخر تحديث",
+    "actions": "الإجراءات"
+  },
+  "view": "عرض",
+  "detail": {
+    "overviewTitle": "تفاصيل الآلة",
+    "status": "الحالة",
+    "code": "الرمز",
+    "category": "الفئة",
+    "location": "الموقع",
+    "area": "المنطقة",
+    "line": "الخط",
+    "manufacturer": "المصنّع",
+    "model": "الطراز",
+    "serialNumber": "الرقم التسلسلي",
+    "commissionedAt": "تاريخ التشغيل",
+    "notAvailable": "-",
+    "noCode": "بدون رمز",
+    "uncategorized": "غير مصنّفة",
+    "noLocation": "بدون موقع",
+    "noActivity": "لا يوجد نشاط حديث",
+    "historyTitle": "السجل",
+    "repairCompleted": "تم إكمال الإصلاح",
+    "repairFollowUp": "تم تسجيل الإصلاح - يحتاج للمتابعة"
+  },
+  "workOrders": "أوامر العمل",
+  "form": {
+    "createTitle": "إضافة آلة",
+    "createDescription": "تسجيل بيانات اللوحة والحالة وتاريخ التشغيل.",
+    "back": "العودة إلى الآلات",
+    "editTitle": "تعديل الآلة",
+    "editDescription": "تحديث بيانات الآلة وحالتها.",
+    "fields": {
+      "name": "الاسم *",
+      "code": "الرمز",
+      "category": "الفئة",
+      "status": "الحالة",
+      "area": "المنطقة",
+      "line": "الخط",
+      "commissionedAt": "تاريخ التشغيل",
+      "manufacturer": "المصنّع",
+      "model": "الطراز",
+      "serialNumber": "الرقم التسلسلي"
+    },
+    "placeholders": {
+      "name": "مثال: Filler 01",
+      "code": "معرف اختياري",
+      "category": "مثال: التعبئة",
+      "area": "الخط أ",
+      "line": "الخط 2",
+      "manufacturer": "الشركة المصنعة",
+      "model": "رقم الطراز",
+      "serialNumber": "الرقم التسلسلي"
+    },
+    "cancel": "إلغاء",
+    "submit": "حفظ الآلة"
+  },
+  "actions": {
+    "viewDocs": "عرض المستندات",
+    "createWO": "إنشاء أمر عمل",
+    "delete": "حذف الآلة",
+    "deleteConfirm": "هل تريد حذف هذه الآلة؟ هذا الإجراء لا يمكن التراجع عنه."
+  },
+  "validation": {
+    "nameMin": "يجب ألا يقل الاسم عن حرفين"
+  },
+  "errors": {
+    "load": "فشل تحميل الآلات",
+    "create": "فشل إنشاء الآلة",
+    "update": "فشل تحديث الآلة",
+    "notFound": "الآلة غير موجودة",
+    "deleteFailed": "فشل حذف الآلة"
+  }
+}

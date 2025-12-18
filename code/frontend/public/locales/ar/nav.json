@@ -1,0 +1,15 @@
+{
+  "dashboard": "لوحة التحكم",
+  "machines": "الآلات",
+  "workOrders": "أوامر العمل",
+  "parts": "قطع الغيار",
+  "documents": "المستندات",
+  "ai": "مساعد مترياليس",
+  "users": "المستخدمون",
+  "settings": "الإعدادات",
+  "login": "تسجيل الدخول",
+  "logout": "تسجيل الخروج",
+  "welcome": "مرحبًا",
+  "appSubtitle": "طبقة ذكاء للمصانع",
+  "accessManagement": "Access Management"
+}

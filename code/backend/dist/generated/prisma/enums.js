@@ -9,11 +9,15 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserRole = void 0;
+exports.AiFeedbackValue = exports.ChatMessageRole = exports.DocumentIngestionStatus = exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserStatus = exports.UserRole = void 0;
 exports.UserRole = {
     ADMIN: 'ADMIN',
-    MANAGER: 'MANAGER',
     TECHNICIAN: 'TECHNICIAN'
+};
+exports.UserStatus = {
+    PENDING: 'PENDING',
+    APPROVED: 'APPROVED',
+    REJECTED: 'REJECTED'
 };
 exports.MachineStatus = {
     RUNNING: 'RUNNING',
@@ -48,5 +52,21 @@ exports.DocumentType = {
     SOP: 'SOP',
     TROUBLESHOOTING: 'TROUBLESHOOTING',
     OTHER: 'OTHER'
+};
+exports.DocumentIngestionStatus = {
+    PENDING: 'PENDING',
+    PROCESSING: 'PROCESSING',
+    COMPLETE: 'COMPLETE',
+    FAILED: 'FAILED'
+};
+exports.ChatMessageRole = {
+    USER: 'USER',
+    ASSISTANT: 'ASSISTANT',
+    SYSTEM: 'SYSTEM'
+};
+exports.AiFeedbackValue = {
+    HELPFUL: 'HELPFUL',
+    NOT_HELPFUL: 'NOT_HELPFUL',
+    CORRECT_CAUSE: 'CORRECT_CAUSE'
 };
 //# sourceMappingURL=enums.js.map

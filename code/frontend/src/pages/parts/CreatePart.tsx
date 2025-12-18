@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,19 +12,20 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { api } from '@/lib/api'
 
-const partSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-  partNumber: z.string().optional(),
-  category: z.string().optional(),
-  manufacturer: z.string().optional(),
-  location: z.string().optional(),
-  description: z.string().optional(),
-  stockQty: z.number().int().min(0, { message: 'Stock must be 0 or greater' }),
-  minStock: z.number().int().min(0, { message: 'Min stock must be 0 or greater' }),
-  cost: z.number().min(0, { message: 'Must be 0 or greater' }).optional().or(z.undefined()),
-})
+const buildPartSchema = (t: (key: string) => string) =>
+  z.object({
+    name: z.string().min(2, { message: t('validation.nameMin') }),
+    partNumber: z.string().optional(),
+    category: z.string().optional(),
+    manufacturer: z.string().optional(),
+    location: z.string().optional(),
+    description: z.string().optional(),
+    stockQty: z.number().int().min(0, { message: t('validation.stockMin') }),
+    minStock: z.number().int().min(0, { message: t('validation.minStockMin') }),
+    cost: z.number().min(0, { message: t('validation.costMin') }).optional().or(z.undefined()),
+  })
 
-type PartFormValues = z.infer<typeof partSchema>
+type PartFormValues = z.infer<ReturnType<typeof buildPartSchema>>
 
 const defaultValues: PartFormValues = {
   name: '',
@@ -41,6 +43,8 @@ export default function CreatePart() {
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useTranslation(['parts', 'common'])
+  const partSchema = useMemo(() => buildPartSchema(t), [t])
 
   const {
     register,
@@ -74,7 +78,7 @@ export default function CreatePart() {
       navigate('/parts')
     } catch (err: unknown) {
       const apiError = err as { response?: { data?: { error?: { message?: string } } } }
-      setError(apiError?.response?.data?.error?.message || 'Failed to create part')
+      setError(apiError?.response?.data?.error?.message || t('errors.create'))
     } finally {
       setIsSubmitting(false)
     }
@@ -83,13 +87,13 @@ export default function CreatePart() {
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
       <Button variant="ghost" onClick={() => navigate(-1)} className="pl-0 hover:bg-transparent">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Parts
+        <ArrowLeft className="mr-2 h-4 w-4" /> {t('actions.backToParts')}
       </Button>
 
       <Card>
         <CardHeader>
-          <CardTitle>Add Part</CardTitle>
-          <CardDescription>Capture spec, stocking, and costing data for new spare parts.</CardDescription>
+          <CardTitle>{t('form.createTitle')}</CardTitle>
+          <CardDescription>{t('form.createSubtitle')}</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
@@ -101,39 +105,39 @@ export default function CreatePart() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
-                <Input id="name" placeholder="e.g. Bearing 6203" {...register('name')} />
+                <Label htmlFor="name">{t('form.fields.name')}</Label>
+                <Input id="name" placeholder={t('form.placeholders.name')} {...register('name')} />
                 {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="partNumber">Part Number</Label>
-                <Input id="partNumber" placeholder="OEM reference" {...register('partNumber')} />
+                <Label htmlFor="partNumber">{t('form.fields.partNumber')}</Label>
+                <Input id="partNumber" placeholder={t('form.placeholders.partNumber')} {...register('partNumber')} />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Input id="category" placeholder="e.g. Bearings" {...register('category')} />
+                <Label htmlFor="category">{t('form.fields.category')}</Label>
+                <Input id="category" placeholder={t('form.placeholders.category')} {...register('category')} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="manufacturer">Manufacturer</Label>
-                <Input id="manufacturer" placeholder="OEM or supplier" {...register('manufacturer')} />
+                <Label htmlFor="manufacturer">{t('form.fields.manufacturer')}</Label>
+                <Input id="manufacturer" placeholder={t('form.placeholders.manufacturer')} {...register('manufacturer')} />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="location">Storage Location</Label>
-                <Input id="location" placeholder="Aisle 4, Bin 12" {...register('location')} />
+                <Label htmlFor="location">{t('form.fields.location')}</Label>
+                <Input id="location" placeholder={t('form.placeholders.location')} {...register('location')} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cost">Unit Cost</Label>
+                <Label htmlFor="cost">{t('form.fields.cost')}</Label>
                 <Input
                   id="cost"
                   type="number"
                   step="0.01"
-                  placeholder="0.00"
+                  placeholder={t('form.placeholders.cost')}
                   {...register('cost', {
                     valueAsNumber: true,
                     setValueAs: (v) => (v === '' || Number.isNaN(v) ? undefined : Number(v)),
@@ -145,25 +149,25 @@ export default function CreatePart() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="stockQty">Current Stock</Label>
+                <Label htmlFor="stockQty">{t('form.fields.stockQty')}</Label>
                 <Input
                   id="stockQty"
                   type="number"
                   min={0}
                   step={1}
-                  placeholder="0"
+                  placeholder={t('form.placeholders.stock')}
                   {...register('stockQty', { valueAsNumber: true })}
                 />
                 {errors.stockQty && <p className="text-sm text-destructive">{errors.stockQty.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="minStock">Minimum Stock</Label>
+                <Label htmlFor="minStock">{t('form.fields.minStock')}</Label>
                 <Input
                   id="minStock"
                   type="number"
                   min={0}
                   step={1}
-                  placeholder="0"
+                  placeholder={t('form.placeholders.minStock')}
                   {...register('minStock', { valueAsNumber: true })}
                 />
                 {errors.minStock && <p className="text-sm text-destructive">{errors.minStock.message}</p>}
@@ -171,21 +175,21 @@ export default function CreatePart() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">{t('form.fields.description')}</Label>
               <Textarea
                 id="description"
-                placeholder="Materials, compatible machines, sourcing notes..."
+                placeholder={t('form.placeholders.description')}
                 {...register('description')}
               />
             </div>
           </CardContent>
           <CardFooter className="flex justify-end gap-3">
             <Button type="button" variant="outline" onClick={() => navigate('/parts')}>
-              Cancel
+              {t('form.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Part
+              {t('form.submitCreate')}
             </Button>
           </CardFooter>
         </form>

@@ -17,8 +17,15 @@ export type UserMinAggregateOutputType = {
     passwordHash: string | null;
     name: string | null;
     role: $Enums.UserRole | null;
+    status: $Enums.UserStatus | null;
     active: boolean | null;
     lastLoginAt: Date | null;
+    approvedById: string | null;
+    approvedAt: Date | null;
+    rejectedAt: Date | null;
+    rejectionReason: string | null;
+    phoneNumber: string | null;
+    assignmentWhatsappOptIn: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -28,8 +35,15 @@ export type UserMaxAggregateOutputType = {
     passwordHash: string | null;
     name: string | null;
     role: $Enums.UserRole | null;
+    status: $Enums.UserStatus | null;
     active: boolean | null;
     lastLoginAt: Date | null;
+    approvedById: string | null;
+    approvedAt: Date | null;
+    rejectedAt: Date | null;
+    rejectionReason: string | null;
+    phoneNumber: string | null;
+    assignmentWhatsappOptIn: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -39,9 +53,16 @@ export type UserCountAggregateOutputType = {
     passwordHash: number;
     name: number;
     role: number;
+    status: number;
     active: number;
     lastLoginAt: number;
+    approvedById: number;
+    approvedAt: number;
+    rejectedAt: number;
+    rejectionReason: number;
     preferences: number;
+    phoneNumber: number;
+    assignmentWhatsappOptIn: number;
     metadata: number;
     createdAt: number;
     updatedAt: number;
@@ -53,8 +74,15 @@ export type UserMinAggregateInputType = {
     passwordHash?: true;
     name?: true;
     role?: true;
+    status?: true;
     active?: true;
     lastLoginAt?: true;
+    approvedById?: true;
+    approvedAt?: true;
+    rejectedAt?: true;
+    rejectionReason?: true;
+    phoneNumber?: true;
+    assignmentWhatsappOptIn?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -64,8 +92,15 @@ export type UserMaxAggregateInputType = {
     passwordHash?: true;
     name?: true;
     role?: true;
+    status?: true;
     active?: true;
     lastLoginAt?: true;
+    approvedById?: true;
+    approvedAt?: true;
+    rejectedAt?: true;
+    rejectionReason?: true;
+    phoneNumber?: true;
+    assignmentWhatsappOptIn?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -75,9 +110,16 @@ export type UserCountAggregateInputType = {
     passwordHash?: true;
     name?: true;
     role?: true;
+    status?: true;
     active?: true;
     lastLoginAt?: true;
+    approvedById?: true;
+    approvedAt?: true;
+    rejectedAt?: true;
+    rejectionReason?: true;
     preferences?: true;
+    phoneNumber?: true;
+    assignmentWhatsappOptIn?: true;
     metadata?: true;
     createdAt?: true;
     updatedAt?: true;
@@ -151,9 +193,16 @@ export type UserGroupByOutputType = {
     passwordHash: string;
     name: string;
     role: $Enums.UserRole;
+    status: $Enums.UserStatus;
     active: boolean;
     lastLoginAt: Date | null;
+    approvedById: string | null;
+    approvedAt: Date | null;
+    rejectedAt: Date | null;
+    rejectionReason: string | null;
     preferences: runtime.JsonValue | null;
+    phoneNumber: string | null;
+    assignmentWhatsappOptIn: boolean;
     metadata: runtime.JsonValue | null;
     createdAt: Date;
     updatedAt: Date;
@@ -173,16 +222,27 @@ export type UserWhereInput = {
     passwordHash?: Prisma.StringFilter<"User"> | string;
     name?: Prisma.StringFilter<"User"> | string;
     role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus;
     active?: Prisma.BoolFilter<"User"> | boolean;
     lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    approvedById?: Prisma.StringNullableFilter<"User"> | string | null;
+    approvedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectionReason?: Prisma.StringNullableFilter<"User"> | string | null;
     preferences?: Prisma.JsonNullableFilter<"User">;
+    phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFilter<"User"> | boolean;
     metadata?: Prisma.JsonNullableFilter<"User">;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+    approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
     reportedWorkOrders?: Prisma.WorkOrderListRelationFilter;
     assignedWorkOrders?: Prisma.WorkOrderListRelationFilter;
     repairActions?: Prisma.RepairActionListRelationFilter;
     documents?: Prisma.DocumentListRelationFilter;
+    approvals?: Prisma.UserListRelationFilter;
+    chatConversations?: Prisma.ChatConversationListRelationFilter;
+    aiFeedback?: Prisma.ChatMessageFeedbackListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -190,16 +250,27 @@ export type UserOrderByWithRelationInput = {
     passwordHash?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
     active?: Prisma.SortOrder;
     lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
+    approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder;
     preferences?: Prisma.SortOrderInput | Prisma.SortOrder;
+    phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assignmentWhatsappOptIn?: Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
+    approvedBy?: Prisma.UserOrderByWithRelationInput;
     reportedWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
     assignedWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
     repairActions?: Prisma.RepairActionOrderByRelationAggregateInput;
     documents?: Prisma.DocumentOrderByRelationAggregateInput;
+    approvals?: Prisma.UserOrderByRelationAggregateInput;
+    chatConversations?: Prisma.ChatConversationOrderByRelationAggregateInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -210,16 +281,27 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     passwordHash?: Prisma.StringFilter<"User"> | string;
     name?: Prisma.StringFilter<"User"> | string;
     role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus;
     active?: Prisma.BoolFilter<"User"> | boolean;
     lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    approvedById?: Prisma.StringNullableFilter<"User"> | string | null;
+    approvedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectionReason?: Prisma.StringNullableFilter<"User"> | string | null;
     preferences?: Prisma.JsonNullableFilter<"User">;
+    phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFilter<"User"> | boolean;
     metadata?: Prisma.JsonNullableFilter<"User">;
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+    approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null;
     reportedWorkOrders?: Prisma.WorkOrderListRelationFilter;
     assignedWorkOrders?: Prisma.WorkOrderListRelationFilter;
     repairActions?: Prisma.RepairActionListRelationFilter;
     documents?: Prisma.DocumentListRelationFilter;
+    approvals?: Prisma.UserListRelationFilter;
+    chatConversations?: Prisma.ChatConversationListRelationFilter;
+    aiFeedback?: Prisma.ChatMessageFeedbackListRelationFilter;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -227,9 +309,16 @@ export type UserOrderByWithAggregationInput = {
     passwordHash?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
     active?: Prisma.SortOrder;
     lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    approvedById?: Prisma.SortOrderInput | Prisma.SortOrder;
+    approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder;
     preferences?: Prisma.SortOrderInput | Prisma.SortOrder;
+    phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assignmentWhatsappOptIn?: Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -246,9 +335,16 @@ export type UserScalarWhereWithAggregatesInput = {
     passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string;
     name?: Prisma.StringWithAggregatesFilter<"User"> | string;
     role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus;
     active?: Prisma.BoolWithAggregatesFilter<"User"> | boolean;
     lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null;
+    approvedById?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
+    approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null;
+    rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null;
+    rejectionReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
     preferences?: Prisma.JsonNullableWithAggregatesFilter<"User">;
+    phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolWithAggregatesFilter<"User"> | boolean;
     metadata?: Prisma.JsonNullableWithAggregatesFilter<"User">;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string;
@@ -259,16 +355,26 @@ export type UserCreateInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
     reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
     assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateInput = {
     id?: string;
@@ -276,9 +382,16 @@ export type UserUncheckedCreateInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -286,6 +399,9 @@ export type UserUncheckedCreateInput = {
     assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -293,16 +409,26 @@ export type UserUpdateInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
     reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -310,9 +436,16 @@ export type UserUncheckedUpdateInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -320,6 +453,9 @@ export type UserUncheckedUpdateInput = {
     assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateManyInput = {
     id?: string;
@@ -327,9 +463,16 @@ export type UserCreateManyInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
@@ -340,9 +483,15 @@ export type UserUpdateManyMutationInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -353,12 +502,31 @@ export type UserUncheckedUpdateManyInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type UserNullableScalarRelationFilter = {
+    is?: Prisma.UserWhereInput | null;
+    isNot?: Prisma.UserWhereInput | null;
+};
+export type UserListRelationFilter = {
+    every?: Prisma.UserWhereInput;
+    some?: Prisma.UserWhereInput;
+    none?: Prisma.UserWhereInput;
+};
+export type UserOrderByRelationAggregateInput = {
+    _count?: Prisma.SortOrder;
 };
 export type UserCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -366,9 +534,16 @@ export type UserCountOrderByAggregateInput = {
     passwordHash?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
     active?: Prisma.SortOrder;
     lastLoginAt?: Prisma.SortOrder;
+    approvedById?: Prisma.SortOrder;
+    approvedAt?: Prisma.SortOrder;
+    rejectedAt?: Prisma.SortOrder;
+    rejectionReason?: Prisma.SortOrder;
     preferences?: Prisma.SortOrder;
+    phoneNumber?: Prisma.SortOrder;
+    assignmentWhatsappOptIn?: Prisma.SortOrder;
     metadata?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
@@ -379,8 +554,15 @@ export type UserMaxOrderByAggregateInput = {
     passwordHash?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
     active?: Prisma.SortOrder;
     lastLoginAt?: Prisma.SortOrder;
+    approvedById?: Prisma.SortOrder;
+    approvedAt?: Prisma.SortOrder;
+    rejectedAt?: Prisma.SortOrder;
+    rejectionReason?: Prisma.SortOrder;
+    phoneNumber?: Prisma.SortOrder;
+    assignmentWhatsappOptIn?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -390,8 +572,15 @@ export type UserMinOrderByAggregateInput = {
     passwordHash?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
     role?: Prisma.SortOrder;
+    status?: Prisma.SortOrder;
     active?: Prisma.SortOrder;
     lastLoginAt?: Prisma.SortOrder;
+    approvedById?: Prisma.SortOrder;
+    approvedAt?: Prisma.SortOrder;
+    rejectedAt?: Prisma.SortOrder;
+    rejectionReason?: Prisma.SortOrder;
+    phoneNumber?: Prisma.SortOrder;
+    assignmentWhatsappOptIn?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -399,9 +588,22 @@ export type UserScalarRelationFilter = {
     is?: Prisma.UserWhereInput;
     isNot?: Prisma.UserWhereInput;
 };
-export type UserNullableScalarRelationFilter = {
-    is?: Prisma.UserWhereInput | null;
-    isNot?: Prisma.UserWhereInput | null;
+export type UserCreateNestedOneWithoutApprovalsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalsInput, Prisma.UserUncheckedCreateWithoutApprovalsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedManyWithoutApprovedByInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput> | Prisma.UserCreateWithoutApprovedByInput[] | Prisma.UserUncheckedCreateWithoutApprovedByInput[];
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedByInput | Prisma.UserCreateOrConnectWithoutApprovedByInput[];
+    createMany?: Prisma.UserCreateManyApprovedByInputEnvelope;
+    connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+};
+export type UserUncheckedCreateNestedManyWithoutApprovedByInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput> | Prisma.UserCreateWithoutApprovedByInput[] | Prisma.UserUncheckedCreateWithoutApprovedByInput[];
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedByInput | Prisma.UserCreateOrConnectWithoutApprovedByInput[];
+    createMany?: Prisma.UserCreateManyApprovedByInputEnvelope;
+    connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
 };
 export type StringFieldUpdateOperationsInput = {
     set?: string;
@@ -409,14 +611,55 @@ export type StringFieldUpdateOperationsInput = {
 export type EnumUserRoleFieldUpdateOperationsInput = {
     set?: $Enums.UserRole;
 };
+export type EnumUserStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserStatus;
+};
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
 export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null;
 };
+export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null;
+};
 export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string;
+};
+export type UserUpdateOneWithoutApprovalsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovalsInput, Prisma.UserUncheckedCreateWithoutApprovalsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovalsInput;
+    upsert?: Prisma.UserUpsertWithoutApprovalsInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovalsInput, Prisma.UserUpdateWithoutApprovalsInput>, Prisma.UserUncheckedUpdateWithoutApprovalsInput>;
+};
+export type UserUpdateManyWithoutApprovedByNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput> | Prisma.UserCreateWithoutApprovedByInput[] | Prisma.UserUncheckedCreateWithoutApprovedByInput[];
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedByInput | Prisma.UserCreateOrConnectWithoutApprovedByInput[];
+    upsert?: Prisma.UserUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.UserUpsertWithWhereUniqueWithoutApprovedByInput[];
+    createMany?: Prisma.UserCreateManyApprovedByInputEnvelope;
+    set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    update?: Prisma.UserUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.UserUpdateWithWhereUniqueWithoutApprovedByInput[];
+    updateMany?: Prisma.UserUpdateManyWithWhereWithoutApprovedByInput | Prisma.UserUpdateManyWithWhereWithoutApprovedByInput[];
+    deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[];
+};
+export type UserUncheckedUpdateManyWithoutApprovedByNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput> | Prisma.UserCreateWithoutApprovedByInput[] | Prisma.UserUncheckedCreateWithoutApprovedByInput[];
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedByInput | Prisma.UserCreateOrConnectWithoutApprovedByInput[];
+    upsert?: Prisma.UserUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.UserUpsertWithWhereUniqueWithoutApprovedByInput[];
+    createMany?: Prisma.UserCreateManyApprovedByInputEnvelope;
+    set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[];
+    update?: Prisma.UserUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.UserUpdateWithWhereUniqueWithoutApprovedByInput[];
+    updateMany?: Prisma.UserUpdateManyWithWhereWithoutApprovedByInput | Prisma.UserUpdateManyWithWhereWithoutApprovedByInput[];
+    deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[];
 };
 export type UserCreateNestedOneWithoutReportedWorkOrdersInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutReportedWorkOrdersInput, Prisma.UserUncheckedCreateWithoutReportedWorkOrdersInput>;
@@ -468,21 +711,268 @@ export type UserUpdateOneRequiredWithoutDocumentsNestedInput = {
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDocumentsInput, Prisma.UserUpdateWithoutDocumentsInput>, Prisma.UserUncheckedUpdateWithoutDocumentsInput>;
 };
+export type UserCreateNestedOneWithoutChatConversationsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutChatConversationsInput, Prisma.UserUncheckedCreateWithoutChatConversationsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatConversationsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutChatConversationsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutChatConversationsInput, Prisma.UserUncheckedCreateWithoutChatConversationsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutChatConversationsInput;
+    upsert?: Prisma.UserUpsertWithoutChatConversationsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutChatConversationsInput, Prisma.UserUpdateWithoutChatConversationsInput>, Prisma.UserUncheckedUpdateWithoutChatConversationsInput>;
+};
+export type UserCreateNestedOneWithoutAiFeedbackInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAiFeedbackInput, Prisma.UserUncheckedCreateWithoutAiFeedbackInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiFeedbackInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutAiFeedbackNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAiFeedbackInput, Prisma.UserUncheckedCreateWithoutAiFeedbackInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiFeedbackInput;
+    upsert?: Prisma.UserUpsertWithoutAiFeedbackInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiFeedbackInput, Prisma.UserUpdateWithoutAiFeedbackInput>, Prisma.UserUncheckedUpdateWithoutAiFeedbackInput>;
+};
+export type UserCreateWithoutApprovalsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutApprovalsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutApprovalsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutApprovalsInput, Prisma.UserUncheckedCreateWithoutApprovalsInput>;
+};
+export type UserCreateWithoutApprovedByInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutApprovedByInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutApprovedByInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput>;
+};
+export type UserCreateManyApprovedByInputEnvelope = {
+    data: Prisma.UserCreateManyApprovedByInput | Prisma.UserCreateManyApprovedByInput[];
+    skipDuplicates?: boolean;
+};
+export type UserUpsertWithoutApprovalsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutApprovalsInput, Prisma.UserUncheckedUpdateWithoutApprovalsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutApprovalsInput, Prisma.UserUncheckedCreateWithoutApprovalsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutApprovalsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutApprovalsInput, Prisma.UserUncheckedUpdateWithoutApprovalsInput>;
+};
+export type UserUpdateWithoutApprovalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutApprovalsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserUpsertWithWhereUniqueWithoutApprovedByInput = {
+    where: Prisma.UserWhereUniqueInput;
+    update: Prisma.XOR<Prisma.UserUpdateWithoutApprovedByInput, Prisma.UserUncheckedUpdateWithoutApprovedByInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutApprovedByInput, Prisma.UserUncheckedCreateWithoutApprovedByInput>;
+};
+export type UserUpdateWithWhereUniqueWithoutApprovedByInput = {
+    where: Prisma.UserWhereUniqueInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutApprovedByInput, Prisma.UserUncheckedUpdateWithoutApprovedByInput>;
+};
+export type UserUpdateManyWithWhereWithoutApprovedByInput = {
+    where: Prisma.UserScalarWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutApprovedByInput>;
+};
+export type UserScalarWhereInput = {
+    AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[];
+    OR?: Prisma.UserScalarWhereInput[];
+    NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[];
+    id?: Prisma.StringFilter<"User"> | string;
+    email?: Prisma.StringFilter<"User"> | string;
+    passwordHash?: Prisma.StringFilter<"User"> | string;
+    name?: Prisma.StringFilter<"User"> | string;
+    role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus;
+    active?: Prisma.BoolFilter<"User"> | boolean;
+    lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    approvedById?: Prisma.StringNullableFilter<"User"> | string | null;
+    approvedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null;
+    rejectionReason?: Prisma.StringNullableFilter<"User"> | string | null;
+    preferences?: Prisma.JsonNullableFilter<"User">;
+    phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFilter<"User"> | boolean;
+    metadata?: Prisma.JsonNullableFilter<"User">;
+    createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+    updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
+};
 export type UserCreateWithoutReportedWorkOrdersInput = {
     id?: string;
     email: string;
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
     assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutReportedWorkOrdersInput = {
     id?: string;
@@ -490,15 +980,25 @@ export type UserUncheckedCreateWithoutReportedWorkOrdersInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutReportedWorkOrdersInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -510,15 +1010,25 @@ export type UserCreateWithoutAssignedWorkOrdersInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
     reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutAssignedWorkOrdersInput = {
     id?: string;
@@ -526,15 +1036,25 @@ export type UserUncheckedCreateWithoutAssignedWorkOrdersInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutAssignedWorkOrdersInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -555,15 +1075,25 @@ export type UserUpdateWithoutReportedWorkOrdersInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutReportedWorkOrdersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -571,15 +1101,25 @@ export type UserUncheckedUpdateWithoutReportedWorkOrdersInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserUpsertWithoutAssignedWorkOrdersInput = {
     update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutAssignedWorkOrdersInput>;
@@ -596,15 +1136,25 @@ export type UserUpdateWithoutAssignedWorkOrdersInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
     reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutAssignedWorkOrdersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -612,15 +1162,25 @@ export type UserUncheckedUpdateWithoutAssignedWorkOrdersInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutRepairActionsInput = {
     id?: string;
@@ -628,15 +1188,25 @@ export type UserCreateWithoutRepairActionsInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
     reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
     assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutRepairActionsInput = {
     id?: string;
@@ -644,15 +1214,25 @@ export type UserUncheckedCreateWithoutRepairActionsInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutRepairActionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -673,15 +1253,25 @@ export type UserUpdateWithoutRepairActionsInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
     reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutRepairActionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -689,15 +1279,25 @@ export type UserUncheckedUpdateWithoutRepairActionsInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
 };
 export type UserCreateWithoutDocumentsInput = {
     id?: string;
@@ -705,15 +1305,25 @@ export type UserCreateWithoutDocumentsInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
     reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
     assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
 };
 export type UserUncheckedCreateWithoutDocumentsInput = {
     id?: string;
@@ -721,15 +1331,25 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
     passwordHash: string;
     name: string;
     role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
     active?: boolean;
     lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
 };
 export type UserCreateOrConnectWithoutDocumentsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -750,15 +1370,25 @@ export type UserUpdateWithoutDocumentsInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
     reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
 };
 export type UserUncheckedUpdateWithoutDocumentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -766,15 +1396,349 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
     passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
     active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
     assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutChatConversationsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutChatConversationsInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutChatConversationsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutChatConversationsInput, Prisma.UserUncheckedCreateWithoutChatConversationsInput>;
+};
+export type UserUpsertWithoutChatConversationsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutChatConversationsInput, Prisma.UserUncheckedUpdateWithoutChatConversationsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutChatConversationsInput, Prisma.UserUncheckedCreateWithoutChatConversationsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutChatConversationsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutChatConversationsInput, Prisma.UserUncheckedUpdateWithoutChatConversationsInput>;
+};
+export type UserUpdateWithoutChatConversationsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutChatConversationsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateWithoutAiFeedbackInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+};
+export type UserUncheckedCreateWithoutAiFeedbackInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+};
+export type UserCreateOrConnectWithoutAiFeedbackInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAiFeedbackInput, Prisma.UserUncheckedCreateWithoutAiFeedbackInput>;
+};
+export type UserUpsertWithoutAiFeedbackInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutAiFeedbackInput, Prisma.UserUncheckedUpdateWithoutAiFeedbackInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAiFeedbackInput, Prisma.UserUncheckedCreateWithoutAiFeedbackInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutAiFeedbackInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutAiFeedbackInput, Prisma.UserUncheckedUpdateWithoutAiFeedbackInput>;
+};
+export type UserUpdateWithoutAiFeedbackInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutAiFeedbackInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserCreateManyApprovedByInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type UserUpdateWithoutApprovedByInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateWithoutApprovedByInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+};
+export type UserUncheckedUpdateManyWithoutApprovedByInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 /**
  * Count Type UserCountOutputType
@@ -784,12 +1748,18 @@ export type UserCountOutputType = {
     assignedWorkOrders: number;
     repairActions: number;
     documents: number;
+    approvals: number;
+    chatConversations: number;
+    aiFeedback: number;
 };
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     reportedWorkOrders?: boolean | UserCountOutputTypeCountReportedWorkOrdersArgs;
     assignedWorkOrders?: boolean | UserCountOutputTypeCountAssignedWorkOrdersArgs;
     repairActions?: boolean | UserCountOutputTypeCountRepairActionsArgs;
     documents?: boolean | UserCountOutputTypeCountDocumentsArgs;
+    approvals?: boolean | UserCountOutputTypeCountApprovalsArgs;
+    chatConversations?: boolean | UserCountOutputTypeCountChatConversationsArgs;
+    aiFeedback?: boolean | UserCountOutputTypeCountAiFeedbackArgs;
 };
 /**
  * UserCountOutputType without action
@@ -824,22 +1794,51 @@ export type UserCountOutputTypeCountRepairActionsArgs<ExtArgs extends runtime.Ty
 export type UserCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.DocumentWhereInput;
 };
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountApprovalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.UserWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountChatConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.ChatConversationWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.ChatMessageFeedbackWhereInput;
+};
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     email?: boolean;
     passwordHash?: boolean;
     name?: boolean;
     role?: boolean;
+    status?: boolean;
     active?: boolean;
     lastLoginAt?: boolean;
+    approvedById?: boolean;
+    approvedAt?: boolean;
+    rejectedAt?: boolean;
+    rejectionReason?: boolean;
     preferences?: boolean;
+    phoneNumber?: boolean;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
     reportedWorkOrders?: boolean | Prisma.User$reportedWorkOrdersArgs<ExtArgs>;
     assignedWorkOrders?: boolean | Prisma.User$assignedWorkOrdersArgs<ExtArgs>;
     repairActions?: boolean | Prisma.User$repairActionsArgs<ExtArgs>;
     documents?: boolean | Prisma.User$documentsArgs<ExtArgs>;
+    approvals?: boolean | Prisma.User$approvalsArgs<ExtArgs>;
+    chatConversations?: boolean | Prisma.User$chatConversationsArgs<ExtArgs>;
+    aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -848,12 +1847,20 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     passwordHash?: boolean;
     name?: boolean;
     role?: boolean;
+    status?: boolean;
     active?: boolean;
     lastLoginAt?: boolean;
+    approvedById?: boolean;
+    approvedAt?: boolean;
+    rejectedAt?: boolean;
+    rejectionReason?: boolean;
     preferences?: boolean;
+    phoneNumber?: boolean;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -861,12 +1868,20 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
     passwordHash?: boolean;
     name?: boolean;
     role?: boolean;
+    status?: boolean;
     active?: boolean;
     lastLoginAt?: boolean;
+    approvedById?: boolean;
+    approvedAt?: boolean;
+    rejectedAt?: boolean;
+    rejectionReason?: boolean;
     preferences?: boolean;
+    phoneNumber?: boolean;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectScalar = {
     id?: boolean;
@@ -874,30 +1889,49 @@ export type UserSelectScalar = {
     passwordHash?: boolean;
     name?: boolean;
     role?: boolean;
+    status?: boolean;
     active?: boolean;
     lastLoginAt?: boolean;
+    approvedById?: boolean;
+    approvedAt?: boolean;
+    rejectedAt?: boolean;
+    rejectionReason?: boolean;
     preferences?: boolean;
+    phoneNumber?: boolean;
+    assignmentWhatsappOptIn?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "active" | "lastLoginAt" | "preferences" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "name" | "role" | "status" | "active" | "lastLoginAt" | "approvedById" | "approvedAt" | "rejectedAt" | "rejectionReason" | "preferences" | "phoneNumber" | "assignmentWhatsappOptIn" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
     reportedWorkOrders?: boolean | Prisma.User$reportedWorkOrdersArgs<ExtArgs>;
     assignedWorkOrders?: boolean | Prisma.User$assignedWorkOrdersArgs<ExtArgs>;
     repairActions?: boolean | Prisma.User$repairActionsArgs<ExtArgs>;
     documents?: boolean | Prisma.User$documentsArgs<ExtArgs>;
+    approvals?: boolean | Prisma.User$approvalsArgs<ExtArgs>;
+    chatConversations?: boolean | Prisma.User$chatConversationsArgs<ExtArgs>;
+    aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
+};
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    approvedBy?: boolean | Prisma.User$approvedByArgs<ExtArgs>;
+};
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "User";
     objects: {
+        approvedBy: Prisma.$UserPayload<ExtArgs> | null;
         reportedWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
         assignedWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
         repairActions: Prisma.$RepairActionPayload<ExtArgs>[];
         documents: Prisma.$DocumentPayload<ExtArgs>[];
+        approvals: Prisma.$UserPayload<ExtArgs>[];
+        chatConversations: Prisma.$ChatConversationPayload<ExtArgs>[];
+        aiFeedback: Prisma.$ChatMessageFeedbackPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -905,9 +1939,16 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         passwordHash: string;
         name: string;
         role: $Enums.UserRole;
+        status: $Enums.UserStatus;
         active: boolean;
         lastLoginAt: Date | null;
+        approvedById: string | null;
+        approvedAt: Date | null;
+        rejectedAt: Date | null;
+        rejectionReason: string | null;
         preferences: runtime.JsonValue | null;
+        phoneNumber: string | null;
+        assignmentWhatsappOptIn: boolean;
         metadata: runtime.JsonValue | null;
         createdAt: Date;
         updatedAt: Date;
@@ -1240,10 +2281,14 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
+    approvedBy<T extends Prisma.User$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     reportedWorkOrders<T extends Prisma.User$reportedWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportedWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     assignedWorkOrders<T extends Prisma.User$assignedWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     repairActions<T extends Prisma.User$repairActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$repairActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RepairActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     documents<T extends Prisma.User$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    approvals<T extends Prisma.User$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    chatConversations<T extends Prisma.User$chatConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    aiFeedback<T extends Prisma.User$aiFeedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMessageFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1274,9 +2319,16 @@ export interface UserFieldRefs {
     readonly passwordHash: Prisma.FieldRef<"User", 'String'>;
     readonly name: Prisma.FieldRef<"User", 'String'>;
     readonly role: Prisma.FieldRef<"User", 'UserRole'>;
+    readonly status: Prisma.FieldRef<"User", 'UserStatus'>;
     readonly active: Prisma.FieldRef<"User", 'Boolean'>;
     readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>;
+    readonly approvedById: Prisma.FieldRef<"User", 'String'>;
+    readonly approvedAt: Prisma.FieldRef<"User", 'DateTime'>;
+    readonly rejectedAt: Prisma.FieldRef<"User", 'DateTime'>;
+    readonly rejectionReason: Prisma.FieldRef<"User", 'String'>;
     readonly preferences: Prisma.FieldRef<"User", 'Json'>;
+    readonly phoneNumber: Prisma.FieldRef<"User", 'String'>;
+    readonly assignmentWhatsappOptIn: Prisma.FieldRef<"User", 'Boolean'>;
     readonly metadata: Prisma.FieldRef<"User", 'Json'>;
     readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>;
@@ -1519,6 +2571,10 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
      */
     data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[];
     skipDuplicates?: boolean;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null;
 };
 /**
  * User update
@@ -1586,6 +2642,10 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
      * Limit how many Users to update.
      */
     limit?: number;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null;
 };
 /**
  * User upsert
@@ -1649,6 +2709,24 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
      * Limit how many Users to delete.
      */
     limit?: number;
+};
+/**
+ * User.approvedBy
+ */
+export type User$approvedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: Prisma.UserSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: Prisma.UserOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.UserInclude<ExtArgs> | null;
+    where?: Prisma.UserWhereInput;
 };
 /**
  * User.reportedWorkOrders
@@ -1741,6 +2819,75 @@ export type User$documentsArgs<ExtArgs extends runtime.Types.Extensions.Internal
     take?: number;
     skip?: number;
     distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[];
+};
+/**
+ * User.approvals
+ */
+export type User$approvalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: Prisma.UserSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: Prisma.UserOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.UserInclude<ExtArgs> | null;
+    where?: Prisma.UserWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[];
+    cursor?: Prisma.UserWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[];
+};
+/**
+ * User.chatConversations
+ */
+export type User$chatConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatConversation
+     */
+    select?: Prisma.ChatConversationSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the ChatConversation
+     */
+    omit?: Prisma.ChatConversationOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.ChatConversationInclude<ExtArgs> | null;
+    where?: Prisma.ChatConversationWhereInput;
+    orderBy?: Prisma.ChatConversationOrderByWithRelationInput | Prisma.ChatConversationOrderByWithRelationInput[];
+    cursor?: Prisma.ChatConversationWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.ChatConversationScalarFieldEnum | Prisma.ChatConversationScalarFieldEnum[];
+};
+/**
+ * User.aiFeedback
+ */
+export type User$aiFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatMessageFeedback
+     */
+    select?: Prisma.ChatMessageFeedbackSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the ChatMessageFeedback
+     */
+    omit?: Prisma.ChatMessageFeedbackOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.ChatMessageFeedbackInclude<ExtArgs> | null;
+    where?: Prisma.ChatMessageFeedbackWhereInput;
+    orderBy?: Prisma.ChatMessageFeedbackOrderByWithRelationInput | Prisma.ChatMessageFeedbackOrderByWithRelationInput[];
+    cursor?: Prisma.ChatMessageFeedbackWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.ChatMessageFeedbackScalarFieldEnum | Prisma.ChatMessageFeedbackScalarFieldEnum[];
 };
 /**
  * User without action

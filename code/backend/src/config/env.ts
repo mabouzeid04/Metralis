@@ -27,6 +27,21 @@ if (aiProvider === "gemini" && !process.env.GEMINI_API_KEY) {
   throw new Error(`Missing required environment variable: GEMINI_API_KEY (required when AI_PROVIDER is gemini)`);
 }
 
+const whatsappEnabled = process.env.WHATSAPP_ASSIGNMENT_ENABLED === "true";
+const whatsappConfig = {
+  enabled: whatsappEnabled && Boolean(process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID),
+  token: process.env.WHATSAPP_TOKEN,
+  phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+  templateName: process.env.WHATSAPP_TEMPLATE_WORKORDER_ASSIGNED || "workorder_assigned",
+  languageCode: process.env.WHATSAPP_TEMPLATE_LANGUAGE || "en_US",
+};
+
+if (whatsappEnabled && (!whatsappConfig.token || !whatsappConfig.phoneNumberId)) {
+  throw new Error(
+    "Missing required environment variables for WhatsApp assignment alerts: WHATSAPP_TOKEN, WHATSAPP_PHONE_NUMBER_ID",
+  );
+}
+
 export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   port: Number(process.env.PORT) || 4000,
@@ -47,13 +62,18 @@ export const env = {
   },
   ai: {
     provider: process.env.AI_PROVIDER || "gemini",
-    temperature: Number(process.env.AI_TEMPERATURE ?? "0.2"),
+    temperature: Number(process.env.AI_TEMPERATURE ?? "0.4"),
     maxTokens: Number(process.env.AI_MAX_TOKENS ?? "1024"),
     gemini: {
       apiKey: process.env.GEMINI_API_KEY as string,
-      model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+      model: process.env.GEMINI_MODEL || "gemini-3-flash-preview",
+    },
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY as string,
+      model: process.env.OPENAI_MODEL || "gpt-5.1-2025-11-13",
     },
   },
+  whatsapp: whatsappConfig,
 };
 
 

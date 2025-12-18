@@ -27,10 +27,15 @@ export type DocumentMinAggregateOutputType = {
     fileSize: number | null;
     mimeType: string | null;
     machineId: string | null;
+    workOrderId: string | null;
+    repairActionId: string | null;
     machineType: string | null;
     language: string | null;
     version: string | null;
     uploadedById: string | null;
+    ingestionStatus: $Enums.DocumentIngestionStatus | null;
+    ingestedAt: Date | null;
+    ingestionError: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -42,10 +47,15 @@ export type DocumentMaxAggregateOutputType = {
     fileSize: number | null;
     mimeType: string | null;
     machineId: string | null;
+    workOrderId: string | null;
+    repairActionId: string | null;
     machineType: string | null;
     language: string | null;
     version: string | null;
     uploadedById: string | null;
+    ingestionStatus: $Enums.DocumentIngestionStatus | null;
+    ingestedAt: Date | null;
+    ingestionError: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -57,11 +67,16 @@ export type DocumentCountAggregateOutputType = {
     fileSize: number;
     mimeType: number;
     machineId: number;
+    workOrderId: number;
+    repairActionId: number;
     machineType: number;
     language: number;
     version: number;
     metadata: number;
     uploadedById: number;
+    ingestionStatus: number;
+    ingestedAt: number;
+    ingestionError: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
@@ -80,10 +95,15 @@ export type DocumentMinAggregateInputType = {
     fileSize?: true;
     mimeType?: true;
     machineId?: true;
+    workOrderId?: true;
+    repairActionId?: true;
     machineType?: true;
     language?: true;
     version?: true;
     uploadedById?: true;
+    ingestionStatus?: true;
+    ingestedAt?: true;
+    ingestionError?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -95,10 +115,15 @@ export type DocumentMaxAggregateInputType = {
     fileSize?: true;
     mimeType?: true;
     machineId?: true;
+    workOrderId?: true;
+    repairActionId?: true;
     machineType?: true;
     language?: true;
     version?: true;
     uploadedById?: true;
+    ingestionStatus?: true;
+    ingestedAt?: true;
+    ingestionError?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -110,11 +135,16 @@ export type DocumentCountAggregateInputType = {
     fileSize?: true;
     mimeType?: true;
     machineId?: true;
+    workOrderId?: true;
+    repairActionId?: true;
     machineType?: true;
     language?: true;
     version?: true;
     metadata?: true;
     uploadedById?: true;
+    ingestionStatus?: true;
+    ingestedAt?: true;
+    ingestionError?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -203,11 +233,16 @@ export type DocumentGroupByOutputType = {
     fileSize: number | null;
     mimeType: string | null;
     machineId: string | null;
+    workOrderId: string | null;
+    repairActionId: string | null;
     machineType: string | null;
     language: string | null;
     version: string | null;
     metadata: runtime.JsonValue | null;
     uploadedById: string;
+    ingestionStatus: $Enums.DocumentIngestionStatus;
+    ingestedAt: Date | null;
+    ingestionError: string | null;
     createdAt: Date;
     updatedAt: Date;
     _count: DocumentCountAggregateOutputType | null;
@@ -230,15 +265,23 @@ export type DocumentWhereInput = {
     fileSize?: Prisma.IntNullableFilter<"Document"> | number | null;
     mimeType?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    workOrderId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    repairActionId?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineType?: Prisma.StringNullableFilter<"Document"> | string | null;
     language?: Prisma.StringNullableFilter<"Document"> | string | null;
     version?: Prisma.StringNullableFilter<"Document"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"Document">;
     uploadedById?: Prisma.StringFilter<"Document"> | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFilter<"Document"> | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null;
+    ingestionError?: Prisma.StringNullableFilter<"Document"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
     machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null;
+    workOrder?: Prisma.XOR<Prisma.WorkOrderNullableScalarRelationFilter, Prisma.WorkOrderWhereInput> | null;
+    repairAction?: Prisma.XOR<Prisma.RepairActionNullableScalarRelationFilter, Prisma.RepairActionWhereInput> | null;
     uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    chunks?: Prisma.DocumentChunkListRelationFilter;
 };
 export type DocumentOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -248,15 +291,23 @@ export type DocumentOrderByWithRelationInput = {
     fileSize?: Prisma.SortOrderInput | Prisma.SortOrder;
     mimeType?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    workOrderId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    repairActionId?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineType?: Prisma.SortOrderInput | Prisma.SortOrder;
     language?: Prisma.SortOrderInput | Prisma.SortOrder;
     version?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     uploadedById?: Prisma.SortOrder;
+    ingestionStatus?: Prisma.SortOrder;
+    ingestedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    ingestionError?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     machine?: Prisma.MachineOrderByWithRelationInput;
+    workOrder?: Prisma.WorkOrderOrderByWithRelationInput;
+    repairAction?: Prisma.RepairActionOrderByWithRelationInput;
     uploadedBy?: Prisma.UserOrderByWithRelationInput;
+    chunks?: Prisma.DocumentChunkOrderByRelationAggregateInput;
 };
 export type DocumentWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -269,15 +320,23 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
     fileSize?: Prisma.IntNullableFilter<"Document"> | number | null;
     mimeType?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    workOrderId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    repairActionId?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineType?: Prisma.StringNullableFilter<"Document"> | string | null;
     language?: Prisma.StringNullableFilter<"Document"> | string | null;
     version?: Prisma.StringNullableFilter<"Document"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"Document">;
     uploadedById?: Prisma.StringFilter<"Document"> | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFilter<"Document"> | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null;
+    ingestionError?: Prisma.StringNullableFilter<"Document"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
     machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null;
+    workOrder?: Prisma.XOR<Prisma.WorkOrderNullableScalarRelationFilter, Prisma.WorkOrderWhereInput> | null;
+    repairAction?: Prisma.XOR<Prisma.RepairActionNullableScalarRelationFilter, Prisma.RepairActionWhereInput> | null;
     uploadedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
+    chunks?: Prisma.DocumentChunkListRelationFilter;
 }, "id">;
 export type DocumentOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -287,11 +346,16 @@ export type DocumentOrderByWithAggregationInput = {
     fileSize?: Prisma.SortOrderInput | Prisma.SortOrder;
     mimeType?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    workOrderId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    repairActionId?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineType?: Prisma.SortOrderInput | Prisma.SortOrder;
     language?: Prisma.SortOrderInput | Prisma.SortOrder;
     version?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     uploadedById?: Prisma.SortOrder;
+    ingestionStatus?: Prisma.SortOrder;
+    ingestedAt?: Prisma.SortOrderInput | Prisma.SortOrder;
+    ingestionError?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.DocumentCountOrderByAggregateInput;
@@ -311,11 +375,16 @@ export type DocumentScalarWhereWithAggregatesInput = {
     fileSize?: Prisma.IntNullableWithAggregatesFilter<"Document"> | number | null;
     mimeType?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     machineId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
+    workOrderId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
+    repairActionId?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     machineType?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     language?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     version?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     metadata?: Prisma.JsonNullableWithAggregatesFilter<"Document">;
     uploadedById?: Prisma.StringWithAggregatesFilter<"Document"> | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusWithAggregatesFilter<"Document"> | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Document"> | Date | string | null;
+    ingestionError?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string;
 };
@@ -330,10 +399,16 @@ export type DocumentCreateInput = {
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     machine?: Prisma.MachineCreateNestedOneWithoutDocumentsInput;
+    workOrder?: Prisma.WorkOrderCreateNestedOneWithoutAttachmentsInput;
+    repairAction?: Prisma.RepairActionCreateNestedOneWithoutAttachmentsInput;
     uploadedBy: Prisma.UserCreateNestedOneWithoutDocumentsInput;
+    chunks?: Prisma.DocumentChunkCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentUncheckedCreateInput = {
     id?: string;
@@ -343,13 +418,19 @@ export type DocumentUncheckedCreateInput = {
     fileSize?: number | null;
     mimeType?: string | null;
     machineId?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -362,10 +443,16 @@ export type DocumentUpdateInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     machine?: Prisma.MachineUpdateOneWithoutDocumentsNestedInput;
+    workOrder?: Prisma.WorkOrderUpdateOneWithoutAttachmentsNestedInput;
+    repairAction?: Prisma.RepairActionUpdateOneWithoutAttachmentsNestedInput;
     uploadedBy?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput;
+    chunks?: Prisma.DocumentChunkUpdateManyWithoutDocumentNestedInput;
 };
 export type DocumentUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -375,13 +462,19 @@ export type DocumentUncheckedUpdateInput = {
     fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput;
 };
 export type DocumentCreateManyInput = {
     id?: string;
@@ -391,11 +484,16 @@ export type DocumentCreateManyInput = {
     fileSize?: number | null;
     mimeType?: string | null;
     machineId?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -410,6 +508,9 @@ export type DocumentUpdateManyMutationInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -421,11 +522,16 @@ export type DocumentUncheckedUpdateManyInput = {
     fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -445,11 +551,16 @@ export type DocumentCountOrderByAggregateInput = {
     fileSize?: Prisma.SortOrder;
     mimeType?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    workOrderId?: Prisma.SortOrder;
+    repairActionId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     version?: Prisma.SortOrder;
     metadata?: Prisma.SortOrder;
     uploadedById?: Prisma.SortOrder;
+    ingestionStatus?: Prisma.SortOrder;
+    ingestedAt?: Prisma.SortOrder;
+    ingestionError?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -464,10 +575,15 @@ export type DocumentMaxOrderByAggregateInput = {
     fileSize?: Prisma.SortOrder;
     mimeType?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    workOrderId?: Prisma.SortOrder;
+    repairActionId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     version?: Prisma.SortOrder;
     uploadedById?: Prisma.SortOrder;
+    ingestionStatus?: Prisma.SortOrder;
+    ingestedAt?: Prisma.SortOrder;
+    ingestionError?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -479,15 +595,24 @@ export type DocumentMinOrderByAggregateInput = {
     fileSize?: Prisma.SortOrder;
     mimeType?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    workOrderId?: Prisma.SortOrder;
+    repairActionId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     version?: Prisma.SortOrder;
     uploadedById?: Prisma.SortOrder;
+    ingestionStatus?: Prisma.SortOrder;
+    ingestedAt?: Prisma.SortOrder;
+    ingestionError?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
 export type DocumentSumOrderByAggregateInput = {
     fileSize?: Prisma.SortOrder;
+};
+export type DocumentScalarRelationFilter = {
+    is?: Prisma.DocumentWhereInput;
+    isNot?: Prisma.DocumentWhereInput;
 };
 export type DocumentCreateNestedManyWithoutUploadedByInput = {
     create?: Prisma.XOR<Prisma.DocumentCreateWithoutUploadedByInput, Prisma.DocumentUncheckedCreateWithoutUploadedByInput> | Prisma.DocumentCreateWithoutUploadedByInput[] | Prisma.DocumentUncheckedCreateWithoutUploadedByInput[];
@@ -565,8 +690,94 @@ export type DocumentUncheckedUpdateManyWithoutMachineNestedInput = {
     updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutMachineInput | Prisma.DocumentUpdateManyWithWhereWithoutMachineInput[];
     deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[];
 };
+export type DocumentCreateNestedManyWithoutWorkOrderInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput> | Prisma.DocumentCreateWithoutWorkOrderInput[] | Prisma.DocumentUncheckedCreateWithoutWorkOrderInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWorkOrderInput | Prisma.DocumentCreateOrConnectWithoutWorkOrderInput[];
+    createMany?: Prisma.DocumentCreateManyWorkOrderInputEnvelope;
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+};
+export type DocumentUncheckedCreateNestedManyWithoutWorkOrderInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput> | Prisma.DocumentCreateWithoutWorkOrderInput[] | Prisma.DocumentUncheckedCreateWithoutWorkOrderInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWorkOrderInput | Prisma.DocumentCreateOrConnectWithoutWorkOrderInput[];
+    createMany?: Prisma.DocumentCreateManyWorkOrderInputEnvelope;
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+};
+export type DocumentUpdateManyWithoutWorkOrderNestedInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput> | Prisma.DocumentCreateWithoutWorkOrderInput[] | Prisma.DocumentUncheckedCreateWithoutWorkOrderInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWorkOrderInput | Prisma.DocumentCreateOrConnectWithoutWorkOrderInput[];
+    upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutWorkOrderInput | Prisma.DocumentUpsertWithWhereUniqueWithoutWorkOrderInput[];
+    createMany?: Prisma.DocumentCreateManyWorkOrderInputEnvelope;
+    set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    update?: Prisma.DocumentUpdateWithWhereUniqueWithoutWorkOrderInput | Prisma.DocumentUpdateWithWhereUniqueWithoutWorkOrderInput[];
+    updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutWorkOrderInput | Prisma.DocumentUpdateManyWithWhereWithoutWorkOrderInput[];
+    deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[];
+};
+export type DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput> | Prisma.DocumentCreateWithoutWorkOrderInput[] | Prisma.DocumentUncheckedCreateWithoutWorkOrderInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutWorkOrderInput | Prisma.DocumentCreateOrConnectWithoutWorkOrderInput[];
+    upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutWorkOrderInput | Prisma.DocumentUpsertWithWhereUniqueWithoutWorkOrderInput[];
+    createMany?: Prisma.DocumentCreateManyWorkOrderInputEnvelope;
+    set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    update?: Prisma.DocumentUpdateWithWhereUniqueWithoutWorkOrderInput | Prisma.DocumentUpdateWithWhereUniqueWithoutWorkOrderInput[];
+    updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutWorkOrderInput | Prisma.DocumentUpdateManyWithWhereWithoutWorkOrderInput[];
+    deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[];
+};
+export type DocumentCreateNestedManyWithoutRepairActionInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput> | Prisma.DocumentCreateWithoutRepairActionInput[] | Prisma.DocumentUncheckedCreateWithoutRepairActionInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutRepairActionInput | Prisma.DocumentCreateOrConnectWithoutRepairActionInput[];
+    createMany?: Prisma.DocumentCreateManyRepairActionInputEnvelope;
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+};
+export type DocumentUncheckedCreateNestedManyWithoutRepairActionInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput> | Prisma.DocumentCreateWithoutRepairActionInput[] | Prisma.DocumentUncheckedCreateWithoutRepairActionInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutRepairActionInput | Prisma.DocumentCreateOrConnectWithoutRepairActionInput[];
+    createMany?: Prisma.DocumentCreateManyRepairActionInputEnvelope;
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+};
+export type DocumentUpdateManyWithoutRepairActionNestedInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput> | Prisma.DocumentCreateWithoutRepairActionInput[] | Prisma.DocumentUncheckedCreateWithoutRepairActionInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutRepairActionInput | Prisma.DocumentCreateOrConnectWithoutRepairActionInput[];
+    upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutRepairActionInput | Prisma.DocumentUpsertWithWhereUniqueWithoutRepairActionInput[];
+    createMany?: Prisma.DocumentCreateManyRepairActionInputEnvelope;
+    set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    update?: Prisma.DocumentUpdateWithWhereUniqueWithoutRepairActionInput | Prisma.DocumentUpdateWithWhereUniqueWithoutRepairActionInput[];
+    updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutRepairActionInput | Prisma.DocumentUpdateManyWithWhereWithoutRepairActionInput[];
+    deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[];
+};
+export type DocumentUncheckedUpdateManyWithoutRepairActionNestedInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput> | Prisma.DocumentCreateWithoutRepairActionInput[] | Prisma.DocumentUncheckedCreateWithoutRepairActionInput[];
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutRepairActionInput | Prisma.DocumentCreateOrConnectWithoutRepairActionInput[];
+    upsert?: Prisma.DocumentUpsertWithWhereUniqueWithoutRepairActionInput | Prisma.DocumentUpsertWithWhereUniqueWithoutRepairActionInput[];
+    createMany?: Prisma.DocumentCreateManyRepairActionInputEnvelope;
+    set?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    disconnect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    delete?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    connect?: Prisma.DocumentWhereUniqueInput | Prisma.DocumentWhereUniqueInput[];
+    update?: Prisma.DocumentUpdateWithWhereUniqueWithoutRepairActionInput | Prisma.DocumentUpdateWithWhereUniqueWithoutRepairActionInput[];
+    updateMany?: Prisma.DocumentUpdateManyWithWhereWithoutRepairActionInput | Prisma.DocumentUpdateManyWithWhereWithoutRepairActionInput[];
+    deleteMany?: Prisma.DocumentScalarWhereInput | Prisma.DocumentScalarWhereInput[];
+};
 export type EnumDocumentTypeFieldUpdateOperationsInput = {
     set?: $Enums.DocumentType;
+};
+export type EnumDocumentIngestionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.DocumentIngestionStatus;
+};
+export type DocumentUpdateOneRequiredWithoutChunksNestedInput = {
+    create?: Prisma.XOR<Prisma.DocumentCreateWithoutChunksInput, Prisma.DocumentUncheckedCreateWithoutChunksInput>;
+    connectOrCreate?: Prisma.DocumentCreateOrConnectWithoutChunksInput;
+    upsert?: Prisma.DocumentUpsertWithoutChunksInput;
+    connect?: Prisma.DocumentWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentUpdateToOneWithWhereWithoutChunksInput, Prisma.DocumentUpdateWithoutChunksInput>, Prisma.DocumentUncheckedUpdateWithoutChunksInput>;
 };
 export type DocumentCreateWithoutUploadedByInput = {
     id?: string;
@@ -579,9 +790,15 @@ export type DocumentCreateWithoutUploadedByInput = {
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     machine?: Prisma.MachineCreateNestedOneWithoutDocumentsInput;
+    workOrder?: Prisma.WorkOrderCreateNestedOneWithoutAttachmentsInput;
+    repairAction?: Prisma.RepairActionCreateNestedOneWithoutAttachmentsInput;
+    chunks?: Prisma.DocumentChunkCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentUncheckedCreateWithoutUploadedByInput = {
     id?: string;
@@ -591,12 +808,18 @@ export type DocumentUncheckedCreateWithoutUploadedByInput = {
     fileSize?: number | null;
     mimeType?: string | null;
     machineId?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentCreateOrConnectWithoutUploadedByInput = {
     where: Prisma.DocumentWhereUniqueInput;
@@ -630,11 +853,16 @@ export type DocumentScalarWhereInput = {
     fileSize?: Prisma.IntNullableFilter<"Document"> | number | null;
     mimeType?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    workOrderId?: Prisma.StringNullableFilter<"Document"> | string | null;
+    repairActionId?: Prisma.StringNullableFilter<"Document"> | string | null;
     machineType?: Prisma.StringNullableFilter<"Document"> | string | null;
     language?: Prisma.StringNullableFilter<"Document"> | string | null;
     version?: Prisma.StringNullableFilter<"Document"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"Document">;
     uploadedById?: Prisma.StringFilter<"Document"> | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFilter<"Document"> | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null;
+    ingestionError?: Prisma.StringNullableFilter<"Document"> | string | null;
     createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string;
 };
@@ -649,9 +877,15 @@ export type DocumentCreateWithoutMachineInput = {
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    workOrder?: Prisma.WorkOrderCreateNestedOneWithoutAttachmentsInput;
+    repairAction?: Prisma.RepairActionCreateNestedOneWithoutAttachmentsInput;
     uploadedBy: Prisma.UserCreateNestedOneWithoutDocumentsInput;
+    chunks?: Prisma.DocumentChunkCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentUncheckedCreateWithoutMachineInput = {
     id?: string;
@@ -660,13 +894,19 @@ export type DocumentUncheckedCreateWithoutMachineInput = {
     filePath: string;
     fileSize?: number | null;
     mimeType?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedCreateNestedManyWithoutDocumentInput;
 };
 export type DocumentCreateOrConnectWithoutMachineInput = {
     where: Prisma.DocumentWhereUniqueInput;
@@ -689,6 +929,229 @@ export type DocumentUpdateManyWithWhereWithoutMachineInput = {
     where: Prisma.DocumentScalarWhereInput;
     data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutMachineInput>;
 };
+export type DocumentCreateWithoutWorkOrderInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    machine?: Prisma.MachineCreateNestedOneWithoutDocumentsInput;
+    repairAction?: Prisma.RepairActionCreateNestedOneWithoutAttachmentsInput;
+    uploadedBy: Prisma.UserCreateNestedOneWithoutDocumentsInput;
+    chunks?: Prisma.DocumentChunkCreateNestedManyWithoutDocumentInput;
+};
+export type DocumentUncheckedCreateWithoutWorkOrderInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineId?: string | null;
+    repairActionId?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedCreateNestedManyWithoutDocumentInput;
+};
+export type DocumentCreateOrConnectWithoutWorkOrderInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput>;
+};
+export type DocumentCreateManyWorkOrderInputEnvelope = {
+    data: Prisma.DocumentCreateManyWorkOrderInput | Prisma.DocumentCreateManyWorkOrderInput[];
+    skipDuplicates?: boolean;
+};
+export type DocumentUpsertWithWhereUniqueWithoutWorkOrderInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    update: Prisma.XOR<Prisma.DocumentUpdateWithoutWorkOrderInput, Prisma.DocumentUncheckedUpdateWithoutWorkOrderInput>;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutWorkOrderInput, Prisma.DocumentUncheckedCreateWithoutWorkOrderInput>;
+};
+export type DocumentUpdateWithWhereUniqueWithoutWorkOrderInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    data: Prisma.XOR<Prisma.DocumentUpdateWithoutWorkOrderInput, Prisma.DocumentUncheckedUpdateWithoutWorkOrderInput>;
+};
+export type DocumentUpdateManyWithWhereWithoutWorkOrderInput = {
+    where: Prisma.DocumentScalarWhereInput;
+    data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderInput>;
+};
+export type DocumentCreateWithoutRepairActionInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    machine?: Prisma.MachineCreateNestedOneWithoutDocumentsInput;
+    workOrder?: Prisma.WorkOrderCreateNestedOneWithoutAttachmentsInput;
+    uploadedBy: Prisma.UserCreateNestedOneWithoutDocumentsInput;
+    chunks?: Prisma.DocumentChunkCreateNestedManyWithoutDocumentInput;
+};
+export type DocumentUncheckedCreateWithoutRepairActionInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineId?: string | null;
+    workOrderId?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedCreateNestedManyWithoutDocumentInput;
+};
+export type DocumentCreateOrConnectWithoutRepairActionInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput>;
+};
+export type DocumentCreateManyRepairActionInputEnvelope = {
+    data: Prisma.DocumentCreateManyRepairActionInput | Prisma.DocumentCreateManyRepairActionInput[];
+    skipDuplicates?: boolean;
+};
+export type DocumentUpsertWithWhereUniqueWithoutRepairActionInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    update: Prisma.XOR<Prisma.DocumentUpdateWithoutRepairActionInput, Prisma.DocumentUncheckedUpdateWithoutRepairActionInput>;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutRepairActionInput, Prisma.DocumentUncheckedCreateWithoutRepairActionInput>;
+};
+export type DocumentUpdateWithWhereUniqueWithoutRepairActionInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    data: Prisma.XOR<Prisma.DocumentUpdateWithoutRepairActionInput, Prisma.DocumentUncheckedUpdateWithoutRepairActionInput>;
+};
+export type DocumentUpdateManyWithWhereWithoutRepairActionInput = {
+    where: Prisma.DocumentScalarWhereInput;
+    data: Prisma.XOR<Prisma.DocumentUpdateManyMutationInput, Prisma.DocumentUncheckedUpdateManyWithoutRepairActionInput>;
+};
+export type DocumentCreateWithoutChunksInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    machine?: Prisma.MachineCreateNestedOneWithoutDocumentsInput;
+    workOrder?: Prisma.WorkOrderCreateNestedOneWithoutAttachmentsInput;
+    repairAction?: Prisma.RepairActionCreateNestedOneWithoutAttachmentsInput;
+    uploadedBy: Prisma.UserCreateNestedOneWithoutDocumentsInput;
+};
+export type DocumentUncheckedCreateWithoutChunksInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineId?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type DocumentCreateOrConnectWithoutChunksInput = {
+    where: Prisma.DocumentWhereUniqueInput;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutChunksInput, Prisma.DocumentUncheckedCreateWithoutChunksInput>;
+};
+export type DocumentUpsertWithoutChunksInput = {
+    update: Prisma.XOR<Prisma.DocumentUpdateWithoutChunksInput, Prisma.DocumentUncheckedUpdateWithoutChunksInput>;
+    create: Prisma.XOR<Prisma.DocumentCreateWithoutChunksInput, Prisma.DocumentUncheckedCreateWithoutChunksInput>;
+    where?: Prisma.DocumentWhereInput;
+};
+export type DocumentUpdateToOneWithWhereWithoutChunksInput = {
+    where?: Prisma.DocumentWhereInput;
+    data: Prisma.XOR<Prisma.DocumentUpdateWithoutChunksInput, Prisma.DocumentUncheckedUpdateWithoutChunksInput>;
+};
+export type DocumentUpdateWithoutChunksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    machine?: Prisma.MachineUpdateOneWithoutDocumentsNestedInput;
+    workOrder?: Prisma.WorkOrderUpdateOneWithoutAttachmentsNestedInput;
+    repairAction?: Prisma.RepairActionUpdateOneWithoutAttachmentsNestedInput;
+    uploadedBy?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput;
+};
+export type DocumentUncheckedUpdateWithoutChunksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
 export type DocumentCreateManyUploadedByInput = {
     id?: string;
     title: string;
@@ -697,10 +1160,15 @@ export type DocumentCreateManyUploadedByInput = {
     fileSize?: number | null;
     mimeType?: string | null;
     machineId?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -715,9 +1183,15 @@ export type DocumentUpdateWithoutUploadedByInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     machine?: Prisma.MachineUpdateOneWithoutDocumentsNestedInput;
+    workOrder?: Prisma.WorkOrderUpdateOneWithoutAttachmentsNestedInput;
+    repairAction?: Prisma.RepairActionUpdateOneWithoutAttachmentsNestedInput;
+    chunks?: Prisma.DocumentChunkUpdateManyWithoutDocumentNestedInput;
 };
 export type DocumentUncheckedUpdateWithoutUploadedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -727,12 +1201,18 @@ export type DocumentUncheckedUpdateWithoutUploadedByInput = {
     fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput;
 };
 export type DocumentUncheckedUpdateManyWithoutUploadedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -742,10 +1222,15 @@ export type DocumentUncheckedUpdateManyWithoutUploadedByInput = {
     fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -756,11 +1241,16 @@ export type DocumentCreateManyMachineInput = {
     filePath: string;
     fileSize?: number | null;
     mimeType?: string | null;
+    workOrderId?: string | null;
+    repairActionId?: string | null;
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -775,9 +1265,15 @@ export type DocumentUpdateWithoutMachineInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workOrder?: Prisma.WorkOrderUpdateOneWithoutAttachmentsNestedInput;
+    repairAction?: Prisma.RepairActionUpdateOneWithoutAttachmentsNestedInput;
     uploadedBy?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput;
+    chunks?: Prisma.DocumentChunkUpdateManyWithoutDocumentNestedInput;
 };
 export type DocumentUncheckedUpdateWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -786,15 +1282,61 @@ export type DocumentUncheckedUpdateWithoutMachineInput = {
     filePath?: Prisma.StringFieldUpdateOperationsInput | string;
     fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput;
+};
+export type DocumentUncheckedUpdateManyWithoutMachineInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
-export type DocumentUncheckedUpdateManyWithoutMachineInput = {
+export type DocumentCreateManyWorkOrderInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineId?: string | null;
+    repairActionId?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type DocumentUpdateWithoutWorkOrderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
@@ -805,9 +1347,162 @@ export type DocumentUncheckedUpdateManyWithoutMachineInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
-    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    machine?: Prisma.MachineUpdateOneWithoutDocumentsNestedInput;
+    repairAction?: Prisma.RepairActionUpdateOneWithoutAttachmentsNestedInput;
+    uploadedBy?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput;
+    chunks?: Prisma.DocumentChunkUpdateManyWithoutDocumentNestedInput;
+};
+export type DocumentUncheckedUpdateWithoutWorkOrderInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput;
+};
+export type DocumentUncheckedUpdateManyWithoutWorkOrderInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    repairActionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type DocumentCreateManyRepairActionInput = {
+    id?: string;
+    title: string;
+    type?: $Enums.DocumentType;
+    filePath: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    machineId?: string | null;
+    workOrderId?: string | null;
+    machineType?: string | null;
+    language?: string | null;
+    version?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById: string;
+    ingestionStatus?: $Enums.DocumentIngestionStatus;
+    ingestedAt?: Date | string | null;
+    ingestionError?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type DocumentUpdateWithoutRepairActionInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    machine?: Prisma.MachineUpdateOneWithoutDocumentsNestedInput;
+    workOrder?: Prisma.WorkOrderUpdateOneWithoutAttachmentsNestedInput;
+    uploadedBy?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput;
+    chunks?: Prisma.DocumentChunkUpdateManyWithoutDocumentNestedInput;
+};
+export type DocumentUncheckedUpdateWithoutRepairActionInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    chunks?: Prisma.DocumentChunkUncheckedUpdateManyWithoutDocumentNestedInput;
+};
+export type DocumentUncheckedUpdateManyWithoutRepairActionInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.EnumDocumentTypeFieldUpdateOperationsInput | $Enums.DocumentType;
+    filePath?: Prisma.StringFieldUpdateOperationsInput | string;
+    fileSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    mimeType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    workOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    version?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    uploadedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    ingestionStatus?: Prisma.EnumDocumentIngestionStatusFieldUpdateOperationsInput | $Enums.DocumentIngestionStatus;
+    ingestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    ingestionError?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+/**
+ * Count Type DocumentCountOutputType
+ */
+export type DocumentCountOutputType = {
+    chunks: number;
+};
+export type DocumentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    chunks?: boolean | DocumentCountOutputTypeCountChunksArgs;
+};
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentCountOutputType
+     */
+    select?: Prisma.DocumentCountOutputTypeSelect<ExtArgs> | null;
+};
+/**
+ * DocumentCountOutputType without action
+ */
+export type DocumentCountOutputTypeCountChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.DocumentChunkWhereInput;
 };
 export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -817,15 +1512,24 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
     fileSize?: boolean;
     mimeType?: boolean;
     machineId?: boolean;
+    workOrderId?: boolean;
+    repairActionId?: boolean;
     machineType?: boolean;
     language?: boolean;
     version?: boolean;
     metadata?: boolean;
     uploadedById?: boolean;
+    ingestionStatus?: boolean;
+    ingestedAt?: boolean;
+    ingestionError?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    chunks?: boolean | Prisma.Document$chunksArgs<ExtArgs>;
+    _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["document"]>;
 export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -835,14 +1539,21 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
     fileSize?: boolean;
     mimeType?: boolean;
     machineId?: boolean;
+    workOrderId?: boolean;
+    repairActionId?: boolean;
     machineType?: boolean;
     language?: boolean;
     version?: boolean;
     metadata?: boolean;
     uploadedById?: boolean;
+    ingestionStatus?: boolean;
+    ingestedAt?: boolean;
+    ingestionError?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["document"]>;
 export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -853,14 +1564,21 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
     fileSize?: boolean;
     mimeType?: boolean;
     machineId?: boolean;
+    workOrderId?: boolean;
+    repairActionId?: boolean;
     machineType?: boolean;
     language?: boolean;
     version?: boolean;
     metadata?: boolean;
     uploadedById?: boolean;
+    ingestionStatus?: boolean;
+    ingestedAt?: boolean;
+    ingestionError?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["document"]>;
 export type DocumentSelectScalar = {
@@ -871,32 +1589,48 @@ export type DocumentSelectScalar = {
     fileSize?: boolean;
     mimeType?: boolean;
     machineId?: boolean;
+    workOrderId?: boolean;
+    repairActionId?: boolean;
     machineType?: boolean;
     language?: boolean;
     version?: boolean;
     metadata?: boolean;
     uploadedById?: boolean;
+    ingestionStatus?: boolean;
+    ingestedAt?: boolean;
+    ingestionError?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "type" | "filePath" | "fileSize" | "mimeType" | "machineId" | "machineType" | "language" | "version" | "metadata" | "uploadedById" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>;
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "type" | "filePath" | "fileSize" | "mimeType" | "machineId" | "workOrderId" | "repairActionId" | "machineType" | "language" | "version" | "metadata" | "uploadedById" | "ingestionStatus" | "ingestedAt" | "ingestionError" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>;
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
+    chunks?: boolean | Prisma.Document$chunksArgs<ExtArgs>;
+    _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type DocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
 export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     machine?: boolean | Prisma.Document$machineArgs<ExtArgs>;
+    workOrder?: boolean | Prisma.Document$workOrderArgs<ExtArgs>;
+    repairAction?: boolean | Prisma.Document$repairActionArgs<ExtArgs>;
     uploadedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
 };
 export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "Document";
     objects: {
         machine: Prisma.$MachinePayload<ExtArgs> | null;
+        workOrder: Prisma.$WorkOrderPayload<ExtArgs> | null;
+        repairAction: Prisma.$RepairActionPayload<ExtArgs> | null;
         uploadedBy: Prisma.$UserPayload<ExtArgs>;
+        chunks: Prisma.$DocumentChunkPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -906,11 +1640,16 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
         fileSize: number | null;
         mimeType: string | null;
         machineId: string | null;
+        workOrderId: string | null;
+        repairActionId: string | null;
         machineType: string | null;
         language: string | null;
         version: string | null;
         metadata: runtime.JsonValue | null;
         uploadedById: string;
+        ingestionStatus: $Enums.DocumentIngestionStatus;
+        ingestedAt: Date | null;
+        ingestionError: string | null;
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["document"]>;
@@ -1243,7 +1982,10 @@ export interface DocumentDelegate<ExtArgs extends runtime.Types.Extensions.Inter
 export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     machine<T extends Prisma.Document$machineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$machineArgs<ExtArgs>>): Prisma.Prisma__MachineClient<runtime.Types.Result.GetResult<Prisma.$MachinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    workOrder<T extends Prisma.Document$workOrderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$workOrderArgs<ExtArgs>>): Prisma.Prisma__WorkOrderClient<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    repairAction<T extends Prisma.Document$repairActionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$repairActionArgs<ExtArgs>>): Prisma.Prisma__RepairActionClient<runtime.Types.Result.GetResult<Prisma.$RepairActionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     uploadedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    chunks<T extends Prisma.Document$chunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Document$chunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1276,11 +2018,16 @@ export interface DocumentFieldRefs {
     readonly fileSize: Prisma.FieldRef<"Document", 'Int'>;
     readonly mimeType: Prisma.FieldRef<"Document", 'String'>;
     readonly machineId: Prisma.FieldRef<"Document", 'String'>;
+    readonly workOrderId: Prisma.FieldRef<"Document", 'String'>;
+    readonly repairActionId: Prisma.FieldRef<"Document", 'String'>;
     readonly machineType: Prisma.FieldRef<"Document", 'String'>;
     readonly language: Prisma.FieldRef<"Document", 'String'>;
     readonly version: Prisma.FieldRef<"Document", 'String'>;
     readonly metadata: Prisma.FieldRef<"Document", 'Json'>;
     readonly uploadedById: Prisma.FieldRef<"Document", 'String'>;
+    readonly ingestionStatus: Prisma.FieldRef<"Document", 'DocumentIngestionStatus'>;
+    readonly ingestedAt: Prisma.FieldRef<"Document", 'DateTime'>;
+    readonly ingestionError: Prisma.FieldRef<"Document", 'String'>;
     readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>;
 }
@@ -1678,6 +2425,65 @@ export type Document$machineArgs<ExtArgs extends runtime.Types.Extensions.Intern
      */
     include?: Prisma.MachineInclude<ExtArgs> | null;
     where?: Prisma.MachineWhereInput;
+};
+/**
+ * Document.workOrder
+ */
+export type Document$workOrderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * Document.repairAction
+ */
+export type Document$repairActionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RepairAction
+     */
+    select?: Prisma.RepairActionSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the RepairAction
+     */
+    omit?: Prisma.RepairActionOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.RepairActionInclude<ExtArgs> | null;
+    where?: Prisma.RepairActionWhereInput;
+};
+/**
+ * Document.chunks
+ */
+export type Document$chunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DocumentChunk
+     */
+    select?: Prisma.DocumentChunkSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the DocumentChunk
+     */
+    omit?: Prisma.DocumentChunkOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.DocumentChunkInclude<ExtArgs> | null;
+    where?: Prisma.DocumentChunkWhereInput;
+    orderBy?: Prisma.DocumentChunkOrderByWithRelationInput | Prisma.DocumentChunkOrderByWithRelationInput[];
+    cursor?: Prisma.DocumentChunkWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.DocumentChunkScalarFieldEnum | Prisma.DocumentChunkScalarFieldEnum[];
 };
 /**
  * Document without action

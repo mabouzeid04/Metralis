@@ -1,0 +1,66 @@
+{
+  "title": "METRALIS AI",
+  "subtitle": "Maintenance Copilot",
+  "description": "Ask troubleshooting questions, reference manuals, and capture learnings.",
+  "welcomeTitle": "How can I help you?",
+  "inputPlaceholder": "Describe the issue, alarm code, or maintenance question...",
+  "emptyState": "Ask a question to get started. Metralis AI will cite specific manual sections and past incidents.",
+  "send": "Send",
+  "thinking": "Thinking",
+  "newChat": "New Chat",
+  "history": "History",
+  "machineContext": "Machine Context",
+  "selectMachine": "Select a machine (optional)",
+  "boundTo": "Bound to",
+  "error": "Failed to send message",
+  "feedback": {
+    "prompt": "Was this response helpful?",
+    "helpful": "Helpful",
+    "needsWork": "Needs work",
+    "correctCause": "Correct cause",
+    "error": "Unable to send feedback. Please try again."
+  },
+  "active": {
+    "title": "Active conversation",
+    "defaultTitle": "New Metralis AI chat",
+    "noMessages": "No messages yet",
+    "idLabel": "Conversation ID",
+    "boundMachine": "Bound machine",
+    "notSpecified": "Not specified",
+    "tipsTitle": "Conversation tips",
+    "tips": [
+      "Reference error codes, sensor readings, or symptoms.",
+      "Metralis AI cites manuals and SOPs automatically.",
+      "Use the History tab to revisit earlier chats."
+    ]
+  },
+  "historyPanel": {
+    "title": "Conversation History",
+    "subtitle": "Select a chat to resume or start a new one",
+    "loading": "Loading history...",
+    "empty": "No previous conversations yet.",
+    "noMachine": "No machine selected",
+    "noMessages": "No messages yet",
+    "startNew": "Start new chat"
+  },
+  "assistantLabel": "Metralis AI",
+  "userLabel": "You",
+  "citations": {
+    "label": "Citations",
+    "docLabel": "Docs"
+  },
+  "structured": {
+    "summaryTitle": "Summary",
+    "summaryFallback": "No summary available.",
+    "causesTitle": "Likely Causes",
+    "causesEmpty": "No ranked causes yet.",
+    "stepsTitle": "Recommended Steps",
+    "stepsEmpty": "No actions proposed.",
+    "moreDataTitle": "More data required",
+    "moreDataBody": "Provide additional context before taking action.",
+    "referencesTitle": "References",
+    "createWorkOrder": "Create Work Order",
+    "viewMachine": "View Machine",
+    "logRepair": "Log Repair"
+  }
+}

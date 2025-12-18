@@ -34,7 +34,7 @@ S3_ENDPOINT="http://localhost:9000"
 S3_FORCE_PATH_STYLE=true
 OPENAI_API_KEY="your-openai-key"          # embeddings
 GEMINI_API_KEY="your-gemini-key"          # default chat provider
-GEMINI_MODEL="gemini-2.5-flash"
+GEMINI_MODEL="gemini-3-flash-preview"
 AI_PROVIDER="gemini"
 AI_TEMPERATURE=0.2
 AI_MAX_TOKENS=1024
@@ -63,7 +63,8 @@ PostgreSQL is now the primary datastore. Document binaries are written to S3 (or
 | `npm run prisma:migrate` | Run migrations |
 | `npm run prisma:generate` | Regenerate Prisma client |
 | `npm run lint` | Type-check via `tsc --noEmit` |
-| `npm test` | Run Vitest unit tests (retrieval + schema coverage) |
+| `npm test` | Run Vitest suites (unit + integration); requires Postgres test DB |
+| `npm test -- --coverage` | Generate coverage reports (thresholds enforced) |
 
 ## API Overview
 

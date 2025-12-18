@@ -8,18 +8,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { api } from '@/lib/api'
+import { SUPPORTED_LANGUAGES } from '@/lib/i18n'
 
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
 
   const changeLanguage = async (lng: string) => {
     i18n.changeLanguage(lng)
-    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr'
     localStorage.setItem('i18nextLng', lng)
 
     // Persist to backend preferences
     try {
-      await api.patch('/users/me/preferences', { language: lng })
+      await api.patch('/profile/me/preferences', { language: lng })
     } catch {
       // Silently fail - preference is already saved locally
     }
@@ -28,17 +28,16 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" aria-label={t('language.label')}>
           <Globe className="h-5 w-5 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
-        <DropdownMenuItem onSelect={() => changeLanguage('en')}>
-          English
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => changeLanguage('ar')}>
-          العربية
-        </DropdownMenuItem>
+        {SUPPORTED_LANGUAGES.map((lng) => (
+          <DropdownMenuItem key={lng.code} onSelect={() => changeLanguage(lng.code)}>
+            {lng.label}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   )

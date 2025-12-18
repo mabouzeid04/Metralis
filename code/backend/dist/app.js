@@ -11,11 +11,26 @@ const routes_1 = __importDefault(require("./routes"));
 const errorHandler_1 = require("./middleware/errorHandler");
 const createApp = () => {
     const app = (0, express_1.default)();
-    // CORS configuration - allow frontend domain in production
-    const corsOrigin = process.env.FRONTEND_URL || process.env.CORS_ORIGIN;
-    const corsOptions = corsOrigin
-        ? { origin: corsOrigin, credentials: true }
-        : {}; // {} = allow all (for development)
+    // CORS configuration - allow configured domains plus local dev by default
+    const configuredOrigins = (process.env.FRONTEND_URL || process.env.CORS_ORIGIN || "")
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
+    if (process.env.NODE_ENV !== "production") {
+        configuredOrigins.push("http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5178", "http://127.0.0.1:5178");
+    }
+    const uniqueOrigins = Array.from(new Set(configuredOrigins));
+    const corsOptions = uniqueOrigins.length > 0
+        ? {
+            origin: (origin, callback) => {
+                if (!origin || uniqueOrigins.includes(origin)) {
+                    return callback(null, true);
+                }
+                return callback(new Error("Not allowed by CORS"));
+            },
+            credentials: true,
+        }
+        : { origin: true, credentials: true };
     app.use((0, cors_1.default)(corsOptions));
     app.use(express_1.default.json({ limit: "10mb" }));
     app.use(express_1.default.urlencoded({ extended: true }));

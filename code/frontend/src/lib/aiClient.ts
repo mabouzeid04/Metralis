@@ -45,6 +45,8 @@ export type ChatMessage = {
     chunkId: string
     similarity: number
     documentTitle?: string
+    source?: string
+    workOrderId?: string | null
     machineId?: string | null
     machineType?: string | null
     language?: string | null

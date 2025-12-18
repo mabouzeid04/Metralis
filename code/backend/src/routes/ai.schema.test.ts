@@ -32,5 +32,34 @@ describe("chatRequestSchema", () => {
     expect(payload.machineId).toBeUndefined();
     expect(payload.conversationId).toBeUndefined();
   });
+
+  it("rejects invalid uuid values", () => {
+    expect(() =>
+      chatRequestSchema.parse({
+        message: "Invalid ids",
+        machineId: "not-a-uuid",
+      }),
+    ).toThrow();
+  });
+
+  it("normalizes whitespace around identifiers", () => {
+    const payload = chatRequestSchema.parse({
+      message: "Check machine",
+      machineId: " 8f1a7cf9-6a9f-4c96-8f93-5c2a52f94d2e ",
+    });
+
+    expect(payload.machineId).toBe("8f1a7cf9-6a9f-4c96-8f93-5c2a52f94d2e");
+  });
+
+  it("treats nullish identifier values as undefined", () => {
+    const payload = chatRequestSchema.parse({
+      message: "Check machine",
+      machineId: null as unknown as string,
+      conversationId: undefined,
+    });
+
+    expect(payload.machineId).toBeUndefined();
+    expect(payload.conversationId).toBeUndefined();
+  });
 });
 

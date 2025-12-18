@@ -26,12 +26,27 @@ router.get("/", async (_req, res) => {
     return res.json({ data: machines });
 });
 router.get("/:id", async (req, res) => {
+    const machineId = req.params.id;
+    if (!machineId) {
+        return res.status(400).json({ error: { message: "Machine id is required" } });
+    }
     const machine = await prisma_1.prisma.machine.findUnique({
-        where: { id: req.params.id },
+        where: { id: machineId },
         include: {
             workOrders: {
                 orderBy: { reportedAt: "desc" },
                 take: 20,
+                include: {
+                    repairActions: {
+                        orderBy: { createdAt: "desc" },
+                        select: {
+                            id: true,
+                            actions: true,
+                            success: true,
+                            createdAt: true,
+                        },
+                    },
+                },
             },
             documents: true,
         },
@@ -41,7 +56,7 @@ router.get("/:id", async (req, res) => {
     }
     return res.json({ data: machine });
 });
-router.post("/", async (req, res) => {
+router.post("/", (0, auth_1.requireRole)(["ADMIN"]), async (req, res) => {
     const parsed = machineSchema.safeParse(req.body);
     if (!parsed.success) {
         return res.status(400).json({ error: parsed.error.flatten() });
@@ -64,7 +79,11 @@ router.post("/", async (req, res) => {
     const machine = await prisma_1.prisma.machine.create({ data });
     return res.status(201).json({ data: machine });
 });
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", (0, auth_1.requireRole)(["ADMIN"]), async (req, res) => {
+    const machineId = req.params.id;
+    if (!machineId) {
+        return res.status(400).json({ error: { message: "Machine id is required" } });
+    }
     const parsed = machineSchema.partial().safeParse(req.body);
     if (!parsed.success) {
         return res.status(400).json({ error: parsed.error.flatten() });
@@ -97,7 +116,7 @@ router.patch("/:id", async (req, res) => {
         data.criticality = parsed.data.criticality;
     try {
         const machine = await prisma_1.prisma.machine.update({
-            where: { id: req.params.id },
+            where: { id: machineId },
             data,
         });
         return res.json({ data: machine });
@@ -107,14 +126,34 @@ router.patch("/:id", async (req, res) => {
     }
 });
 router.get("/:id/history", async (req, res) => {
+    const machineId = req.params.id;
+    if (!machineId) {
+        return res.status(400).json({ error: { message: "Machine id is required" } });
+    }
     const history = await prisma_1.prisma.workOrder.findMany({
-        where: { machineId: req.params.id },
+        where: { machineId },
         orderBy: { reportedAt: "desc" },
         include: {
             repairActions: true,
         },
     });
     return res.json({ data: history });
+});
+router.delete("/:id", (0, auth_1.requireRole)(["ADMIN"]), async (req, res) => {
+    const machineId = req.params.id;
+    if (!machineId) {
+        return res.status(400).json({ error: { message: "Machine id is required" } });
+    }
+    try {
+        await prisma_1.prisma.machine.delete({
+            where: { id: machineId },
+        });
+        return res.status(204).send();
+    }
+    catch (error) {
+        const message = error instanceof Error ? error.message : "Unable to delete machine";
+        return res.status(400).json({ error: { message } });
+    }
 });
 exports.default = router;
 //# sourceMappingURL=machines.js.map

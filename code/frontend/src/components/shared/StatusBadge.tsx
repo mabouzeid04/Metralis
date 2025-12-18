@@ -1,8 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { Badge } from "@/components/ui/badge"
 
 export type StatusType = 
   | 'running' | 'up' | 'completed' | 'success' | 'closed'
-  | 'maintenance' | 'warning' | 'in_progress' | 'pending'
+  | 'maintenance' | 'warning' | 'in_progress' | 'pending' | 'waiting'
   | 'down' | 'error' | 'failed' | 'critical' | 'retired' 
   | 'idle' | 'open' | 'draft'
 
@@ -12,7 +13,11 @@ interface StatusBadgeProps {
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const normalizedStatus = status.toLowerCase().replace(' ', '_') as StatusType
+  const { t } = useTranslation()
+  const normalizedStatus = status
+    .toLowerCase()
+    .replace(/^status\./, '')
+    .replace(/\s+/g, '_') as StatusType
   
   let variant: "default" | "secondary" | "destructive" | "outline" | "success" | "warning" = "secondary"
   
@@ -28,6 +33,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     case 'warning':
     case 'in_progress':
     case 'pending':
+    case 'waiting':
       variant = "warning"
       break
     case 'down':
@@ -49,7 +55,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
 
   return (
     <Badge variant={variant} className={className}>
-      {status.replace('_', ' ')}
+      {t(`common:status.${normalizedStatus}`, { defaultValue: status.replace('_', ' ') })}
     </Badge>
   )
 }

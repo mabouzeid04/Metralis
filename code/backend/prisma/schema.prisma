@@ -81,6 +81,26 @@ enum AiFeedbackValue {
   CORRECT_CAUSE
 }
 
+enum InsightCategory {
+  MAINTENANCE
+  INVENTORY
+  DOCUMENTATION
+  TRAINING
+}
+
+enum InsightPriority {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum InsightStatus {
+  NEW
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -138,6 +158,7 @@ model Machine {
 
 model WorkOrder {
   id                String            @id @default(uuid())
+  publicId          String            @unique @default(dbgenerated("upper(substr(md5(random()::text), 1, 8))"))
   machineId         String
   machine           Machine           @relation(fields: [machineId], references: [id])
   title             String
@@ -164,6 +185,14 @@ model WorkOrder {
   repairActions RepairAction[]
   parts        WorkOrderPart[]
   attachments  Document[]        @relation("WorkOrderDocuments")
+  incidentChunks IncidentChunk[]
+
+  @@index([reportedAt])
+  @@index([machineId])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([priority])
+  @@index([type])
 }
 
 model RepairAction {
@@ -184,6 +213,8 @@ model RepairAction {
   updatedAt       DateTime    @updatedAt
 
   attachments Document[] @relation("RepairActionDocuments")
+
+  @@index([workOrderId])
 }
 
 model Part {
@@ -263,6 +294,26 @@ model DocumentChunk {
   @@index([documentId])
 }
 
+model IncidentChunk {
+  id           String   @id @default(uuid())
+  workOrderId  String
+  workOrder    WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  chunkIndex   Int
+  content      String
+  tokens       Int
+  embedding    Unsupported("vector(1536)")
+  machineId    String?
+  machineType  String?
+  language     String?  @default("en")
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@unique([workOrderId, chunkIndex])
+  @@index([workOrderId])
+  @@index([machineId])
+  @@index([machineType])
+}
+
 model ChatConversation {
   id            String      @id @default(uuid())
   userId        String
@@ -311,3 +362,19 @@ model ChatMessageFeedback {
   @@index([userId])
 }
 
+model SystemInsight {
+  id        String          @id @default(uuid())
+  title     String
+  content   String
+  category  InsightCategory
+  priority  InsightPriority
+  status    InsightStatus   @default(NEW)
+  metadata  Json?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([createdAt])
+}

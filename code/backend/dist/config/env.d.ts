@@ -11,5 +11,30 @@ export declare const env: {
         endpoint: string | undefined;
         forcePathStyle: boolean;
     };
+    embeddings: {
+        apiKey: string;
+        model: string;
+        dimensions: number;
+    };
+    ai: {
+        provider: string;
+        temperature: number;
+        maxTokens: number;
+        gemini: {
+            apiKey: string;
+            model: string;
+        };
+        openai: {
+            apiKey: string;
+            model: string;
+        };
+    };
+    whatsapp: {
+        enabled: boolean;
+        token: string | undefined;
+        phoneNumberId: string | undefined;
+        templateName: string;
+        languageCode: string;
+    };
 };
 //# sourceMappingURL=env.d.ts.map

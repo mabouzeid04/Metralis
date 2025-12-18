@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, User, Calendar, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus } from 'lucide-react'
+import { ArrowLeft, User, Calendar, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus, Eye, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/shared/StatusBadge'
@@ -61,6 +61,7 @@ interface RepairAction {
 
 interface WorkOrder {
   id: string
+  publicId?: string
   title: string
   descriptionRaw: string | null
   status: 'OPEN' | 'IN_PROGRESS' | 'WAITING' | 'CLOSED'
@@ -144,9 +145,25 @@ const parsePartsUsed = (partsUsed: unknown): RepairPartUsage[] => {
     .filter(Boolean) as RepairPartUsage[]
 }
 
+const canPreviewAttachment = (att?: Attachment | null) => {
+  if (!att) return false
+  const mime = att.mimeType?.toLowerCase() || ''
+  if (mime.includes('pdf') || mime.startsWith('image/')) return true
+  const lower = att.title.toLowerCase()
+  return (
+    lower.endsWith('.pdf') ||
+    lower.endsWith('.png') ||
+    lower.endsWith('.jpg') ||
+    lower.endsWith('.jpeg') ||
+    lower.endsWith('.gif') ||
+    lower.endsWith('.webp')
+  )
+}
+
 export default function WorkOrderDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const previewAttachmentIdRef = useRef<string | null>(null)
   const [workOrder, setWorkOrder] = useState<WorkOrder | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -159,6 +176,10 @@ export default function WorkOrderDetail() {
   const [repairSubmitting, setRepairSubmitting] = useState(false)
   const [repairFormError, setRepairFormError] = useState<string | null>(null)
   const repairAttachmentInputRef = useRef<HTMLInputElement | null>(null)
+  const [previewAttachment, setPreviewAttachment] = useState<Attachment | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+  const [previewError, setPreviewError] = useState<string | null>(null)
   const [repairForm, setRepairForm] = useState<RepairFormState>({
     actions: '',
     success: true,
@@ -211,6 +232,14 @@ export default function WorkOrderDetail() {
   }, [])
 
   const partsLookup = useMemo(() => new Map(parts.map((part) => [part.id, part])), [parts])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    }
+  }, [previewUrl])
 
   const handleStatusChange = async (newStatus: string) => {
     if (!id || !workOrder) return
@@ -278,6 +307,49 @@ export default function WorkOrderDetail() {
     } catch (err) {
       console.error('Failed to download file', err)
     }
+  }
+
+  const handlePreviewAttachment = async (attachment: Attachment) => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+      setPreviewUrl(null)
+    }
+
+    setPreviewAttachment(attachment)
+    previewAttachmentIdRef.current = attachment.id
+    setPreviewError(null)
+
+    if (!canPreviewAttachment(attachment)) {
+      setPreviewLoading(false)
+      return
+    }
+
+    setPreviewLoading(true)
+    try {
+      const response = await api.get(`/documents/${attachment.id}/file`, { responseType: 'blob' })
+      const blob: Blob = response.data
+      const url = window.URL.createObjectURL(blob)
+      if (previewAttachmentIdRef.current !== attachment.id) {
+        URL.revokeObjectURL(url)
+        return
+      }
+      setPreviewUrl(url)
+    } catch (err) {
+      console.error('Failed to preview attachment:', err)
+      setPreviewError('Unable to preview this file. Please download instead.')
+    } finally {
+      setPreviewLoading(false)
+    }
+  }
+
+  const closePreviewAttachment = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl)
+    }
+    setPreviewUrl(null)
+    setPreviewAttachment(null)
+    setPreviewError(null)
+    previewAttachmentIdRef.current = null
   }
 
   const addRepairPart = () => {
@@ -390,6 +462,7 @@ export default function WorkOrderDetail() {
   }
 
   const repairParts = (repair: RepairAction) => parsePartsUsed(repair.partsUsed)
+  const displayId = workOrder.publicId || workOrder.id
 
   return (
     <div className="space-y-6">
@@ -400,10 +473,10 @@ export default function WorkOrderDetail() {
       <div className="flex flex-col md:flex-row justify-between items-start gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h2 className="text-3xl font-bold tracking-tight">{workOrder.id.slice(0, 8)}...</h2>
+            <h2 className="text-3xl font-bold tracking-tight">{workOrder.title}</h2>
             <StatusBadge status={workOrder.status} />
           </div>
-          <h3 className="text-xl font-medium text-muted-foreground">{workOrder.title}</h3>
+          <h3 className="text-xl font-medium text-muted-foreground font-mono break-all">{displayId}</h3>
         </div>
         <div className="flex gap-2">
           <DropdownMenu>
@@ -491,10 +564,21 @@ export default function WorkOrderDetail() {
                           {attachment.uploadedBy?.name ? ` · ${attachment.uploadedBy.name}` : ''}
                         </p>
                       </div>
-                      <Button variant="ghost" size="sm" onClick={() => downloadAttachment(attachment)}>
-                        <Download className="h-4 w-4" />
-                        <span className="sr-only">Download</span>
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handlePreviewAttachment(attachment)}
+                          title="View"
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span className="sr-only">View attachment</span>
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => downloadAttachment(attachment)} title="Download">
+                          <Download className="h-4 w-4" />
+                          <span className="sr-only">Download</span>
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -792,6 +876,74 @@ export default function WorkOrderDetail() {
           </Card>
         </div>
       </div>
+
+      {previewAttachment && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8"
+          onClick={closePreviewAttachment}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="bg-background rounded-lg shadow-xl w-full max-w-5xl h-full max-h-[90vh] flex flex-col"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b px-6 py-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Previewing attachment</p>
+                <h3 className="text-lg font-semibold">{previewAttachment.title}</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={() => downloadAttachment(previewAttachment)}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download
+                </Button>
+                <Button variant="ghost" size="icon" onClick={closePreviewAttachment} title="Close preview">
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="flex-1 p-6 bg-muted/40 rounded-b-lg">
+              {previewLoading && (
+                <div className="h-full flex flex-col items-center justify-center gap-3 text-muted-foreground">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <p>Loading preview…</p>
+                </div>
+              )}
+
+              {!previewLoading && previewError && (
+                <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
+                  <p className="text-sm text-destructive">{previewError}</p>
+                  <div className="flex gap-2">
+                    <Button onClick={() => handlePreviewAttachment(previewAttachment)}>Retry</Button>
+                    <Button variant="ghost" onClick={closePreviewAttachment}>
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {!previewLoading && !previewError && previewUrl && canPreviewAttachment(previewAttachment) && (
+                <iframe
+                  src={previewUrl}
+                  title={`Preview ${previewAttachment.title}`}
+                  className="w-full h-full rounded-md border"
+                />
+              )}
+
+              {!previewLoading && !previewError && previewAttachment && !canPreviewAttachment(previewAttachment) && (
+                <div className="h-full flex flex-col items-center justify-center gap-4 text-center text-sm text-muted-foreground px-6">
+                  <p>Preview is unavailable for this file type. Please download it instead.</p>
+                  <Button onClick={() => downloadAttachment(previewAttachment)}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Download attachment
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

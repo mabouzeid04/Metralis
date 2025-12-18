@@ -37,4 +37,29 @@ export type WorkOrderPart = Prisma.WorkOrderPartModel;
  *
  */
 export type Document = Prisma.DocumentModel;
+/**
+ * Model DocumentChunk
+ *
+ */
+export type DocumentChunk = Prisma.DocumentChunkModel;
+/**
+ * Model IncidentChunk
+ *
+ */
+export type IncidentChunk = Prisma.IncidentChunkModel;
+/**
+ * Model ChatConversation
+ *
+ */
+export type ChatConversation = Prisma.ChatConversationModel;
+/**
+ * Model ChatMessage
+ *
+ */
+export type ChatMessage = Prisma.ChatMessageModel;
+/**
+ * Model ChatMessageFeedback
+ *
+ */
+export type ChatMessageFeedback = Prisma.ChatMessageFeedbackModel;
 //# sourceMappingURL=browser.d.ts.map

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, ArrowLeft, User, Paperclip, Trash2 } from 'lucide-react'
+import { Loader2, ArrowLeft, User, Paperclip, Trash2, Check, ChevronDown, Search } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { api } from '@/lib/api'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -55,8 +61,9 @@ export default function CreateWorkOrder() {
   const [attachments, setAttachments] = useState<File[]>([])
   const [attachmentError, setAttachmentError] = useState<string | null>(null)
   const attachmentInputRef = useRef<HTMLInputElement | null>(null)
-  
-  const { register, handleSubmit, formState: { errors } } = useForm<WorkOrderFormValues>({
+  const [machineSearch, setMachineSearch] = useState('')
+
+  const { register, handleSubmit, control, formState: { errors } } = useForm<WorkOrderFormValues>({
     resolver: zodResolver(workOrderSchema),
     defaultValues: {
       priority: 'Medium',
@@ -181,7 +188,7 @@ export default function CreateWorkOrder() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto">
       <Button variant="ghost" onClick={() => navigate(-1)} className="pl-0 hover:bg-transparent">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to List
       </Button>
@@ -194,175 +201,249 @@ export default function CreateWorkOrder() {
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {error && (
               <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
                 {error}
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input 
-                id="title" 
-                placeholder="e.g. Vibration on gearbox" 
-                {...register('title')}
-              />
-              {errors.title && (
-                <p className="text-sm text-destructive">{errors.title.message}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* Left Column: Main Content */}
+              <div className="lg:col-span-3 space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="machineId">Machine</Label>
-                    <select 
-                        id="machineId"
-                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        {...register('machineId')}
-                        disabled={isMachineSelectDisabled}
-                    >
-                        <option value="">Select Machine</option>
-                        {machines.map(m => (
-                            <option key={m.id} value={m.id}>{m.name}</option>
-                        ))}
-                    </select>
-                    {loadingMachines && (
-                        <p className="text-sm text-muted-foreground">Loading machines...</p>
-                    )}
-                    {!loadingMachines && machinesError && (
-                        <p className="text-sm text-destructive">{machinesError}</p>
-                    )}
-                    {!loadingMachines && !machinesError && machines.length === 0 && (
-                        <p className="text-sm text-muted-foreground">No machines found. Add one to continue.</p>
-                    )}
-                    {errors.machineId && (
-                        <p className="text-sm text-destructive">{errors.machineId.message}</p>
-                    )}
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    placeholder="e.g. Vibration on gearbox"
+                    {...register('title')}
+                  />
+                  {errors.title && (
+                    <p className="text-sm text-destructive">{errors.title.message}</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="priority">Priority</Label>
-                    <select 
-                        id="priority"
-                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        {...register('priority')}
-                    >
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                        <option value="Critical">Critical</option>
-                    </select>
+                  <Label htmlFor="machineId">Machine</Label>
+                  <Controller
+                    control={control}
+                    name="machineId"
+                    render={({ field }) => (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={`w-full justify-between font-normal ${!field.value && "text-muted-foreground"}`}
+                            disabled={isMachineSelectDisabled}
+                          >
+                            {(() => {
+                              const m = machines.find(m => m.id === field.value);
+                              return m ? m.name : "Select Machine";
+                            })()}
+                            <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[500px]" align="start">
+                          <div className="flex items-center border-b px-3">
+                            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                            <Input
+                              className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-0 focus-visible:ring-0 px-0 shadow-none"
+                              placeholder="Search machines..."
+                              value={machineSearch}
+                              onChange={(e) => setMachineSearch(e.target.value)}
+                            />
+                          </div>
+                          <div className="max-h-[300px] overflow-y-auto p-1">
+                            {machines
+                              .filter(m => m.name.toLowerCase().includes(machineSearch.toLowerCase()))
+                              .map(m => (
+                                <DropdownMenuItem key={m.id} onSelect={() => field.onChange(m.id)}>
+                                  {m.name}
+                                  {field.value === m.id && <Check className="ml-auto h-4 w-4 opacity-50" />}
+                                </DropdownMenuItem>
+                              ))}
+                            {machines.length === 0 && !loadingMachines && (
+                              <div className="p-2 text-sm text-muted-foreground">No machines found</div>
+                            )}
+                          </div>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  />
+                  {errors.machineId && (
+                    <p className="text-sm text-destructive">{errors.machineId.message}</p>
+                  )}
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="type">Type</Label>
-                    <select 
-                        id="type"
-                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        {...register('type')}
-                    >
-                        <option value="Corrective">Corrective</option>
-                        <option value="Preventive">Preventive</option>
-                        <option value="Inspection">Inspection</option>
-                    </select>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Describe the issue in detail..."
+                    className="min-h-[200px] resize-y"
+                    {...register('description')}
+                  />
+                  {errors.description && (
+                    <p className="text-sm text-destructive">{errors.description.message}</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    Include symptoms, alarms, noises, smells, leaks, and anything else that will help diagnose the issue quickly.
+                  </p>
                 </div>
 
                 <div className="space-y-2">
-                    <Label htmlFor="assignedToId">Assign To (Optional)</Label>
-                    <select 
-                        id="assignedToId"
-                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                        {...register('assignedToId')}
-                        disabled={loadingUsers}
-                    >
-                        <option value="">Unassigned</option>
-                        {users.map(u => (
-                            <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
-                        ))}
-                    </select>
-                </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea 
-                id="description" 
-                placeholder="Describe the issue in detail..." 
-                className="min-h-[150px]"
-                {...register('description')}
-              />
-              {errors.description && (
-                <p className="text-sm text-destructive">{errors.description.message}</p>
-              )}
-              <p className="text-xs text-muted-foreground">
-                Include symptoms, alarms, noises, smells, leaks, and anything else that will help diagnose the issue quickly.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Attachments (optional)</Label>
-              <input
-                ref={attachmentInputRef}
-                type="file"
-                accept="image/*,.pdf,.doc,.docx,.txt"
-                multiple
-                className="hidden"
-                onChange={handleAttachmentChange}
-              />
-              <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => attachmentInputRef.current?.click()}
-                  disabled={isLoading}
-                >
-                  <Paperclip className="mr-2 h-4 w-4" />
-                  Add files
-                </Button>
-                <p className="text-xs text-muted-foreground">Up to 25MB per file.</p>
-              </div>
-              {attachmentError && (
-                <p className="text-sm text-destructive">{attachmentError}</p>
-              )}
-              {attachments.length > 0 && (
-                <ul className="space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
-                  {attachments.map((file, index) => (
-                    <li key={`${file.name}-${index}`} className="flex items-center justify-between gap-2">
-                      <div className="flex flex-col">
-                        <span className="font-medium">{file.name}</span>
-                        <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
-                      </div>
+                  <Label>Attachments (optional)</Label>
+                  <div className="flex flex-col gap-4 p-4 border rounded-lg bg-muted/20">
+                    <div className="flex items-center gap-4">
                       <Button
                         type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeAttachment(index)}
+                        variant="secondary"
+                        onClick={() => attachmentInputRef.current?.click()}
+                        disabled={isLoading}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Paperclip className="mr-2 h-4 w-4" />
+                        Add files
                       </Button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+                      <p className="text-xs text-muted-foreground">Up to 25MB per file.</p>
+                    </div>
+                    <input
+                      ref={attachmentInputRef}
+                      type="file"
+                      accept="image/*,.pdf,.doc,.docx,.txt"
+                      multiple
+                      className="hidden"
+                      onChange={handleAttachmentChange}
+                    />
 
-            <div className="space-y-2 p-3 bg-muted/50 rounded-md">
-              <Label className="text-sm text-muted-foreground flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Created By
-              </Label>
-              <p className="text-sm font-medium">{user?.name || 'Current User'}</p>
-              <p className="text-xs text-muted-foreground">This work order will be created by you</p>
+                    {attachmentError && (
+                      <p className="text-sm text-destructive">{attachmentError}</p>
+                    )}
+
+                    {attachments.length > 0 && (
+                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {attachments.map((file, index) => (
+                          <li key={`${file.name}-${index}`} className="flex items-center justify-between gap-2 p-2 rounded border bg-background text-sm">
+                            <div className="flex items-center gap-2 truncate">
+                              <Paperclip className="h-3 w-3 text-muted-foreground shrink-0" />
+                              <span className="truncate">{file.name}</span>
+                              <span className="text-xs text-muted-foreground ml-1 shrink-0">({formatFileSize(file.size)})</span>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 shrink-0"
+                              onClick={() => removeAttachment(index)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
+                  <User className="w-4 h-4" />
+                  <span>Created by <span className="font-medium text-foreground">{user?.name || 'Current User'}</span></span>
+                </div>
+              </div>
+
+              {/* Right Column: Metadata */}
+              <div className="lg:col-span-1 space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="type">Type</Label>
+                  <Controller
+                    control={control}
+                    name="type"
+                    render={({ field }) => (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between font-normal">
+                            {field.value}
+                            <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]" align="start">
+                          {["Corrective", "Preventive", "Inspection"].map(type => (
+                            <DropdownMenuItem key={type} onSelect={() => field.onChange(type)}>
+                              {type}
+                              {field.value === type && <Check className="ml-auto h-4 w-4 opacity-50" />}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="priority">Priority</Label>
+                  <Controller
+                    control={control}
+                    name="priority"
+                    render={({ field }) => (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between font-normal">
+                            {field.value}
+                            <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]" align="start">
+                          {["Low", "Medium", "High", "Critical"].map(priority => (
+                            <DropdownMenuItem key={priority} onSelect={() => field.onChange(priority)}>
+                              {priority}
+                              {field.value === priority && <Check className="ml-auto h-4 w-4 opacity-50" />}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="assignedToId">Assign To</Label>
+                  <Controller
+                    control={control}
+                    name="assignedToId"
+                    render={({ field }) => (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-between font-normal" disabled={loadingUsers}>
+                            {(() => {
+                              const user = users.find(u => u.id === field.value);
+                              return user ? user.name : "Unassigned";
+                            })()}
+                            <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)]" align="start">
+                          <DropdownMenuItem onSelect={() => field.onChange(null)}>
+                            Unassigned
+                          </DropdownMenuItem>
+                          {users.map(u => (
+                            <DropdownMenuItem key={u.id} onSelect={() => field.onChange(u.id)}>
+                              <span>{u.name}</span>
+                              <span className="ml-2 text-xs text-muted-foreground">({u.role})</span>
+                              {field.value === u.id && <Check className="ml-auto h-4 w-4 opacity-50" />}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-end gap-4">
-            <Button variant="outline" type="button" onClick={() => navigate(-1)}>
+          <CardFooter className="flex justify-between border-t p-6 bg-muted/10">
+            <Button variant="ghost" type="button" onClick={() => navigate(-1)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitDisabled}>
+            <Button type="submit" disabled={isSubmitDisabled} size="lg">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Work Order
             </Button>

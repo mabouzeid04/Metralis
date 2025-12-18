@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Package, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,49 +14,24 @@ import {
 } from '@/components/ui/table'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { api } from '@/lib/api'
+import { useParts } from '@/lib/hooks/useParts'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface Part {
-  id: string
-  name: string
-  partNumber: string | null
-  category: string | null
-  stockQuantity: number
-  minStock: number
-  manufacturer: string | null
-  location: string | null
-  unitCost: number | null
-}
-
 export default function PartsList() {
-  const [parts, setParts] = useState<Part[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const { isApproved } = useAuth()
+  const { t } = useTranslation(['parts', 'common'])
 
-  useEffect(() => {
-    const fetchParts = async () => {
-      try {
-        const response = await api.get('/parts')
-        setParts(response.data.data || [])
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch parts:', err)
-        setError('Failed to load parts')
-      } finally {
-        setLoading(false)
-      }
-    }
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data: parts = [], isLoading: loading, error } = useParts()
 
-    fetchParts()
-  }, [])
-
-  const filteredParts = parts.filter(part => 
-    part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (part.category && part.category.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredParts = useMemo(() =>
+    parts.filter(part =>
+      part.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (part.partNumber && part.partNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (part.category && part.category.toLowerCase().includes(searchTerm.toLowerCase()))
+    ),
+    [parts, searchTerm]
   )
 
   if (loading) {
@@ -70,8 +46,8 @@ export default function PartsList() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Package className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <p className="text-muted-foreground">{error.message || t('errors.loadList')}</p>
+        <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )
   }
@@ -80,18 +56,18 @@ export default function PartsList() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Parts Inventory</h2>
-          <p className="text-muted-foreground">Manage spare parts and stock levels.</p>
+          <h2 className="text-3xl font-bold tracking-tight">{t('inventoryTitle')}</h2>
+          <p className="text-muted-foreground">{t('inventorySubtitle')}</p>
         </div>
         {isApproved ? (
           <Button className="w-full sm:w-auto" asChild>
             <Link to="/parts/new">
-              <Plus className="mr-2 h-4 w-4" /> Add Part
+              <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
             </Link>
           </Button>
         ) : (
           <Button className="w-full sm:w-auto" variant="outline" disabled title="Awaiting approval">
-            <Plus className="mr-2 h-4 w-4" /> Add Part
+            <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
           </Button>
         )}
       </div>
@@ -102,7 +78,7 @@ export default function PartsList() {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search parts..."
+                placeholder={t('searchPlaceholder')}
                 className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -117,20 +93,20 @@ export default function PartsList() {
           {filteredParts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Package className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No parts found</h3>
+              <h3 className="text-lg font-semibold">{t('noPartsTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? 'Try a different search term' : 'Get started by adding your first part'}
+                {searchTerm ? t('noPartsSearch') : t('noPartsEmpty')}
               </p>
               {!searchTerm &&
                 (isApproved ? (
                   <Button asChild>
                     <Link to="/parts/new">
-                      <Plus className="mr-2 h-4 w-4" /> Add Part
+                      <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
                     </Link>
                   </Button>
                 ) : (
                   <Button variant="outline" disabled title="Awaiting approval">
-                    <Plus className="mr-2 h-4 w-4" /> Add Part
+                    <Plus className="mr-2 h-4 w-4" /> {t('addPart')}
                   </Button>
                 ))}
             </div>
@@ -138,13 +114,13 @@ export default function PartsList() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Part Name</TableHead>
-                  <TableHead>Part Number</TableHead>
-                  <TableHead className="hidden md:table-cell">Category</TableHead>
-                  <TableHead>Stock</TableHead>
-                  <TableHead className="hidden lg:table-cell">Location</TableHead>
-                  <TableHead className="hidden md:table-cell">Cost</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('list.table.name')}</TableHead>
+                  <TableHead>{t('list.table.partNumber')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('list.table.category')}</TableHead>
+                  <TableHead>{t('list.table.stock')}</TableHead>
+                  <TableHead className="hidden lg:table-cell">{t('list.table.location')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('list.table.cost')}</TableHead>
+                  <TableHead className="text-right">{t('list.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -167,7 +143,7 @@ export default function PartsList() {
                         </span>
                         {part.stockQuantity <= part.minStock && (
                           <Badge variant="destructive" className="text-[10px] h-5 px-1">
-                            Low
+                            {t('list.lowStock')}
                           </Badge>
                         )}
                       </div>
@@ -178,7 +154,7 @@ export default function PartsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/parts/${part.id}`}>View</Link>
+                        <Link to={`/parts/${part.id}`}>{t('actions.view')}</Link>
                       </Button>
                     </TableCell>
                   </TableRow>

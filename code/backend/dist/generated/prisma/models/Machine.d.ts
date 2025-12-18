@@ -217,6 +217,7 @@ export type MachineWhereInput = {
     updatedAt?: Prisma.DateTimeFilter<"Machine"> | Date | string;
     workOrders?: Prisma.WorkOrderListRelationFilter;
     documents?: Prisma.DocumentListRelationFilter;
+    chatConversations?: Prisma.ChatConversationListRelationFilter;
 };
 export type MachineOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -236,6 +237,7 @@ export type MachineOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder;
     workOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
     documents?: Prisma.DocumentOrderByRelationAggregateInput;
+    chatConversations?: Prisma.ChatConversationOrderByRelationAggregateInput;
 };
 export type MachineWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -258,6 +260,7 @@ export type MachineWhereUniqueInput = Prisma.AtLeast<{
     updatedAt?: Prisma.DateTimeFilter<"Machine"> | Date | string;
     workOrders?: Prisma.WorkOrderListRelationFilter;
     documents?: Prisma.DocumentListRelationFilter;
+    chatConversations?: Prisma.ChatConversationListRelationFilter;
 }, "id">;
 export type MachineOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -317,6 +320,7 @@ export type MachineCreateInput = {
     updatedAt?: Date | string;
     workOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineInput;
     documents?: Prisma.DocumentCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutMachineInput;
 };
 export type MachineUncheckedCreateInput = {
     id?: string;
@@ -336,6 +340,7 @@ export type MachineUncheckedCreateInput = {
     updatedAt?: Date | string;
     workOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineInput;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutMachineInput;
 };
 export type MachineUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -355,6 +360,7 @@ export type MachineUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrders?: Prisma.WorkOrderUpdateManyWithoutMachineNestedInput;
     documents?: Prisma.DocumentUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutMachineNestedInput;
 };
 export type MachineUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -374,6 +380,7 @@ export type MachineUncheckedUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineNestedInput;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutMachineNestedInput;
 };
 export type MachineCreateManyInput = {
     id?: string;
@@ -483,9 +490,6 @@ export type MachineNullableScalarRelationFilter = {
     is?: Prisma.MachineWhereInput | null;
     isNot?: Prisma.MachineWhereInput | null;
 };
-export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null;
-};
 export type EnumMachineStatusFieldUpdateOperationsInput = {
     set?: $Enums.MachineStatus;
 };
@@ -518,6 +522,20 @@ export type MachineUpdateOneWithoutDocumentsNestedInput = {
     connect?: Prisma.MachineWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutDocumentsInput, Prisma.MachineUpdateWithoutDocumentsInput>, Prisma.MachineUncheckedUpdateWithoutDocumentsInput>;
 };
+export type MachineCreateNestedOneWithoutChatConversationsInput = {
+    create?: Prisma.XOR<Prisma.MachineCreateWithoutChatConversationsInput, Prisma.MachineUncheckedCreateWithoutChatConversationsInput>;
+    connectOrCreate?: Prisma.MachineCreateOrConnectWithoutChatConversationsInput;
+    connect?: Prisma.MachineWhereUniqueInput;
+};
+export type MachineUpdateOneWithoutChatConversationsNestedInput = {
+    create?: Prisma.XOR<Prisma.MachineCreateWithoutChatConversationsInput, Prisma.MachineUncheckedCreateWithoutChatConversationsInput>;
+    connectOrCreate?: Prisma.MachineCreateOrConnectWithoutChatConversationsInput;
+    upsert?: Prisma.MachineUpsertWithoutChatConversationsInput;
+    disconnect?: Prisma.MachineWhereInput | boolean;
+    delete?: Prisma.MachineWhereInput | boolean;
+    connect?: Prisma.MachineWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutChatConversationsInput, Prisma.MachineUpdateWithoutChatConversationsInput>, Prisma.MachineUncheckedUpdateWithoutChatConversationsInput>;
+};
 export type MachineCreateWithoutWorkOrdersInput = {
     id?: string;
     name: string;
@@ -535,6 +553,7 @@ export type MachineCreateWithoutWorkOrdersInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     documents?: Prisma.DocumentCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutMachineInput;
 };
 export type MachineUncheckedCreateWithoutWorkOrdersInput = {
     id?: string;
@@ -553,6 +572,7 @@ export type MachineUncheckedCreateWithoutWorkOrdersInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutMachineInput;
 };
 export type MachineCreateOrConnectWithoutWorkOrdersInput = {
     where: Prisma.MachineWhereUniqueInput;
@@ -584,6 +604,7 @@ export type MachineUpdateWithoutWorkOrdersInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     documents?: Prisma.DocumentUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutMachineNestedInput;
 };
 export type MachineUncheckedUpdateWithoutWorkOrdersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -602,6 +623,7 @@ export type MachineUncheckedUpdateWithoutWorkOrdersInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutMachineNestedInput;
 };
 export type MachineCreateWithoutDocumentsInput = {
     id?: string;
@@ -620,6 +642,7 @@ export type MachineCreateWithoutDocumentsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     workOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutMachineInput;
 };
 export type MachineUncheckedCreateWithoutDocumentsInput = {
     id?: string;
@@ -638,6 +661,7 @@ export type MachineUncheckedCreateWithoutDocumentsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     workOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutMachineInput;
 };
 export type MachineCreateOrConnectWithoutDocumentsInput = {
     where: Prisma.MachineWhereUniqueInput;
@@ -669,6 +693,7 @@ export type MachineUpdateWithoutDocumentsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrders?: Prisma.WorkOrderUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutMachineNestedInput;
 };
 export type MachineUncheckedUpdateWithoutDocumentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -687,6 +712,96 @@ export type MachineUncheckedUpdateWithoutDocumentsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutMachineNestedInput;
+};
+export type MachineCreateWithoutChatConversationsInput = {
+    id?: string;
+    name: string;
+    code?: string | null;
+    category?: string | null;
+    line?: string | null;
+    area?: string | null;
+    manufacturer?: string | null;
+    model?: string | null;
+    serialNumber?: string | null;
+    commissionedAt?: Date | string | null;
+    status?: $Enums.MachineStatus;
+    criticality?: $Enums.MachineCriticality;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutMachineInput;
+};
+export type MachineUncheckedCreateWithoutChatConversationsInput = {
+    id?: string;
+    name: string;
+    code?: string | null;
+    category?: string | null;
+    line?: string | null;
+    area?: string | null;
+    manufacturer?: string | null;
+    model?: string | null;
+    serialNumber?: string | null;
+    commissionedAt?: Date | string | null;
+    status?: $Enums.MachineStatus;
+    criticality?: $Enums.MachineCriticality;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    workOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutMachineInput;
+};
+export type MachineCreateOrConnectWithoutChatConversationsInput = {
+    where: Prisma.MachineWhereUniqueInput;
+    create: Prisma.XOR<Prisma.MachineCreateWithoutChatConversationsInput, Prisma.MachineUncheckedCreateWithoutChatConversationsInput>;
+};
+export type MachineUpsertWithoutChatConversationsInput = {
+    update: Prisma.XOR<Prisma.MachineUpdateWithoutChatConversationsInput, Prisma.MachineUncheckedUpdateWithoutChatConversationsInput>;
+    create: Prisma.XOR<Prisma.MachineCreateWithoutChatConversationsInput, Prisma.MachineUncheckedCreateWithoutChatConversationsInput>;
+    where?: Prisma.MachineWhereInput;
+};
+export type MachineUpdateToOneWithWhereWithoutChatConversationsInput = {
+    where?: Prisma.MachineWhereInput;
+    data: Prisma.XOR<Prisma.MachineUpdateWithoutChatConversationsInput, Prisma.MachineUncheckedUpdateWithoutChatConversationsInput>;
+};
+export type MachineUpdateWithoutChatConversationsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    line?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    area?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    manufacturer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    commissionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.EnumMachineStatusFieldUpdateOperationsInput | $Enums.MachineStatus;
+    criticality?: Prisma.EnumMachineCriticalityFieldUpdateOperationsInput | $Enums.MachineCriticality;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workOrders?: Prisma.WorkOrderUpdateManyWithoutMachineNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutMachineNestedInput;
+};
+export type MachineUncheckedUpdateWithoutChatConversationsInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    line?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    area?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    manufacturer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    model?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    serialNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    commissionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    status?: Prisma.EnumMachineStatusFieldUpdateOperationsInput | $Enums.MachineStatus;
+    criticality?: Prisma.EnumMachineCriticalityFieldUpdateOperationsInput | $Enums.MachineCriticality;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutMachineNestedInput;
 };
 /**
  * Count Type MachineCountOutputType
@@ -694,10 +809,12 @@ export type MachineUncheckedUpdateWithoutDocumentsInput = {
 export type MachineCountOutputType = {
     workOrders: number;
     documents: number;
+    chatConversations: number;
 };
 export type MachineCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrders?: boolean | MachineCountOutputTypeCountWorkOrdersArgs;
     documents?: boolean | MachineCountOutputTypeCountDocumentsArgs;
+    chatConversations?: boolean | MachineCountOutputTypeCountChatConversationsArgs;
 };
 /**
  * MachineCountOutputType without action
@@ -720,6 +837,12 @@ export type MachineCountOutputTypeCountWorkOrdersArgs<ExtArgs extends runtime.Ty
 export type MachineCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.DocumentWhereInput;
 };
+/**
+ * MachineCountOutputType without action
+ */
+export type MachineCountOutputTypeCountChatConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.ChatConversationWhereInput;
+};
 export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
@@ -738,6 +861,7 @@ export type MachineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     updatedAt?: boolean;
     workOrders?: boolean | Prisma.Machine$workOrdersArgs<ExtArgs>;
     documents?: boolean | Prisma.Machine$documentsArgs<ExtArgs>;
+    chatConversations?: boolean | Prisma.Machine$chatConversationsArgs<ExtArgs>;
     _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["machine"]>;
 export type MachineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -795,6 +919,7 @@ export type MachineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type MachineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrders?: boolean | Prisma.Machine$workOrdersArgs<ExtArgs>;
     documents?: boolean | Prisma.Machine$documentsArgs<ExtArgs>;
+    chatConversations?: boolean | Prisma.Machine$chatConversationsArgs<ExtArgs>;
     _count?: boolean | Prisma.MachineCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type MachineIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -804,6 +929,7 @@ export type $MachinePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     objects: {
         workOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
         documents: Prisma.$DocumentPayload<ExtArgs>[];
+        chatConversations: Prisma.$ChatConversationPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -1152,6 +1278,7 @@ export interface Prisma__MachineClient<T, Null = never, ExtArgs extends runtime.
     readonly [Symbol.toStringTag]: "PrismaPromise";
     workOrders<T extends Prisma.Machine$workOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$workOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     documents<T extends Prisma.Machine$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    chatConversations<T extends Prisma.Machine$chatConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Machine$chatConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1607,6 +1734,29 @@ export type Machine$documentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
     take?: number;
     skip?: number;
     distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[];
+};
+/**
+ * Machine.chatConversations
+ */
+export type Machine$chatConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatConversation
+     */
+    select?: Prisma.ChatConversationSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the ChatConversation
+     */
+    omit?: Prisma.ChatConversationOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.ChatConversationInclude<ExtArgs> | null;
+    where?: Prisma.ChatConversationWhereInput;
+    orderBy?: Prisma.ChatConversationOrderByWithRelationInput | Prisma.ChatConversationOrderByWithRelationInput[];
+    cursor?: Prisma.ChatConversationWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.ChatConversationScalarFieldEnum | Prisma.ChatConversationScalarFieldEnum[];
 };
 /**
  * Machine without action

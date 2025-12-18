@@ -1,0 +1,34 @@
+{
+  "title": "Work Orders",
+  "subtitle": "Track maintenance tasks and repairs.",
+  "create": "Create Work Order",
+  "searchPlaceholder": "Search work orders...",
+  "emptyTitle": "No work orders found",
+  "emptySearchHint": "Try a different search term",
+  "emptyCreateHint": "Get started by creating your first work order",
+  "filters": {
+    "status": "Status",
+    "priority": "Priority",
+    "type": "Type",
+    "machine": "Machine",
+    "any": "Any",
+    "apply": "Apply",
+    "clear": "Clear"
+  },
+  "table": {
+    "id": "ID",
+    "status": "Status",
+    "title": "Title",
+    "machine": "Machine",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "created": "Created",
+    "resolved": "Resolved",
+    "actions": "Actions"
+  },
+  "unassigned": "Unassigned",
+  "view": "View",
+  "errors": {
+    "load": "Failed to load work orders"
+  }
+}

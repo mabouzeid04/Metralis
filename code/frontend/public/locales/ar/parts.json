@@ -1,0 +1,90 @@
+{
+  "inventoryTitle": "مخزون القطع",
+  "inventorySubtitle": "إدارة قطع الغيار ومستويات المخزون.",
+  "addPart": "إضافة قطعة",
+  "searchPlaceholder": "ابحث عن القطع...",
+  "noPartsTitle": "لم يتم العثور على قطع",
+  "noPartsEmpty": "ابدأ بإضافة أول قطعة لديك",
+  "noPartsSearch": "جرّب مصطلح بحث مختلف",
+  "actions": {
+    "backToPart": "العودة إلى القطعة",
+    "backToParts": "العودة إلى القطع",
+    "adjustStock": "تعديل المخزون",
+    "editPart": "تعديل القطعة",
+    "view": "عرض"
+  },
+  "list": {
+    "table": {
+      "name": "اسم القطعة",
+      "partNumber": "رقم القطعة",
+      "category": "الفئة",
+      "stock": "المخزون",
+      "location": "الموقع",
+      "cost": "التكلفة",
+      "actions": "الإجراءات"
+    },
+    "lowStock": "منخفض"
+  },
+  "form": {
+    "createTitle": "إضافة قطعة",
+    "createSubtitle": "سجّل المواصفات والمخزون والتكلفة للقطع الجديدة.",
+    "editTitle": "تعديل القطعة",
+    "editSubtitle": "حدّث مواصفات القطعة ومستوى المخزون والتكلفة.",
+    "fields": {
+      "name": "الاسم *",
+      "partNumber": "رقم القطعة",
+      "category": "الفئة",
+      "manufacturer": "المصنّع",
+      "location": "موقع التخزين",
+      "description": "الوصف",
+      "stockQty": "المخزون الحالي",
+      "minStock": "الحد الأدنى للمخزون",
+      "cost": "تكلفة الوحدة"
+    },
+    "placeholders": {
+      "name": "مثل: Bearing 6203",
+      "partNumber": "مرجع الشركة المصنعة",
+      "category": "مثل: المحامل",
+      "manufacturer": "الشركة المصنعة أو المورّد",
+      "location": "الممر 4، الصندوق 12",
+      "description": "المواد، الآلات المناسبة، ملاحظات الشراء...",
+      "cost": "0.00",
+      "stock": "0",
+      "minStock": "0"
+    },
+    "submitCreate": "حفظ القطعة",
+    "submitEdit": "حفظ التغييرات",
+    "cancel": "إلغاء"
+  },
+  "detail": {
+    "partDetails": "تفاصيل القطعة",
+    "inventoryStatus": "حالة المخزون",
+    "manufacturer": "المصنّع",
+    "supplier": "المورّد",
+    "cost": "التكلفة",
+    "location": "الموقع",
+    "description": "الوصف",
+    "noDescription": "لا يوجد وصف",
+    "currentStock": "المخزون الحالي",
+    "minLevel": "الحد الأدنى",
+    "lowStock": "مخزون منخفض",
+    "inStock": "متوفر",
+    "recentActivity": "آخر النشاطات",
+    "noActivity": "لا يوجد نشاط حديث",
+    "partNumberMissing": "لا يوجد رقم قطعة",
+    "uncategorized": "غير مصنّف"
+  },
+  "errors": {
+    "loadList": "فشل تحميل قائمة القطع",
+    "loadDetail": "فشل تحميل تفاصيل القطعة",
+    "notFound": "لم يتم العثور على القطعة",
+    "update": "فشل تحديث القطعة",
+    "create": "فشل إنشاء القطعة"
+  },
+  "validation": {
+    "nameMin": "يجب ألا يقل الاسم عن حرفين",
+    "stockMin": "يجب أن يكون المخزون 0 أو أكثر",
+    "minStockMin": "يجب أن يكون الحد الأدنى للمخزون 0 أو أكثر",
+    "costMin": "يجب أن تكون القيمة 0 أو أكثر"
+  }
+}

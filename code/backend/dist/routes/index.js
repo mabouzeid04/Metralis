@@ -13,6 +13,7 @@ const users_1 = __importDefault(require("./users"));
 const dashboard_1 = __importDefault(require("./dashboard"));
 const search_1 = __importDefault(require("./search"));
 const profile_1 = __importDefault(require("./profile"));
+const ai_1 = __importDefault(require("./ai"));
 const router = (0, express_1.Router)();
 router.use("/auth", auth_1.default);
 router.use("/machines", machines_1.default);
@@ -22,6 +23,7 @@ router.use("/documents", documents_1.default);
 router.use("/users", users_1.default);
 router.use("/dashboard", dashboard_1.default);
 router.use("/search", search_1.default);
-router.use("/users", profile_1.default);
+router.use("/profile", profile_1.default);
+router.use("/ai", ai_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

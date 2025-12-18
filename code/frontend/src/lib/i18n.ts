@@ -1,49 +1,125 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import Backend from 'i18next-http-backend'
+import enCommon from '../../public/locales/en/common.json'
+import enNav from '../../public/locales/en/nav.json'
+import enAuth from '../../public/locales/en/auth.json'
+import enDashboard from '../../public/locales/en/dashboard.json'
+import enSettings from '../../public/locales/en/settings.json'
+import enParts from '../../public/locales/en/parts.json'
+import enMachines from '../../public/locales/en/machines.json'
+import enWorkOrders from '../../public/locales/en/workOrders.json'
+import enDocuments from '../../public/locales/en/documents.json'
+import enUsers from '../../public/locales/en/users.json'
+import enAi from '../../public/locales/en/ai.json'
+import enNotFound from '../../public/locales/en/notFound.json'
+import arCommon from '../../public/locales/ar/common.json'
+import arNav from '../../public/locales/ar/nav.json'
+import arAuth from '../../public/locales/ar/auth.json'
+import arDashboard from '../../public/locales/ar/dashboard.json'
+import arSettings from '../../public/locales/ar/settings.json'
+import arParts from '../../public/locales/ar/parts.json'
+import arMachines from '../../public/locales/ar/machines.json'
+import arWorkOrders from '../../public/locales/ar/workOrders.json'
+import arDocuments from '../../public/locales/ar/documents.json'
+import arUsers from '../../public/locales/ar/users.json'
+import arAi from '../../public/locales/ar/ai.json'
+import arNotFound from '../../public/locales/ar/notFound.json'
 
-// Basic translations for MVP
-const resources = {
-  en: {
-    translation: {
-      "dashboard": "Dashboard",
-      "machines": "Machines",
-      "work_orders": "Work Orders",
-      "parts": "Parts",
-      "documents": "Documents",
-      "settings": "Settings",
-      "login": "Login",
-      "logout": "Logout",
-      "search": "Search...",
-      "welcome": "Welcome",
-    }
-  },
-  ar: {
-    translation: {
-      "dashboard": "لوحة القيادة",
-      "machines": "الآلات",
-      "work_orders": "أوامر العمل",
-      "parts": "قطع الغيار",
-      "documents": "المستندات",
-      "settings": "الإعدادات",
-      "login": "تسجيل الدخول",
-      "logout": "تسجيل الخروج",
-      "search": "بحث...",
-      "welcome": "مرحبا",
-    }
+export const SUPPORTED_LANGUAGES = [
+  { code: 'en', label: 'English', dir: 'ltr' },
+  { code: 'ar', label: 'العربية', dir: 'rtl' },
+] as const
+
+export const DEFAULT_LANGUAGE = 'en'
+const rtlLanguages = new Set<string>(
+  SUPPORTED_LANGUAGES.filter((lng) => lng.dir === 'rtl').map((lng) => lng.code),
+)
+
+const applyDirection = (lng?: string) => {
+  const direction = lng && rtlLanguages.has(lng) ? 'rtl' : 'ltr'
+  document.documentElement.dir = direction
+  if (lng) {
+    document.documentElement.lang = lng
   }
-};
+}
 
 i18n
+  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources,
-    fallbackLng: 'en',
+    resources: {
+      en: {
+        common: enCommon,
+        nav: enNav,
+        auth: enAuth,
+        dashboard: enDashboard,
+        settings: enSettings,
+        parts: enParts,
+        machines: enMachines,
+        workOrders: enWorkOrders,
+        documents: enDocuments,
+        users: enUsers,
+        ai: enAi,
+        notFound: enNotFound,
+      },
+      ar: {
+        common: arCommon,
+        nav: arNav,
+        auth: arAuth,
+        dashboard: arDashboard,
+        settings: arSettings,
+        parts: arParts,
+        machines: arMachines,
+        workOrders: arWorkOrders,
+        documents: arDocuments,
+        users: arUsers,
+        ai: arAi,
+        notFound: arNotFound,
+      },
+    },
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    fallbackLng: DEFAULT_LANGUAGE,
+    supportedLngs: SUPPORTED_LANGUAGES.map((lng) => lng.code),
+    nonExplicitSupportedLngs: true,
+    defaultNS: 'common',
+    ns: [
+      'common',
+      'nav',
+      'auth',
+      'dashboard',
+      'machines',
+      'workOrders',
+      'parts',
+      'documents',
+      'settings',
+      'users',
+      'ai',
+      'notFound',
+    ],
+    load: 'languageOnly',
+    returnEmptyString: false,
     interpolation: {
-      escapeValue: false 
-    }
-  });
+      escapeValue: false,
+    },
+    detection: {
+      order: ['querystring', 'localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+    parseMissingKeyHandler: (key) => key,
+  })
 
-export default i18n;
+applyDirection(i18n.resolvedLanguage)
+i18n.on('languageChanged', (lng) => {
+  applyDirection(lng)
+  localStorage.setItem('i18nextLng', lng)
+})
+
+export const getDirection = (lng?: string) => (lng && rtlLanguages.has(lng) ? 'rtl' : 'ltr')
+
+export default i18n
 

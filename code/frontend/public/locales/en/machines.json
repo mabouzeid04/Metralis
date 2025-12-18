@@ -1,0 +1,89 @@
+{
+  "title": "Machines",
+  "subtitle": "Manage your factory assets and equipment.",
+  "add": "Add Machine",
+  "adminsOnly": "Admins only",
+  "searchPlaceholder": "Search machines...",
+  "emptyTitle": "No machines found",
+  "emptySearchHint": "Try a different search term",
+  "emptyCreateHint": "Get started by adding your first machine",
+  "table": {
+    "status": "Status",
+    "name": "Name",
+    "code": "Code",
+    "category": "Category",
+    "location": "Location",
+    "updated": "Last Updated",
+    "actions": "Actions"
+  },
+  "view": "View",
+  "detail": {
+    "overviewTitle": "Machine Details",
+    "status": "Status",
+    "code": "Code",
+    "category": "Category",
+    "location": "Location",
+    "area": "Area",
+    "line": "Line",
+    "manufacturer": "Manufacturer",
+    "model": "Model",
+    "serialNumber": "Serial Number",
+    "commissionedAt": "Commissioned",
+    "notAvailable": "-",
+    "noCode": "No code",
+    "uncategorized": "Uncategorized",
+    "noLocation": "No location",
+    "noActivity": "No recent activity",
+    "historyTitle": "History",
+    "repairCompleted": "Repair completed",
+    "repairFollowUp": "Repair logged - needs follow-up"
+  },
+  "workOrders": "Work orders",
+  "form": {
+    "createTitle": "Add Machine",
+    "createDescription": "Capture nameplate info, status, and commissioning details.",
+    "back": "Back to Machines",
+    "editTitle": "Edit Machine",
+    "editDescription": "Update machine details and status.",
+    "fields": {
+      "name": "Name *",
+      "code": "Code",
+      "category": "Category",
+      "status": "Status",
+      "area": "Area",
+      "line": "Line",
+      "commissionedAt": "Commissioned",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "serialNumber": "Serial Number"
+    },
+    "placeholders": {
+      "name": "e.g. Filler 01",
+      "code": "Optional ID",
+      "category": "e.g. Packaging",
+      "area": "Line A",
+      "line": "Line 2",
+      "manufacturer": "OEM",
+      "model": "Model #",
+      "serialNumber": "Serial #"
+    },
+    "cancel": "Cancel",
+    "submit": "Save Machine"
+  },
+  "actions": {
+    "viewDocs": "View Docs",
+    "createWO": "Create Work Order",
+    "delete": "Delete Machine",
+    "deleteConfirm": "Delete this machine? This cannot be undone."
+  },
+  "validation": {
+    "nameMin": "Name must be at least 2 characters"
+  },
+  "errors": {
+    "load": "Failed to load machines",
+    "create": "Failed to create machine",
+    "update": "Failed to update machine",
+    "notFound": "Machine not found",
+    "deleteFailed": "Failed to delete machine"
+  }
+}

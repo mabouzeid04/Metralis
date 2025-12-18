@@ -5,6 +5,7 @@ const zod_1 = require("zod");
 const auth_1 = require("../middleware/auth");
 const storage_1 = require("../services/storage");
 const prisma_1 = require("../lib/prisma");
+const documentIngestion_1 = require("../services/documentIngestion");
 const router = (0, express_1.Router)();
 const documentSchema = zod_1.z.object({
     title: zod_1.z.string().min(1),
@@ -17,6 +18,10 @@ const documentSchema = zod_1.z.object({
 router.use(auth_1.requireAuth);
 router.get("/", async (_req, res) => {
     const documents = await prisma_1.prisma.document.findMany({
+        where: {
+            workOrderId: null,
+            repairActionId: null,
+        },
         orderBy: { createdAt: "desc" },
         include: { machine: true, uploadedBy: true },
     });
@@ -66,6 +71,9 @@ router.post("/", storage_1.upload.single("file"), async (req, res) => {
             mimeType: req.file.mimetype,
             uploadedById: req.user.id,
         },
+    });
+    void (0, documentIngestion_1.ingestDocument)(doc.id).catch((error) => {
+        console.error("Document ingestion failed", { documentId: doc.id, error });
     });
     return res.status(201).json({ data: doc });
 });

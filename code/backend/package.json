@@ -37,7 +37,8 @@
     "pdf-parse": "^2.2.2",
     "pg": "^8.16.3",
     "uuid": "^13.0.0",
-    "zod": "^4.1.13"
+    "zod": "^4.1.13",
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -48,9 +49,12 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
+    "@types/supertest": "^2.0.16",
     "prisma": "^6.19.0",
+    "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.14",
+    "@types/node-cron": "^3.0.11"
   }
 }

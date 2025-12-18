@@ -1,5 +1,5 @@
 import { embedTexts } from "../embeddings";
-import { searchSimilarChunks } from "../vectorStore";
+import { searchSimilarChunks, searchSimilarIncidents } from "../vectorStore";
 import type { RetrievedChunk } from "./types";
 
 type RetrieveParams = {
@@ -23,19 +23,39 @@ export const retrieveContext = async ({
     return [];
   }
 
-  const chunks = await searchSimilarChunks(questionEmbedding, limit, {
+  const docChunks = await searchSimilarChunks(questionEmbedding, limit, {
     machineId: machineId ?? undefined,
     machineType: machineType ?? undefined,
     language: language ?? undefined,
   });
 
-  return chunks.map((chunk) => ({
+  const incidentChunks = await searchSimilarIncidents(questionEmbedding, limit, {
+    machineId: machineId ?? undefined,
+    machineType: machineType ?? undefined,
+    language: language ?? undefined,
+  });
+
+  const mappedDocs: RetrievedChunk[] = docChunks.map((chunk) => ({
     id: chunk.id,
+    source: "DOCUMENT",
     documentId: chunk.documentId,
     chunkIndex: chunk.chunkIndex,
     content: chunk.content,
     metadata: chunk.metadata ?? null,
     similarity: chunk.similarity,
   }));
+
+  const mappedIncidents: RetrievedChunk[] = incidentChunks.map((chunk) => ({
+    id: chunk.id,
+    source: "INCIDENT",
+    workOrderId: chunk.workOrderId,
+    content: chunk.content,
+    metadata: chunk.metadata ?? null,
+    similarity: chunk.similarity,
+  }));
+
+  return [...mappedDocs, ...mappedIncidents]
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, limit * 2);
 };
 

@@ -1,12 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { api } from '@/lib/api'
+import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Loader2, RefreshCw, ShieldCheck, Users as UsersIcon } from 'lucide-react'
+import { ChevronDown, Check, Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 type UserStatus = 'PENDING' | 'APPROVED' | 'REJECTED'
 
@@ -15,6 +24,7 @@ interface UserRecord {
   name: string
   email: string
   role: 'ADMIN' | 'TECHNICIAN'
+  active?: boolean
   createdAt?: string
   status?: UserStatus
   approvedAt?: string | null
@@ -22,11 +32,11 @@ interface UserRecord {
 
 const roleOptions: UserRecord['role'][] = ['ADMIN', 'TECHNICIAN']
 
-const StatusPill = ({ status }: { status: UserStatus }) => {
+const StatusPill = ({ status, t }: { status: UserStatus; t: TFunction }) => {
   const variants: Record<UserStatus, { label: string; variant: 'outline' | 'secondary' | 'destructive' }> = {
-    APPROVED: { label: 'Approved', variant: 'secondary' },
-    PENDING: { label: 'Pending', variant: 'outline' },
-    REJECTED: { label: 'Rejected', variant: 'destructive' },
+    APPROVED: { label: t('users:status.approved'), variant: 'secondary' },
+    PENDING: { label: t('users:status.pending'), variant: 'outline' },
+    REJECTED: { label: t('users:status.rejected'), variant: 'destructive' },
   }
   const { label, variant } = variants[status]
   return <Badge variant={variant}>{label}</Badge>
@@ -53,6 +63,8 @@ export default function UserManagement() {
   const [formState, setFormState] = useState(initialFormState)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+  const { t } = useTranslation(['users', 'common'])
+  const { user: currentUser } = useAuth()
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
@@ -61,11 +73,11 @@ export default function UserManagement() {
       setUsers(data.data)
       setError(null)
     } catch (err) {
-      setError(getApiErrorMessage(err) || 'Failed to load users')
+      setError(getApiErrorMessage(err) || t('errors.load'))
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   const fetchPendingUsers = useCallback(async () => {
     setPendingLoading(true)
@@ -74,11 +86,11 @@ export default function UserManagement() {
       const { data } = await api.get('/users/pending')
       setPendingUsers(data.data)
     } catch (err) {
-      setPendingError(getApiErrorMessage(err) || 'Failed to load pending users')
+      setPendingError(getApiErrorMessage(err) || t('errors.loadPending'))
     } finally {
       setPendingLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     fetchUsers()
@@ -92,7 +104,7 @@ export default function UserManagement() {
         await api.patch(`/users/${id}/${action}`)
         await Promise.all([fetchUsers(), fetchPendingUsers()])
       } catch (err) {
-        setPendingError(getApiErrorMessage(err) || 'Action failed')
+        setPendingError(getApiErrorMessage(err) || t('errors.action'))
       } finally {
         setActionLoading(null)
       }
@@ -105,23 +117,47 @@ export default function UserManagement() {
     fetchPendingUsers()
   }
 
+  const handleDeleteUser = useCallback(
+    async (user: UserRecord) => {
+      if (currentUser?.id === user.id) {
+        setError(t('errors.deleteSelf'))
+        return
+      }
+
+      const confirmed = window.confirm(t('confirmDelete', { name: user.name }))
+      if (!confirmed) return
+
+      setActionLoading(`${user.id}-delete`)
+      try {
+        await api.delete(`/users/${user.id}`)
+        await fetchUsers()
+        setError(null)
+      } catch (err) {
+        setError(getApiErrorMessage(err) || t('errors.delete'))
+      } finally {
+        setActionLoading(null)
+      }
+    },
+    [currentUser?.id, fetchUsers, t],
+  )
+
   const pendingContent = useMemo(() => {
     if (pendingLoading) {
-      return <p className="text-sm text-muted-foreground">Loading pending requests…</p>
+      return <p className="text-sm text-muted-foreground">{t('pendingLoading')}</p>
     }
 
     if (!pendingUsers.length) {
-      return <p className="text-sm text-muted-foreground">No technician requests are waiting for approval.</p>
+      return <p className="text-sm text-muted-foreground">{t('pendingEmpty')}</p>
     }
 
     return (
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Requested</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t('table.name')}</TableHead>
+            <TableHead>{t('table.email')}</TableHead>
+            <TableHead>{t('table.created')}</TableHead>
+            <TableHead className="text-right">{t('table.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -137,7 +173,7 @@ export default function UserManagement() {
                   disabled={actionLoading !== null}
                   onClick={() => handleDecision(user.id, 'approve')}
                 >
-                  Approve
+                  {t('approve')}
                 </Button>
                 <Button
                   size="sm"
@@ -145,7 +181,7 @@ export default function UserManagement() {
                   disabled={actionLoading !== null}
                   onClick={() => handleDecision(user.id, 'reject')}
                 >
-                  Reject
+                  {t('reject')}
                 </Button>
               </TableCell>
             </TableRow>
@@ -153,11 +189,15 @@ export default function UserManagement() {
         </TableBody>
       </Table>
     )
-  }, [pendingUsers, pendingLoading, actionLoading, handleDecision])
+  }, [pendingUsers, pendingLoading, actionLoading, handleDecision, t])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target
     setFormState((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleRoleChange = (role: UserRecord['role']) => {
+    setFormState((prev) => ({ ...prev, role }))
   }
 
   const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -170,7 +210,7 @@ export default function UserManagement() {
       setFormState(initialFormState)
       await fetchUsers()
     } catch (err) {
-      setFormError(getApiErrorMessage(err) || 'Failed to create user')
+      setFormError(getApiErrorMessage(err) || t('errors.create'))
     } finally {
       setIsSubmitting(false)
     }
@@ -181,11 +221,11 @@ export default function UserManagement() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            User Management
+            {t('title')}
             <ShieldCheck className="h-5 w-5 text-primary" />
           </h2>
           <p className="text-muted-foreground">
-            Create accounts and manage access levels for your maintenance team.
+            {t('subtitle')}
           </p>
         </div>
       </div>
@@ -195,9 +235,9 @@ export default function UserManagement() {
           <div>
             <CardTitle className="flex items-center gap-2">
               <UsersIcon className="h-5 w-5 text-primary" />
-              Pending Technician Requests
+              {t('pendingTitle')}
             </CardTitle>
-            <CardDescription>Technicians stay here until an admin approves or rejects them.</CardDescription>
+            <CardDescription>{t('pendingDescription')}</CardDescription>
           </div>
           <Button
             variant="outline"
@@ -206,7 +246,7 @@ export default function UserManagement() {
             disabled={loading || pendingLoading}
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            {t('refresh')}
           </Button>
         </CardHeader>
         {pendingError && (
@@ -220,7 +260,7 @@ export default function UserManagement() {
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Team Members</CardTitle>
+            <CardTitle>{t('table.teamMembers')}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
@@ -233,11 +273,12 @@ export default function UserManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead className="hidden md:table-cell">Status</TableHead>
-                    <TableHead className="hidden md:table-cell">Created</TableHead>
+                    <TableHead>{t('table.name')}</TableHead>
+                    <TableHead>{t('table.email')}</TableHead>
+                    <TableHead>{t('table.role')}</TableHead>
+                    <TableHead className="hidden md:table-cell">{t('table.status')}</TableHead>
+                    <TableHead className="hidden md:table-cell">{t('table.created')}</TableHead>
+                    <TableHead className="text-right">{t('table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -247,16 +288,28 @@ export default function UserManagement() {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
                         <Badge variant={user.role === 'ADMIN' ? 'secondary' : 'outline'} className="uppercase">
-                          {user.role}
+                          {t(`common:roles.${user.role.toLowerCase()}`, { defaultValue: user.role })}
                         </Badge>
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm">
-                        {user.status ? <StatusPill status={user.status} /> : '—'}
+                        {user.status ? <StatusPill status={user.status} t={t} /> : '—'}
                       </TableCell>
                       <TableCell className="hidden md:table-cell text-sm text-muted-foreground">
                         {user.createdAt
                           ? new Date(user.createdAt).toLocaleDateString()
                           : '—'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive"
+                          disabled={actionLoading !== null}
+                          onClick={() => handleDeleteUser(user)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">{t('deleteUser', { name: user.name })}</span>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -268,23 +321,23 @@ export default function UserManagement() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Add New User</CardTitle>
+            <CardTitle>{t('form.title')}</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={handleCreateUser}>
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t('form.name')}</Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Jane Doe"
+                  placeholder={t('form.name')}
                   value={formState.name}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('form.email')}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -296,28 +349,38 @@ export default function UserManagement() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <select
-                  id="role"
-                  name="role"
-                  value={formState.role}
-                  onChange={handleInputChange}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                >
-                  {roleOptions.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </select>
+                <Label htmlFor="role">{t('form.role')}</Label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-between font-normal"
+                    >
+                      {t(`common:roles.${formState.role.toLowerCase()}`, { defaultValue: formState.role })}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-[calc(100%-2rem)] min-w-[200px] p-1">
+                    {roleOptions.map((role) => (
+                      <DropdownMenuItem
+                        key={role}
+                        onSelect={() => handleRoleChange(role)}
+                        className="cursor-pointer flex items-center justify-between"
+                      >
+                        {t(`common:roles.${role.toLowerCase()}`, { defaultValue: role })}
+                        {formState.role === role && <Check className="h-4 w-4 opacity-50" />}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Temporary Password</Label>
+                <Label htmlFor="password">{t('form.password')}</Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="At least 8 characters"
+                  placeholder={t('form.passwordHint')}
                   value={formState.password}
                   onChange={handleInputChange}
                   required
@@ -326,7 +389,7 @@ export default function UserManagement() {
               {formError && <p className="text-sm text-destructive">{formError}</p>}
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create User
+                {t('form.submit')}
               </Button>
             </form>
           </CardContent>

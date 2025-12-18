@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import type { TFunction } from 'i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,110 +21,87 @@ import {
 import { useAuth } from '@/contexts/AuthContext'
 import { api } from '@/lib/api'
 import { useTranslation } from 'react-i18next'
+import { SUPPORTED_LANGUAGES } from '@/lib/i18n'
 
 const phoneRegex = /^\+?[0-9\s\-()]+$/
 
-const phoneNumberSchema = z
-  .string()
-  .trim()
-  .refine((value) => value.length === 0 || value.length >= 7, {
-    message: 'Phone number must be at least 7 characters',
-  })
-  .refine((value) => value.length === 0 || value.length <= 20, {
-    message: 'Phone number must be 20 characters or less',
-  })
-  .refine((value) => value.length === 0 || phoneRegex.test(value), {
-    message: 'Phone number can include numbers, spaces, +, -, and parentheses',
-  })
+const buildProfileSchema = (t: TFunction) =>
+  z
+    .object({
+      name: z.string().min(1, { message: t('validation.nameRequired') }),
+      email: z.string().email({ message: t('validation.emailValid') }),
+      phoneNumber: z
+        .string()
+        .trim()
+        .refine((value) => value.length === 0 || value.length >= 7, {
+          message: t('validation.phoneMin'),
+        })
+        .refine((value) => value.length === 0 || value.length <= 20, {
+          message: t('validation.phoneMax'),
+        })
+        .refine((value) => value.length === 0 || phoneRegex.test(value), {
+          message: t('validation.phoneFormat'),
+        })
+        .optional(),
+      assignmentWhatsappOptIn: z.boolean().optional(),
+    })
+    .refine(
+      (data) => {
+        const hasWhatsappPhone =
+          typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
+        if (data.assignmentWhatsappOptIn && !hasWhatsappPhone) {
+          return false
+        }
+        return true
+      },
+      {
+        message: t('validation.whatsappRequiresPhone'),
+        path: ['assignmentWhatsappOptIn'],
+      },
+    )
 
-const profileSchema = z
-  .object({
-    name: z.string().min(1, { message: 'Name is required' }),
-    email: z.string().email({ message: 'Please enter a valid email address' }),
-    phoneNumber: phoneNumberSchema.optional(),
-    assignmentWhatsappOptIn: z.boolean().optional(),
-  })
-  .refine(
-    (data) => {
-      const hasWhatsappPhone =
-        typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
-      if (data.assignmentWhatsappOptIn && !hasWhatsappPhone) {
-        return false
-      }
-      return true
-    },
-    {
-      message: 'Add your phone number to enable WhatsApp alerts',
-      path: ['assignmentWhatsappOptIn'],
-    },
-  )
+const buildPasswordSchema = (t: TFunction) =>
+  z
+    .object({
+      currentPassword: z
+        .string()
+        .min(1, { message: t('validation.currentPasswordRequired') }),
+      newPassword: z
+        .string()
+        .min(8, { message: t('validation.newPasswordLength') }),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t('validation.passwordsMatch'),
+      path: ['confirmPassword'],
+    })
 
-const passwordSchema = z.object({
-  currentPassword: z.string().min(1, { message: 'Current password is required' }),
-  newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-})
-
-type ProfileFormValues = z.infer<typeof profileSchema>
-type PasswordFormValues = z.infer<typeof passwordSchema>
-
-const helpContent = {
-  gettingStarted: {
-    title: 'Getting Started',
-    content: [
-      'Welcome to Metralis CMMS! This system helps you manage your factory maintenance operations.',
-      'Start by exploring the Dashboard to see an overview of your machines and work orders.',
-      'Navigate using the sidebar menu to access different sections of the application.',
-    ],
-  },
-  features: [
-    {
-      title: 'Work Orders',
-      description: 'Create and manage work orders to track maintenance tasks. Assign them to technicians and track their status.',
-    },
-    {
-      title: 'Machines',
-      description: 'Register and manage your factory machines. View their history and link documents.',
-    },
-    {
-      title: 'Repairs',
-      description: 'Log repair actions and document what was done to fix issues. Link parts used and record root causes.',
-    },
-    {
-      title: 'Search',
-      description: 'Use the global search to quickly find machines, work orders, or parts.',
-    },
-    {
-      title: 'Documents',
-      description: 'Upload and manage machine manuals, SOPs, and other documentation.',
-    },
-  ],
-  faq: [
-    {
-      question: 'What are work order statuses?',
-      answer: 'Work orders can be: Open (newly created), In Progress (being worked on), Waiting (on hold), or Closed (completed).',
-    },
-    {
-      question: 'What user roles are available?',
-      answer: 'There are three roles: Admin (full access), Manager (can assign work orders), and Technician (can create and work on orders).',
-    },
-    {
-      question: 'How do I change my password?',
-      answer: 'Go to Settings and use the Change Password section. You\'ll need to enter your current password.',
-    },
-    {
-      question: 'Can I upload documents?',
-      answer: 'Yes! Admins can upload PDFs and other documents in the Documents section and link them to machines.',
-    },
-  ],
-}
+type ProfileFormValues = z.infer<ReturnType<typeof buildProfileSchema>>
+type PasswordFormValues = z.infer<ReturnType<typeof buildPasswordSchema>>
 
 export default function Settings() {
   const { user, refreshUser } = useAuth()
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation(['settings', 'common'])
+  const profileSchema = useMemo(() => buildProfileSchema(t), [t])
+  const passwordSchema = useMemo(() => buildPasswordSchema(t), [t])
+  const helpContent = useMemo(
+    () => ({
+      gettingStarted: {
+        title: t('help.gettingStartedTitle'),
+        content: t('help.gettingStarted', { returnObjects: true }) as string[],
+      },
+      features: t('help.features', { returnObjects: true }) as {
+        title: string
+        description: string
+      }[],
+      faq: t('help.faq', { returnObjects: true }) as {
+        question: string
+        answer: string
+      }[],
+      aboutLines: t('help.aboutLines', { returnObjects: true }) as string[],
+    }),
+    [t],
+  )
   const [profileError, setProfileError] = useState<string | null>(null)
   const [profileSuccess, setProfileSuccess] = useState(false)
   const [passwordError, setPasswordError] = useState<string | null>(null)
@@ -133,7 +111,7 @@ export default function Settings() {
   const [isPasswordExpanded, setIsPasswordExpanded] = useState(false)
   const [isPreferencesExpanded, setIsPreferencesExpanded] = useState(false)
   const [isHelpExpanded, setIsHelpExpanded] = useState(false)
-  const [language, setLanguage] = useState<string>('en')
+  const [language, setLanguage] = useState<string>(i18n.language || 'en')
 
   const isEligibleForWhatsapp = user?.role === 'ADMIN' || user?.role === 'TECHNICIAN'
 
@@ -190,21 +168,24 @@ export default function Settings() {
     // Load language preference
     const loadPreferences = async () => {
       try {
-        const { data } = await api.get('/users/me/preferences')
+        const { data } = await api.get('/profile/me/preferences')
         const prefs = data.data || {}
-        if (prefs.language) {
+        if (prefs.language && SUPPORTED_LANGUAGES.some((lng) => lng.code === prefs.language)) {
           setLanguage(prefs.language)
-          i18n.changeLanguage(prefs.language)
-          document.documentElement.dir = prefs.language === 'ar' ? 'rtl' : 'ltr'
+          await i18n.changeLanguage(prefs.language)
         }
       } catch {
         // Fallback to localStorage or default
-        const stored = localStorage.getItem('i18nextLng') || 'en'
+        const stored = localStorage.getItem('i18nextLng') || i18n.language || 'en'
         setLanguage(stored)
       }
     }
-    loadPreferences()
+    void loadPreferences()
   }, [i18n])
+
+  useEffect(() => {
+    setLanguage(i18n.language || 'en')
+  }, [i18n.language])
 
   const getApiError = (err: unknown) =>
     (err as { response?: { data?: { error?: { message?: string } } } })?.response?.data?.error?.message
@@ -219,7 +200,7 @@ export default function Settings() {
         typeof data.phoneNumber === 'string' && data.phoneNumber.length > 0
           ? data.phoneNumber
           : null
-      await api.patch('/users/me', {
+      await api.patch('/profile/me', {
         name: data.name,
         email: data.email,
         phoneNumber: sanitizedPhoneNumber,
@@ -229,7 +210,7 @@ export default function Settings() {
       setProfileSuccess(true)
       setTimeout(() => setProfileSuccess(false), 3000)
     } catch (error: unknown) {
-      setProfileError(getApiError(error) || 'Failed to update profile')
+      setProfileError(getApiError(error) || t('profile.error'))
     } finally {
       setIsUpdatingProfile(false)
     }
@@ -241,7 +222,7 @@ export default function Settings() {
     setPasswordSuccess(false)
 
     try {
-      await api.patch('/users/me/password', {
+      await api.patch('/profile/me/password', {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       })
@@ -249,7 +230,7 @@ export default function Settings() {
       passwordForm.reset()
       setTimeout(() => setPasswordSuccess(false), 3000)
     } catch (error: unknown) {
-      setPasswordError(getApiError(error) || 'Failed to change password')
+      setPasswordError(getApiError(error) || t('password.error'))
     } finally {
       setIsChangingPassword(false)
     }
@@ -258,11 +239,10 @@ export default function Settings() {
   const handleLanguageChange = async (newLanguage: string) => {
     setLanguage(newLanguage)
     i18n.changeLanguage(newLanguage)
-    document.documentElement.dir = newLanguage === 'ar' ? 'rtl' : 'ltr'
     localStorage.setItem('i18nextLng', newLanguage)
 
     try {
-      await api.patch('/users/me/preferences', { language: newLanguage })
+      await api.patch('/profile/me/preferences', { language: newLanguage })
     } catch {
       // Silently fail - preference is already saved locally
     }
@@ -280,24 +260,20 @@ export default function Settings() {
   return (
     <div className="container mx-auto py-8 space-y-8 max-w-4xl">
       <div>
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-2">
-          Manage your account settings and preferences
-        </p>
+        <h1 className="text-3xl font-bold">{t('title')}</h1>
+        <p className="text-muted-foreground mt-2">{t('subtitle')}</p>
       </div>
 
       {/* Profile Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile</CardTitle>
-          <CardDescription>
-            Update your personal information
-          </CardDescription>
+          <CardTitle>{t('profile.title')}</CardTitle>
+          <CardDescription>{t('profile.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{t('profile.fields.fullName')}</Label>
               <Input
                 id="name"
                 {...profileForm.register('name')}
@@ -311,7 +287,7 @@ export default function Settings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('profile.fields.email')}</Label>
               <Input
                 id="email"
                 type="email"
@@ -326,11 +302,11 @@ export default function Settings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Label htmlFor="phoneNumber">{t('profile.fields.phoneNumber')}</Label>
               <Input
                 id="phoneNumber"
                 type="tel"
-                placeholder="+1 555 123 4567"
+                placeholder={t('profile.placeholders.phone')}
                 {...profileForm.register('phoneNumber')}
                 className="bg-muted/30"
               />
@@ -346,10 +322,10 @@ export default function Settings() {
                 <div className="flex flex-col md:flex-row md:items-center gap-4 rounded-lg border border-border/60 p-4">
                   <div className="flex-1 space-y-1">
                     <Label htmlFor="assignmentWhatsappOptIn" className="text-base font-medium">
-                      WhatsApp work order alerts
+                      {t('profile.whatsappLabel')}
                     </Label>
                     <p className="text-sm text-muted-foreground">
-                      Provide a phone number above to receive a WhatsApp message whenever you get assigned to a work order.
+                      {t('profile.whatsappDescription')}
                     </p>
                   </div>
                   <input
@@ -369,14 +345,14 @@ export default function Settings() {
             )}
 
             <div className="space-y-2">
-              <Label>Role</Label>
+              <Label>{t('profile.roleLabel')}</Label>
               <div>
                 <Badge variant={getRoleBadgeVariant(user?.role || '')}>
                   {user?.role}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Your role cannot be changed. Contact an administrator if you need a role change.
+                {t('profile.roleHint')}
               </p>
             </div>
 
@@ -390,13 +366,13 @@ export default function Settings() {
             {profileSuccess && (
               <div className="p-3 text-sm text-emerald-600 bg-emerald-50 rounded-md flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4" />
-                Profile updated successfully
+                {t('profile.success')}
               </div>
             )}
 
             <Button type="submit" disabled={isUpdatingProfile}>
               {isUpdatingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {t('common:actions.saveChanges')}
             </Button>
           </form>
         </CardContent>
@@ -409,10 +385,8 @@ export default function Settings() {
           onClick={togglePasswordExpansion}
         >
           <div className="space-y-1">
-            <CardTitle>Change Password</CardTitle>
-            <CardDescription>
-              Update your password to keep your account secure
-            </CardDescription>
+            <CardTitle>{t('password.title')}</CardTitle>
+            <CardDescription>{t('password.description')}</CardDescription>
           </div>
           <ChevronDown
             className={`h-5 w-5 text-muted-foreground transition-transform ${
@@ -424,7 +398,7 @@ export default function Settings() {
           <CardContent>
             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">Current Password</Label>
+                <Label htmlFor="currentPassword">{t('password.current')}</Label>
                 <Input
                   id="currentPassword"
                   type="password"
@@ -439,7 +413,7 @@ export default function Settings() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
+                <Label htmlFor="newPassword">{t('password.new')}</Label>
                 <Input
                   id="newPassword"
                   type="password"
@@ -454,7 +428,7 @@ export default function Settings() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Label htmlFor="confirmPassword">{t('password.confirm')}</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -478,13 +452,13 @@ export default function Settings() {
               {passwordSuccess && (
                 <div className="p-3 text-sm text-emerald-600 bg-emerald-50 rounded-md flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4" />
-                  Password changed successfully
+                  {t('password.success')}
                 </div>
               )}
 
               <Button type="submit" disabled={isChangingPassword}>
                 {isChangingPassword && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Change Password
+                {t('password.title')}
               </Button>
             </form>
           </CardContent>
@@ -498,10 +472,8 @@ export default function Settings() {
           onClick={togglePreferencesExpansion}
         >
           <div className="space-y-1">
-            <CardTitle>Preferences</CardTitle>
-            <CardDescription>
-              Customize your application preferences such as language and appearance. 
-            </CardDescription>
+            <CardTitle>{t('preferences.title')}</CardTitle>
+            <CardDescription>{t('preferences.description')}</CardDescription>
           </div>
           <ChevronDown
             className={`h-5 w-5 text-muted-foreground transition-transform ${
@@ -512,18 +484,21 @@ export default function Settings() {
         {isPreferencesExpanded && (
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="language">Language</Label>
+              <Label htmlFor="language">{t('preferences.languageLabel')}</Label>
               <select
                 id="language"
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <option value="en">English</option>
-                <option value="ar">العربية (Arabic)</option>
+                {SUPPORTED_LANGUAGES.map((lng) => (
+                  <option key={lng.code} value={lng.code}>
+                    {lng.label}
+                  </option>
+                ))}
               </select>
               <p className="text-sm text-muted-foreground">
-                Choose your preferred language for the interface
+                {t('preferences.languageHelper')}
               </p>
             </div>
           </CardContent>
@@ -539,10 +514,10 @@ export default function Settings() {
           <div className="space-y-1">
             <CardTitle className="flex items-center gap-2">
               <HelpCircle className="h-5 w-5" />
-              Help & Documentation
+              {t('help.title')}
             </CardTitle>
             <CardDescription>
-              Learn how to use the system and find answers to common questions
+              {t('help.description')}
             </CardDescription>
           </div>
           <ChevronDown
@@ -568,7 +543,7 @@ export default function Settings() {
 
             {/* Feature Guides */}
             <div>
-              <h3 className="font-semibold mb-3">Feature Guides</h3>
+              <h3 className="font-semibold mb-3">{t('help.featuresTitle')}</h3>
               <div className="space-y-3">
                 {helpContent.features.map((feature, index) => (
                   <div key={index} className="border rounded-lg p-3">
@@ -583,7 +558,7 @@ export default function Settings() {
             <div>
               <h3 className="font-semibold mb-3 flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
-                Frequently Asked Questions
+                {t('help.faqTitle')}
               </h3>
               <div className="space-y-3">
                 {helpContent.faq.map((item, index) => (
@@ -599,11 +574,12 @@ export default function Settings() {
             <div className="border-t pt-4">
               <h3 className="font-semibold mb-2 flex items-center gap-2">
                 <Info className="h-4 w-4" />
-                About
+                {t('help.aboutTitle')}
               </h3>
               <div className="text-sm text-muted-foreground space-y-1">
-                <p>Metralis CMMS v1.0</p>
-                <p>Factory Intelligence Layer - Foundation Release</p>
+                {helpContent.aboutLines.map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
               </div>
             </div>
           </CardContent>
