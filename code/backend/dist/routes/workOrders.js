@@ -11,6 +11,7 @@ const auth_1 = require("../middleware/auth");
 const client_1 = require("../generated/prisma/client");
 const storage_1 = require("../services/storage");
 const whatsapp_1 = require("../services/notifications/whatsapp");
+const incidentIngestion_1 = require("../services/incidentIngestion");
 const router = (0, express_1.Router)();
 const workOrderSchema = zod_1.z.object({
     machineId: zod_1.z.string(),
@@ -20,6 +21,22 @@ const workOrderSchema = zod_1.z.object({
     priority: zod_1.z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
     symptoms: zod_1.z.array(zod_1.z.string()).optional(),
     assignedToId: zod_1.z.string().uuid().nullable().optional(),
+});
+const workOrderListQuerySchema = zod_1.z.object({
+    status: zod_1.z.enum(["OPEN", "IN_PROGRESS", "WAITING", "CLOSED"]).optional(),
+    priority: zod_1.z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional(),
+    type: zod_1.z.enum(["CORRECTIVE", "PREVENTIVE", "INSPECTION"]).optional(),
+    machineId: zod_1.z.string().uuid().optional(),
+    assignedToId: zod_1.z.string().uuid().optional(),
+    q: zod_1.z.string().trim().optional(),
+    reportedFrom: zod_1.z.coerce.date().optional(),
+    reportedTo: zod_1.z.coerce.date().optional(),
+    startedFrom: zod_1.z.coerce.date().optional(),
+    startedTo: zod_1.z.coerce.date().optional(),
+    completedFrom: zod_1.z.coerce.date().optional(),
+    completedTo: zod_1.z.coerce.date().optional(),
+    take: zod_1.z.coerce.number().int().positive().max(200).optional(),
+    skip: zod_1.z.coerce.number().int().min(0).optional(),
 });
 router.use(auth_1.requireAuth);
 const generateWorkOrderPublicId = () => crypto_1.default.randomBytes(4).toString("hex").toUpperCase();
@@ -72,30 +89,70 @@ const notifyAssigneeOfWhatsapp = async (workOrder) => {
     }
 };
 router.get("/", async (req, res) => {
-    const { status, priority, machineId } = req.query;
     const where = {};
-    if (status) {
-        where.status = String(status).toUpperCase();
+    const parsed = workOrderListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+        return res.status(400).json({ error: parsed.error.flatten() });
     }
-    if (priority) {
-        where.priority = String(priority).toUpperCase();
+    const { status: statusFilter, priority: priorityFilter, type: typeFilter, machineId: machineIdFilter, assignedToId, q, reportedFrom, reportedTo, startedFrom, startedTo, completedFrom, completedTo, take: takeParam, skip: skipParam, } = parsed.data;
+    if (statusFilter) {
+        where.status = statusFilter;
     }
-    if (machineId) {
-        where.machineId = { equals: String(machineId) };
+    if (priorityFilter) {
+        where.priority = priorityFilter;
     }
+    if (typeFilter) {
+        where.type = typeFilter;
+    }
+    if (machineIdFilter) {
+        where.machineId = { equals: machineIdFilter };
+    }
+    if (assignedToId) {
+        where.assignedToId = assignedToId;
+    }
+    if (q) {
+        const term = q.trim();
+        if (term) {
+            // Note: descriptionRaw removed from search for performance
+            // Use title and publicId for quick list searches
+            where.OR = [
+                { title: { contains: term, mode: "insensitive" } },
+                { publicId: { contains: term, mode: "insensitive" } },
+            ];
+        }
+    }
+    if (reportedFrom || reportedTo) {
+        where.reportedAt = {
+            ...(reportedFrom ? { gte: reportedFrom } : {}),
+            ...(reportedTo ? { lte: reportedTo } : {}),
+        };
+    }
+    if (startedFrom || startedTo) {
+        where.startedAt = {
+            ...(startedFrom ? { gte: startedFrom } : {}),
+            ...(startedTo ? { lte: startedTo } : {}),
+        };
+    }
+    if (completedFrom || completedTo) {
+        where.completedAt = {
+            ...(completedFrom ? { gte: completedFrom } : {}),
+            ...(completedTo ? { lte: completedTo } : {}),
+        };
+    }
+    const take = takeParam ?? 50;
+    const skip = skipParam ?? 0;
     const workOrders = await prisma_1.prisma.workOrder.findMany({
         where,
         orderBy: { reportedAt: "desc" },
+        take,
+        skip,
         include: {
-            machine: true,
-            assignedTo: true,
-            repairActions: true,
-            parts: {
-                include: { part: true },
-            },
+            machine: { select: { id: true, name: true } },
+            assignedTo: { select: { id: true, name: true } },
         },
     });
-    return res.json({ data: workOrders });
+    const total = await prisma_1.prisma.workOrder.count({ where });
+    return res.json({ data: workOrders, meta: { total, take, skip } });
 });
 router.get("/:id", async (req, res) => {
     const workOrder = await prisma_1.prisma.workOrder.findUnique({
@@ -158,6 +215,9 @@ router.post("/", async (req, res) => {
     if (workOrder.assignedTo) {
         void notifyAssigneeOfWhatsapp(workOrder);
     }
+    void (0, incidentIngestion_1.upsertIncidentChunksForWorkOrder)(workOrder.id).catch((error) => {
+        console.error("Failed to ingest incident embeddings for new work order", { workOrderId: workOrder.id, error });
+    });
     return res.status(201).json({ data: workOrder });
 });
 router.patch("/:id", async (req, res) => {
@@ -184,6 +244,9 @@ router.patch("/:id", async (req, res) => {
         const workOrder = await prisma_1.prisma.workOrder.update({
             where: { id: req.params.id },
             data,
+        });
+        void (0, incidentIngestion_1.upsertIncidentChunksForWorkOrder)(workOrder.id).catch((error) => {
+            console.error("Failed to ingest incident embeddings after work order update", { workOrderId: workOrder.id, error });
         });
         return res.json({ data: workOrder });
     }
@@ -319,6 +382,9 @@ router.post("/:id/repair", async (req, res) => {
             },
         })));
     }
+    void (0, incidentIngestion_1.upsertIncidentChunksForWorkOrder)(req.params.id).catch((error) => {
+        console.error("Failed to ingest incident embeddings after repair creation", { workOrderId: req.params.id, error });
+    });
     return res.status(201).json({ data: repair });
 });
 const attachmentSelect = {

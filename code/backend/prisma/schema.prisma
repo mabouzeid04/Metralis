@@ -166,6 +166,13 @@ model WorkOrder {
   parts        WorkOrderPart[]
   attachments  Document[]        @relation("WorkOrderDocuments")
   incidentChunks IncidentChunk[]
+
+  @@index([reportedAt])
+  @@index([machineId])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([priority])
+  @@index([type])
 }
 
 model RepairAction {
@@ -186,6 +193,8 @@ model RepairAction {
   updatedAt       DateTime    @updatedAt
 
   attachments Document[] @relation("RepairActionDocuments")
+
+  @@index([workOrderId])
 }
 
 model Part {

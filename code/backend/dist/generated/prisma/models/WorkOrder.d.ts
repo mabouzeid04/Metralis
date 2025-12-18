@@ -261,6 +261,7 @@ export type WorkOrderWhereInput = {
     repairActions?: Prisma.RepairActionListRelationFilter;
     parts?: Prisma.WorkOrderPartListRelationFilter;
     attachments?: Prisma.DocumentListRelationFilter;
+    incidentChunks?: Prisma.IncidentChunkListRelationFilter;
 };
 export type WorkOrderOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -290,6 +291,7 @@ export type WorkOrderOrderByWithRelationInput = {
     repairActions?: Prisma.RepairActionOrderByRelationAggregateInput;
     parts?: Prisma.WorkOrderPartOrderByRelationAggregateInput;
     attachments?: Prisma.DocumentOrderByRelationAggregateInput;
+    incidentChunks?: Prisma.IncidentChunkOrderByRelationAggregateInput;
 };
 export type WorkOrderWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -322,6 +324,7 @@ export type WorkOrderWhereUniqueInput = Prisma.AtLeast<{
     repairActions?: Prisma.RepairActionListRelationFilter;
     parts?: Prisma.WorkOrderPartListRelationFilter;
     attachments?: Prisma.DocumentListRelationFilter;
+    incidentChunks?: Prisma.IncidentChunkListRelationFilter;
 }, "id" | "publicId">;
 export type WorkOrderOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -400,6 +403,7 @@ export type WorkOrderCreateInput = {
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateInput = {
     id?: string;
@@ -426,6 +430,7 @@ export type WorkOrderUncheckedCreateInput = {
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -452,6 +457,7 @@ export type WorkOrderUpdateInput = {
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -478,6 +484,7 @@ export type WorkOrderUncheckedUpdateInput = {
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateManyInput = {
     id?: string;
@@ -785,6 +792,13 @@ export type WorkOrderUpdateOneWithoutAttachmentsNestedInput = {
     connect?: Prisma.WorkOrderWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.WorkOrderUpdateToOneWithWhereWithoutAttachmentsInput, Prisma.WorkOrderUpdateWithoutAttachmentsInput>, Prisma.WorkOrderUncheckedUpdateWithoutAttachmentsInput>;
 };
+export type WorkOrderUpdateOneRequiredWithoutIncidentChunksNestedInput = {
+    create?: Prisma.XOR<Prisma.WorkOrderCreateWithoutIncidentChunksInput, Prisma.WorkOrderUncheckedCreateWithoutIncidentChunksInput>;
+    connectOrCreate?: Prisma.WorkOrderCreateOrConnectWithoutIncidentChunksInput;
+    upsert?: Prisma.WorkOrderUpsertWithoutIncidentChunksInput;
+    connect?: Prisma.WorkOrderWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.WorkOrderUpdateToOneWithWhereWithoutIncidentChunksInput, Prisma.WorkOrderUpdateWithoutIncidentChunksInput>, Prisma.WorkOrderUncheckedUpdateWithoutIncidentChunksInput>;
+};
 export type WorkOrderCreateWithoutReportedByInput = {
     id?: string;
     publicId?: string;
@@ -809,6 +823,7 @@ export type WorkOrderCreateWithoutReportedByInput = {
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutReportedByInput = {
     id?: string;
@@ -834,6 +849,7 @@ export type WorkOrderUncheckedCreateWithoutReportedByInput = {
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutReportedByInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -867,6 +883,7 @@ export type WorkOrderCreateWithoutAssignedToInput = {
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutAssignedToInput = {
     id?: string;
@@ -892,6 +909,7 @@ export type WorkOrderUncheckedCreateWithoutAssignedToInput = {
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutAssignedToInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -977,6 +995,7 @@ export type WorkOrderCreateWithoutMachineInput = {
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutMachineInput = {
     id?: string;
@@ -1002,6 +1021,7 @@ export type WorkOrderUncheckedCreateWithoutMachineInput = {
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutMachineInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1048,6 +1068,7 @@ export type WorkOrderCreateWithoutRepairActionsInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutRepairActionsInput = {
     id?: string;
@@ -1073,6 +1094,7 @@ export type WorkOrderUncheckedCreateWithoutRepairActionsInput = {
     updatedAt?: Date | string;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutRepairActionsInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1111,6 +1133,7 @@ export type WorkOrderUpdateWithoutRepairActionsInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutRepairActionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1136,6 +1159,7 @@ export type WorkOrderUncheckedUpdateWithoutRepairActionsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateWithoutPartsInput = {
     id?: string;
@@ -1161,6 +1185,7 @@ export type WorkOrderCreateWithoutPartsInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutPartsInput = {
     id?: string;
@@ -1186,6 +1211,7 @@ export type WorkOrderUncheckedCreateWithoutPartsInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutPartsInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1224,6 +1250,7 @@ export type WorkOrderUpdateWithoutPartsInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutPartsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1249,6 +1276,7 @@ export type WorkOrderUncheckedUpdateWithoutPartsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateWithoutAttachmentsInput = {
     id?: string;
@@ -1274,6 +1302,7 @@ export type WorkOrderCreateWithoutAttachmentsInput = {
     assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
     repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderUncheckedCreateWithoutAttachmentsInput = {
     id?: string;
@@ -1299,6 +1328,7 @@ export type WorkOrderUncheckedCreateWithoutAttachmentsInput = {
     updatedAt?: Date | string;
     repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
     parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedCreateNestedManyWithoutWorkOrderInput;
 };
 export type WorkOrderCreateOrConnectWithoutAttachmentsInput = {
     where: Prisma.WorkOrderWhereUniqueInput;
@@ -1337,6 +1367,7 @@ export type WorkOrderUpdateWithoutAttachmentsInput = {
     assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutAttachmentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1362,6 +1393,124 @@ export type WorkOrderUncheckedUpdateWithoutAttachmentsInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
+};
+export type WorkOrderCreateWithoutIncidentChunksInput = {
+    id?: string;
+    publicId?: string;
+    title: string;
+    descriptionRaw: string;
+    status?: $Enums.WorkOrderStatus;
+    type?: $Enums.WorkOrderType;
+    priority?: $Enums.WorkOrderPriority;
+    reportedAt?: Date | string;
+    startedAt?: Date | string | null;
+    completedAt?: Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: string | null;
+    rootCause?: string | null;
+    failureMode?: string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    machine: Prisma.MachineCreateNestedOneWithoutWorkOrdersInput;
+    reportedBy: Prisma.UserCreateNestedOneWithoutReportedWorkOrdersInput;
+    assignedTo?: Prisma.UserCreateNestedOneWithoutAssignedWorkOrdersInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutWorkOrderInput;
+    parts?: Prisma.WorkOrderPartCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentCreateNestedManyWithoutWorkOrderInput;
+};
+export type WorkOrderUncheckedCreateWithoutIncidentChunksInput = {
+    id?: string;
+    publicId?: string;
+    machineId: string;
+    title: string;
+    descriptionRaw: string;
+    status?: $Enums.WorkOrderStatus;
+    type?: $Enums.WorkOrderType;
+    priority?: $Enums.WorkOrderPriority;
+    reportedAt?: Date | string;
+    reportedById: string;
+    assignedToId?: string | null;
+    startedAt?: Date | string | null;
+    completedAt?: Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: string | null;
+    rootCause?: string | null;
+    failureMode?: string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutWorkOrderInput;
+    parts?: Prisma.WorkOrderPartUncheckedCreateNestedManyWithoutWorkOrderInput;
+    attachments?: Prisma.DocumentUncheckedCreateNestedManyWithoutWorkOrderInput;
+};
+export type WorkOrderCreateOrConnectWithoutIncidentChunksInput = {
+    where: Prisma.WorkOrderWhereUniqueInput;
+    create: Prisma.XOR<Prisma.WorkOrderCreateWithoutIncidentChunksInput, Prisma.WorkOrderUncheckedCreateWithoutIncidentChunksInput>;
+};
+export type WorkOrderUpsertWithoutIncidentChunksInput = {
+    update: Prisma.XOR<Prisma.WorkOrderUpdateWithoutIncidentChunksInput, Prisma.WorkOrderUncheckedUpdateWithoutIncidentChunksInput>;
+    create: Prisma.XOR<Prisma.WorkOrderCreateWithoutIncidentChunksInput, Prisma.WorkOrderUncheckedCreateWithoutIncidentChunksInput>;
+    where?: Prisma.WorkOrderWhereInput;
+};
+export type WorkOrderUpdateToOneWithWhereWithoutIncidentChunksInput = {
+    where?: Prisma.WorkOrderWhereInput;
+    data: Prisma.XOR<Prisma.WorkOrderUpdateWithoutIncidentChunksInput, Prisma.WorkOrderUncheckedUpdateWithoutIncidentChunksInput>;
+};
+export type WorkOrderUpdateWithoutIncidentChunksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
+    type?: Prisma.EnumWorkOrderTypeFieldUpdateOperationsInput | $Enums.WorkOrderType;
+    priority?: Prisma.EnumWorkOrderPriorityFieldUpdateOperationsInput | $Enums.WorkOrderPriority;
+    reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    failureMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    machine?: Prisma.MachineUpdateOneRequiredWithoutWorkOrdersNestedInput;
+    reportedBy?: Prisma.UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput;
+    assignedTo?: Prisma.UserUpdateOneWithoutAssignedWorkOrdersNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
+    parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+};
+export type WorkOrderUncheckedUpdateWithoutIncidentChunksInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    publicId?: Prisma.StringFieldUpdateOperationsInput | string;
+    machineId?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    descriptionRaw?: Prisma.StringFieldUpdateOperationsInput | string;
+    status?: Prisma.EnumWorkOrderStatusFieldUpdateOperationsInput | $Enums.WorkOrderStatus;
+    type?: Prisma.EnumWorkOrderTypeFieldUpdateOperationsInput | $Enums.WorkOrderType;
+    priority?: Prisma.EnumWorkOrderPriorityFieldUpdateOperationsInput | $Enums.WorkOrderPriority;
+    reportedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedById?: Prisma.StringFieldUpdateOperationsInput | string;
+    assignedToId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    symptoms?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    suspectedCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    rootCause?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    failureMode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    environmentContext?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderCreateManyReportedByInput = {
     id?: string;
@@ -1431,6 +1580,7 @@ export type WorkOrderUpdateWithoutReportedByInput = {
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutReportedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1456,6 +1606,7 @@ export type WorkOrderUncheckedUpdateWithoutReportedByInput = {
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutReportedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1503,6 +1654,7 @@ export type WorkOrderUpdateWithoutAssignedToInput = {
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutAssignedToInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1528,6 +1680,7 @@ export type WorkOrderUncheckedUpdateWithoutAssignedToInput = {
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutAssignedToInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1597,6 +1750,7 @@ export type WorkOrderUpdateWithoutMachineInput = {
     repairActions?: Prisma.RepairActionUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1622,6 +1776,7 @@ export type WorkOrderUncheckedUpdateWithoutMachineInput = {
     repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutWorkOrderNestedInput;
     parts?: Prisma.WorkOrderPartUncheckedUpdateManyWithoutWorkOrderNestedInput;
     attachments?: Prisma.DocumentUncheckedUpdateManyWithoutWorkOrderNestedInput;
+    incidentChunks?: Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput;
 };
 export type WorkOrderUncheckedUpdateManyWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1652,11 +1807,13 @@ export type WorkOrderCountOutputType = {
     repairActions: number;
     parts: number;
     attachments: number;
+    incidentChunks: number;
 };
 export type WorkOrderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     repairActions?: boolean | WorkOrderCountOutputTypeCountRepairActionsArgs;
     parts?: boolean | WorkOrderCountOutputTypeCountPartsArgs;
     attachments?: boolean | WorkOrderCountOutputTypeCountAttachmentsArgs;
+    incidentChunks?: boolean | WorkOrderCountOutputTypeCountIncidentChunksArgs;
 };
 /**
  * WorkOrderCountOutputType without action
@@ -1684,6 +1841,12 @@ export type WorkOrderCountOutputTypeCountPartsArgs<ExtArgs extends runtime.Types
  */
 export type WorkOrderCountOutputTypeCountAttachmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.DocumentWhereInput;
+};
+/**
+ * WorkOrderCountOutputType without action
+ */
+export type WorkOrderCountOutputTypeCountIncidentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.IncidentChunkWhereInput;
 };
 export type WorkOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -1713,6 +1876,7 @@ export type WorkOrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
     repairActions?: boolean | Prisma.WorkOrder$repairActionsArgs<ExtArgs>;
     parts?: boolean | Prisma.WorkOrder$partsArgs<ExtArgs>;
     attachments?: boolean | Prisma.WorkOrder$attachmentsArgs<ExtArgs>;
+    incidentChunks?: boolean | Prisma.WorkOrder$incidentChunksArgs<ExtArgs>;
     _count?: boolean | Prisma.WorkOrderCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["workOrder"]>;
 export type WorkOrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1798,6 +1962,7 @@ export type WorkOrderInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
     repairActions?: boolean | Prisma.WorkOrder$repairActionsArgs<ExtArgs>;
     parts?: boolean | Prisma.WorkOrder$partsArgs<ExtArgs>;
     attachments?: boolean | Prisma.WorkOrder$attachmentsArgs<ExtArgs>;
+    incidentChunks?: boolean | Prisma.WorkOrder$incidentChunksArgs<ExtArgs>;
     _count?: boolean | Prisma.WorkOrderCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type WorkOrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1819,6 +1984,7 @@ export type $WorkOrderPayload<ExtArgs extends runtime.Types.Extensions.InternalA
         repairActions: Prisma.$RepairActionPayload<ExtArgs>[];
         parts: Prisma.$WorkOrderPartPayload<ExtArgs>[];
         attachments: Prisma.$DocumentPayload<ExtArgs>[];
+        incidentChunks: Prisma.$IncidentChunkPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -2177,6 +2343,7 @@ export interface Prisma__WorkOrderClient<T, Null = never, ExtArgs extends runtim
     repairActions<T extends Prisma.WorkOrder$repairActionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$repairActionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RepairActionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     parts<T extends Prisma.WorkOrder$partsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$partsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     attachments<T extends Prisma.WorkOrder$attachmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    incidentChunks<T extends Prisma.WorkOrder$incidentChunksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrder$incidentChunksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$IncidentChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2687,6 +2854,29 @@ export type WorkOrder$attachmentsArgs<ExtArgs extends runtime.Types.Extensions.I
     take?: number;
     skip?: number;
     distinct?: Prisma.DocumentScalarFieldEnum | Prisma.DocumentScalarFieldEnum[];
+};
+/**
+ * WorkOrder.incidentChunks
+ */
+export type WorkOrder$incidentChunksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IncidentChunk
+     */
+    select?: Prisma.IncidentChunkSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the IncidentChunk
+     */
+    omit?: Prisma.IncidentChunkOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.IncidentChunkInclude<ExtArgs> | null;
+    where?: Prisma.IncidentChunkWhereInput;
+    orderBy?: Prisma.IncidentChunkOrderByWithRelationInput | Prisma.IncidentChunkOrderByWithRelationInput[];
+    cursor?: Prisma.IncidentChunkWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.IncidentChunkScalarFieldEnum | Prisma.IncidentChunkScalarFieldEnum[];
 };
 /**
  * WorkOrder without action

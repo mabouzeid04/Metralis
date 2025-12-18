@@ -49,6 +49,7 @@ export declare const ModelName: {
     readonly WorkOrderPart: "WorkOrderPart";
     readonly Document: "Document";
     readonly DocumentChunk: "DocumentChunk";
+    readonly IncidentChunk: "IncidentChunk";
     readonly ChatConversation: "ChatConversation";
     readonly ChatMessage: "ChatMessage";
     readonly ChatMessageFeedback: "ChatMessageFeedback";
@@ -196,6 +197,19 @@ export declare const DocumentChunkScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type DocumentChunkScalarFieldEnum = (typeof DocumentChunkScalarFieldEnum)[keyof typeof DocumentChunkScalarFieldEnum];
+export declare const IncidentChunkScalarFieldEnum: {
+    readonly id: "id";
+    readonly workOrderId: "workOrderId";
+    readonly chunkIndex: "chunkIndex";
+    readonly content: "content";
+    readonly tokens: "tokens";
+    readonly machineId: "machineId";
+    readonly machineType: "machineType";
+    readonly language: "language";
+    readonly metadata: "metadata";
+    readonly createdAt: "createdAt";
+};
+export type IncidentChunkScalarFieldEnum = (typeof IncidentChunkScalarFieldEnum)[keyof typeof IncidentChunkScalarFieldEnum];
 export declare const ChatConversationScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";

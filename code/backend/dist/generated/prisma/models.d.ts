@@ -6,6 +6,7 @@ export type * from './models/Part';
 export type * from './models/WorkOrderPart';
 export type * from './models/Document';
 export type * from './models/DocumentChunk';
+export type * from './models/IncidentChunk';
 export type * from './models/ChatConversation';
 export type * from './models/ChatMessage';
 export type * from './models/ChatMessageFeedback';

@@ -2,6 +2,7 @@
   "title": "METRALIS AI",
   "subtitle": "Maintenance Copilot",
   "description": "Ask troubleshooting questions, reference manuals, and capture learnings.",
+  "welcomeTitle": "How can I help you?",
   "inputPlaceholder": "Describe the issue, alarm code, or maintenance question...",
   "emptyState": "Ask a question to get started. Metralis AI will cite specific manual sections and past incidents.",
   "send": "Send",

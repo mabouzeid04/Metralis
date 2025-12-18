@@ -12,12 +12,13 @@ class OpenAIProvider {
         this.client = new openai_1.default({ apiKey: env_1.env.ai.openai.apiKey });
     }
     async generate(params) {
+        const historyMessages = params.history.map((message) => ({
+            role: message.role === "ASSISTANT" ? "assistant" : "user",
+            content: message.content,
+        }));
         const messages = [
             { role: "system", content: systemPrompt_1.SYSTEM_PROMPT },
-            ...params.history.map((message) => ({
-                role: message.role === "ASSISTANT" ? "assistant" : "user",
-                content: message.content,
-            })),
+            ...historyMessages,
             { role: "user", content: params.prompt },
         ];
         const completion = await this.client.chat.completions.create({

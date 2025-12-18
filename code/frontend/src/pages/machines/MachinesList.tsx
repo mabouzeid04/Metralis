@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Loader2, ServerOff } from 'lucide-react'
@@ -14,49 +14,24 @@ import {
 } from '@/components/ui/table'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { api } from '@/lib/api'
+import { useMachines } from '@/lib/hooks/useDashboard'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface Machine {
-  id: string
-  name: string
-  code: string | null
-  category: string | null
-  status: string
-  area: string | null
-  line: string | null
-  updatedAt: string
-}
-
 export default function MachinesList() {
-  const [machines, setMachines] = useState<Machine[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
   const { t } = useTranslation(['machines', 'common'])
 
-  useEffect(() => {
-    const fetchMachines = async () => {
-      try {
-        const response = await api.get('/machines')
-        setMachines(response.data.data || [])
-        setError(null)
-      } catch (err) {
-        console.error('Failed to fetch machines:', err)
-        setError(t('errors.load'))
-      } finally {
-        setLoading(false)
-      }
-    }
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data: machines = [], isLoading: loading, error } = useMachines()
 
-    fetchMachines()
-  }, [])
-
-  const filteredMachines = machines.filter(machine => 
-    machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (machine.code && machine.code.toLowerCase().includes(searchTerm.toLowerCase()))
+  const filteredMachines = useMemo(() =>
+    machines.filter(machine =>
+      machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (machine.code && machine.code.toLowerCase().includes(searchTerm.toLowerCase()))
+    ),
+    [machines, searchTerm]
   )
 
   if (loading) {
@@ -71,7 +46,7 @@ export default function MachinesList() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <ServerOff className="h-12 w-12 text-muted-foreground" />
-        <p className="text-muted-foreground">{error}</p>
+        <p className="text-muted-foreground">{error.message || t('errors.load')}</p>
         <Button onClick={() => window.location.reload()}>{t('common:actions.retry')}</Button>
       </div>
     )

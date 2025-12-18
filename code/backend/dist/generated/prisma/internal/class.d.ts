@@ -200,6 +200,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
+     * `prisma.incidentChunk`: Exposes CRUD operations for the **IncidentChunk** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more IncidentChunks
+      * const incidentChunks = await prisma.incidentChunk.findMany()
+      * ```
+      */
+    get incidentChunk(): Prisma.IncidentChunkDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
      * `prisma.chatConversation`: Exposes CRUD operations for the **ChatConversation** model.
       * Example usage:
       * ```ts

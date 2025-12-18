@@ -63,7 +63,7 @@ exports.env = {
         maxTokens: Number(process.env.AI_MAX_TOKENS ?? "1024"),
         gemini: {
             apiKey: process.env.GEMINI_API_KEY,
-            model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+            model: process.env.GEMINI_MODEL || "gemini-3-flash-preview",
         },
         openai: {
             apiKey: process.env.OPENAI_API_KEY,

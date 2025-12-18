@@ -5,7 +5,9 @@ export type ConversationMessage = {
 };
 export type RetrievedChunk = {
     id: string;
-    documentId: string;
+    source: "DOCUMENT" | "INCIDENT";
+    documentId?: string;
+    workOrderId?: string;
     chunkIndex?: number;
     content: string;
     metadata: Record<string, any> | null;
@@ -20,6 +22,8 @@ export type Citation = {
     machineType?: string | null;
     language?: string | null;
     version?: string | null;
+    workOrderId?: string | null;
+    source?: "DOCUMENT" | "INCIDENT";
 };
 export type GenerateParams = {
     history: ConversationMessage[];

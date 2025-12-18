@@ -14,16 +14,35 @@ const createTitleFromMessage = (content) => {
         return "Metralis AI Chat";
     return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
 };
-const mapCitations = (chunks) => chunks.map((chunk) => ({
-    documentId: chunk.documentId,
-    chunkId: chunk.id,
-    similarity: chunk.similarity,
-    documentTitle: chunk.metadata?.documentTitle ?? chunk.metadata?.title,
-    machineId: chunk.metadata?.machineId,
-    machineType: chunk.metadata?.machineType,
-    language: chunk.metadata?.language,
-    version: chunk.metadata?.version,
-}));
+const mapCitations = (chunks) => {
+    const dedup = new Map();
+    chunks.forEach((chunk) => {
+        const title = chunk.source === "INCIDENT"
+            ? chunk.metadata?.workOrderTitle ?? chunk.metadata?.title
+            : chunk.metadata?.documentTitle ?? chunk.metadata?.title;
+        const documentId = chunk.documentId ?? chunk.workOrderId ?? chunk.id;
+        const key = chunk.source === "INCIDENT"
+            ? `incident:${chunk.workOrderId ?? documentId}`
+            : `doc:${documentId}`;
+        const candidate = {
+            documentId,
+            workOrderId: chunk.workOrderId ?? null,
+            chunkId: chunk.id,
+            similarity: chunk.similarity,
+            documentTitle: title,
+            machineId: chunk.metadata?.machineId,
+            machineType: chunk.metadata?.machineType ?? chunk.metadata?.machineModel,
+            language: chunk.metadata?.language,
+            version: chunk.metadata?.version,
+            source: chunk.source,
+        };
+        const existing = dedup.get(key);
+        if (!existing || candidate.similarity > existing.similarity) {
+            dedup.set(key, candidate);
+        }
+    });
+    return Array.from(dedup.values());
+};
 const structuredOutputSchema = zod_1.z.object({
     summary: zod_1.z.string().optional().default(""),
     likelyCauses: zod_1.z

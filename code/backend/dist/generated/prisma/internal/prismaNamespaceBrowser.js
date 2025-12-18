@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -83,6 +83,7 @@ exports.ModelName = {
     WorkOrderPart: 'WorkOrderPart',
     Document: 'Document',
     DocumentChunk: 'DocumentChunk',
+    IncidentChunk: 'IncidentChunk',
     ChatConversation: 'ChatConversation',
     ChatMessage: 'ChatMessage',
     ChatMessageFeedback: 'ChatMessageFeedback'
@@ -220,6 +221,18 @@ exports.DocumentChunkScalarFieldEnum = {
     chunkIndex: 'chunkIndex',
     content: 'content',
     tokens: 'tokens',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+};
+exports.IncidentChunkScalarFieldEnum = {
+    id: 'id',
+    workOrderId: 'workOrderId',
+    chunkIndex: 'chunkIndex',
+    content: 'content',
+    tokens: 'tokens',
+    machineId: 'machineId',
+    machineType: 'machineType',
+    language: 'language',
     metadata: 'metadata',
     createdAt: 'createdAt'
 };

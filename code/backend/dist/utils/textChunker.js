@@ -15,10 +15,12 @@ const chunkText = (input, options) => {
     while (start < sanitized.length) {
         const end = Math.min(start + chunkSize, sanitized.length);
         chunks.push(sanitized.slice(start, end).trim());
-        start = end - chunkOverlap;
-        if (start < 0) {
-            start = 0;
+        const nextStart = end - chunkOverlap;
+        // Ensure forward progress to avoid infinite loops when overlap >= chunk size or very short input
+        if (nextStart <= start) {
+            break;
         }
+        start = nextStart;
     }
     // Remove empty fragments and ensure uniqueness when overlap degenerates
     return chunks.filter((chunk, idx) => chunk.length > 0 && (idx === 0 || chunk !== chunks[idx - 1]));

@@ -224,19 +224,19 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
   const targetMachineId = conversation.machineId ?? machineId;
   const maintenanceHistory = targetMachineId
     ? await prisma.workOrder.findMany({
-        where: { machineId: targetMachineId },
-        orderBy: { reportedAt: "desc" },
-        take: 15,
-        select: {
-          id: true,
-          title: true,
-          descriptionRaw: true,
-          status: true,
-          type: true,
-          reportedAt: true,
-          completedAt: true,
-        },
-      })
+      where: { machineId: targetMachineId },
+      orderBy: { reportedAt: "desc" },
+      take: 15,
+      select: {
+        id: true,
+        title: true,
+        descriptionRaw: true,
+        status: true,
+        type: true,
+        reportedAt: true,
+        completedAt: true,
+      },
+    })
     : [];
 
   if (!conversation.machine && machineId) {

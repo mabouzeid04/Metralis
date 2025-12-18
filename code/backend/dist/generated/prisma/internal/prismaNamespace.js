@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/library"));
 /**
  * Prisma Errors
@@ -111,6 +111,7 @@ exports.ModelName = {
     WorkOrderPart: 'WorkOrderPart',
     Document: 'Document',
     DocumentChunk: 'DocumentChunk',
+    IncidentChunk: 'IncidentChunk',
     ChatConversation: 'ChatConversation',
     ChatMessage: 'ChatMessage',
     ChatMessageFeedback: 'ChatMessageFeedback'
@@ -248,6 +249,18 @@ exports.DocumentChunkScalarFieldEnum = {
     chunkIndex: 'chunkIndex',
     content: 'content',
     tokens: 'tokens',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+};
+exports.IncidentChunkScalarFieldEnum = {
+    id: 'id',
+    workOrderId: 'workOrderId',
+    chunkIndex: 'chunkIndex',
+    content: 'content',
+    tokens: 'tokens',
+    machineId: 'machineId',
+    machineType: 'machineType',
+    language: 'language',
     metadata: 'metadata',
     createdAt: 'createdAt'
 };
