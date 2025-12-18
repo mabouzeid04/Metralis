@@ -39,7 +39,7 @@ async function startServer() {
   }
 
   const app = createApp();
-  app.listen(env.port, () => {
+  app.listen(env.port, '0.0.0.0', () => {
     console.log(`API listening on port ${env.port}`);
     setupCronJobs();
   });

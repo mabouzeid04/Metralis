@@ -22,6 +22,10 @@ export const chunkText = (input: string, options?: ChunkerOptions) => {
     const end = Math.min(start + chunkSize, sanitized.length);
     chunks.push(sanitized.slice(start, end).trim());
 
+    if (end >= sanitized.length) {
+      break;
+    }
+
     const nextStart = end - chunkOverlap;
     // Ensure forward progress to avoid infinite loops when overlap >= chunk size or very short input
     if (nextStart <= start) {

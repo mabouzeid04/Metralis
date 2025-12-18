@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { prisma } from "../../tests/utils/testDb";
+import { prisma } from "../tests/utils/testDb";
 
 const downloadDocumentBuffer = vi.hoisted(() =>
   vi.fn(async () => Buffer.from("Example text for chunking")),

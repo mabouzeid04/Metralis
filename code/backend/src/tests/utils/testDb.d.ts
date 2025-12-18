@@ -1,4 +1,4 @@
-import { MachineCriticality, MachineStatus, UserRole, UserStatus } from "../../src/generated/prisma/client";
+import { MachineCriticality, MachineStatus, UserRole, UserStatus } from "../../generated/prisma/client";
 export declare const prisma: import("../../src/generated/prisma/internal/class").PrismaClient<never, import("../../src/generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined, import("@prisma/client/runtime/library").DefaultArgs>;
 export declare const ensureDatabase: () => Promise<void>;
 export declare const resetDatabase: () => Promise<void>;

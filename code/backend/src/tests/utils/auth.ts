@@ -1,5 +1,5 @@
-import type { UserRole } from "../../src/generated/prisma/client";
-import { signToken } from "../../src/utils/jwt";
+import type { UserRole } from "../../generated/prisma/client";
+import { signToken } from "../../utils/jwt";
 import { prisma } from "./testDb";
 
 export const getUserToken = async (role: UserRole = "TECHNICIAN") => {

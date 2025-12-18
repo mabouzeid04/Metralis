@@ -1,19 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 
-const geminiFactory = vi.fn(() => ({
+const geminiFactory = vi.fn().mockImplementation(() => ({
   generate: vi.fn(async () => ({ text: "gemini-text" })),
 }));
 
-const openaiFactory = vi.fn(() => ({
+const openaiFactory = vi.fn().mockImplementation(() => ({
   generate: vi.fn(async () => ({ text: "openai-text" })),
 }));
 
 vi.doMock("./googleGemini", () => ({
-  GoogleGeminiProvider: geminiFactory,
+  GoogleGeminiProvider: vi.fn().mockImplementation(() => geminiFactory()),
 }));
 
 vi.doMock("./openai", () => ({
-  OpenAIProvider: openaiFactory,
+  OpenAIProvider: vi.fn().mockImplementation(() => openaiFactory()),
 }));
 
 describe("getLLMProvider", () => {

@@ -30,7 +30,7 @@ describe("replaceDocumentChunks", () => {
 
     expect(queryMock).toHaveBeenCalledTimes(2);
     expect(queryMock).toHaveBeenNthCalledWith(1, 'DELETE FROM "DocumentChunk" WHERE "documentId" = $1', ["doc-1"]);
-    const insertCall = queryMock.mock.calls[1];
+    const insertCall = queryMock.mock.calls[1]!;
     expect(insertCall[0]).toContain('INSERT INTO "DocumentChunk"');
     expect(insertCall[1]).toEqual([
       "doc-1",
@@ -76,10 +76,11 @@ describe("searchSimilarChunks", () => {
     const result = await searchSimilarChunks([0.3, 0.4], 100, { language: "en" });
 
     expect(queryMock).toHaveBeenCalledTimes(1);
-    const [sql, params] = queryMock.mock.calls[0];
+    const call = queryMock.mock.calls[0]!;
+    const [sql, params] = call;
     expect(sql).toContain("LIMIT 50");
     expect(sql).toContain(`metadata\"->>'language' = $2`);
     expect(params).toEqual(["[0.3,0.4]", "en"]);
-    expect(result[0].id).toBe("chunk-1");
+    expect(result[0]!.id).toBe("chunk-1");
   });
 });

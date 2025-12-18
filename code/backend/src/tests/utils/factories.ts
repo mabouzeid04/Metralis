@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import type { Prisma } from "../../src/generated/prisma/client";
+import type { Prisma } from "../../generated/prisma/client";
 import { prisma } from "./testDb";
 import bcrypt from "bcryptjs";
 

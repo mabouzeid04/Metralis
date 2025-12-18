@@ -122,4 +122,3 @@ i18n.on('languageChanged', (lng) => {
 export const getDirection = (lng?: string) => (lng && rtlLanguages.has(lng) ? 'rtl' : 'ltr')
 
 export default i18n
-

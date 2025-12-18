@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-const generateContentMock = vi.fn(async () => ({
+const generateContentMock = vi.fn().mockImplementation(async () => ({
   response: { text: () => "gemini-response" },
 }));
 
