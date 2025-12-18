@@ -12,6 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -20,7 +30,7 @@ import { useWorkOrders, type WorkOrderFilters } from '@/lib/hooks/useWorkOrders'
 export default function WorkOrdersList() {
   const [searchInput, setSearchInput] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [filters] = useState<WorkOrderFilters>({})
+  const [filters, setFilters] = useState<WorkOrderFilters>({})
   const { t } = useTranslation(['workOrders', 'common'])
 
   // Debounce search input
@@ -33,7 +43,7 @@ export default function WorkOrdersList() {
 
   // React Query - data cached for 5 minutes, instant on back navigation
   const { data, isLoading, error } = useWorkOrders({ ...filters, q: debouncedSearch || undefined })
-  const workOrders = data?.data || []
+  const workOrders = useMemo(() => data?.data || [], [data])
 
   // Client-side filtering for immediate search feedback
   const filteredWOs = useMemo(() => {
@@ -96,9 +106,61 @@ export default function WorkOrdersList() {
                 onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{t('filters.status')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {['OPEN', 'IN_PROGRESS', 'COMPLETED'].map((status) => (
+                    <DropdownMenuCheckboxItem
+                      key={status}
+                      checked={filters.status === status}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          status: checked ? status : undefined,
+                        }))
+                      }}
+                    >
+                      {status.replace('_', ' ')}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>{t('filters.priority')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'].map((priority) => (
+                    <DropdownMenuCheckboxItem
+                      key={priority}
+                      checked={filters.priority === priority}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          priority: checked ? priority : undefined,
+                        }))
+                      }}
+                    >
+                      {priority}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                {(filters.status || filters.priority) && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onSelect={() => setFilters({})}
+                      className="justify-center text-center"
+                    >
+                      {t('filters.clear')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="p-0">

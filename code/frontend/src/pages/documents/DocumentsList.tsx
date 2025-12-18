@@ -11,6 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/api'
@@ -39,6 +49,8 @@ function formatFileSize(bytes: number | null): string {
 
 export default function DocumentsList() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [filters, setFilters] = useState<{ machineId?: string; type?: DocumentType }>({})
+  const [machineSearch, setMachineSearch] = useState('')
   const [uploadOpen, setUploadOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -64,11 +76,17 @@ export default function DocumentsList() {
   const { data: machines = [], isLoading: machinesLoading, error: machinesError } = useMachines()
 
   const filteredDocs = useMemo(() =>
-    documents.filter(doc =>
-      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    ),
-    [documents, searchTerm]
+    documents.filter((doc) => {
+      const matchesSearch =
+        doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+      const matchesMachine = !filters.machineId || doc.machine?.id === filters.machineId
+      const matchesType = !filters.type || doc.type === filters.type
+
+      return matchesSearch && matchesMachine && matchesType
+    }),
+    [documents, searchTerm, filters]
   )
 
   const handleDownload = async (doc: Document) => {
@@ -363,9 +381,74 @@ export default function DocumentsList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{t('table.type')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {documentTypes.map((type) => (
+                    <DropdownMenuCheckboxItem
+                      key={type.value}
+                      checked={filters.type === type.value}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          type: checked ? type.value : undefined,
+                        }))
+                      }}
+                    >
+                      {t(type.labelKey)}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>{t('table.machine')}</DropdownMenuLabel>
+                <div className="px-2 py-1.5" onKeyDown={(e) => e.stopPropagation()}>
+                  <Input
+                    placeholder={t('searchMachinesPlaceholder')}
+                    value={machineSearch}
+                    onChange={(e) => setMachineSearch(e.target.value)}
+                    className="h-8"
+                  />
+                </div>
+                <DropdownMenuGroup className="max-h-[200px] overflow-yscroll">
+                  {machines
+                    .filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase()))
+                    .map((machine) => (
+                      <DropdownMenuCheckboxItem
+                        key={machine.id}
+                        checked={filters.machineId === machine.id}
+                        onCheckedChange={(checked) => {
+                          setFilters((prev) => ({
+                            ...prev,
+                            machineId: checked ? machine.id : undefined,
+                          }))
+                        }}
+                      >
+                        {machine.name}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  {machines.filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase())).length === 0 && (
+                    <div className="px-2 py-1.5 text-sm text-muted-foreground">{t('noMachinesFound')}</div>
+                  )}
+                </DropdownMenuGroup>
+                {(filters.type || filters.machineId) && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onSelect={() => setFilters({})}
+                      className="justify-center text-center"
+                    >
+                      {t('filters.clear')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -405,7 +488,7 @@ export default function DocumentsList() {
                       <div className="flex flex-col">
                         <span>{doc.title}</span>
                         <span className="text-xs text-muted-foreground md:hidden">
-                          {doc.type} • {formatFileSize(doc.fileSize)}
+                          {doc.type} {' • '} {formatFileSize(doc.fileSize)}
                         </span>
                       </div>
                     </TableCell>
@@ -480,9 +563,9 @@ export default function DocumentsList() {
                 <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
                   <p className="text-sm text-destructive">{previewError}</p>
                   <div className="flex gap-2">
-                    <Button onClick={() => handlePreview(previewDoc)}>Retry</Button>
+                    <Button onClick={() => handlePreview(previewDoc)}>{t('common:actions.retry')}</Button>
                     <Button variant="ghost" onClick={closePreview}>
-                      Close
+                      {t('common:actions.close')}
                     </Button>
                   </div>
                 </div>
@@ -501,10 +584,10 @@ export default function DocumentsList() {
                 previewDoc &&
                 !canPreviewDocument(previewDoc) && (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-center text-sm text-muted-foreground px-6">
-                    <p>Preview is unavailable for this file type. Please download it instead.</p>
+                    <p>{t('previewUnavailable')}</p>
                     <Button onClick={() => handleDownload(previewDoc)}>
                       <Download className="h-4 w-4 mr-2" />
-                      Download document
+                      {t('downloadDocument')}
                     </Button>
                   </div>
                 )}

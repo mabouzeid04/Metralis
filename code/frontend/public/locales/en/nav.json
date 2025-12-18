@@ -11,5 +11,6 @@
   "logout": "Logout",
   "welcome": "Welcome",
   "appSubtitle": "Factory Intelligence Layer",
-  "accessManagement": "Access Management"
+  "accessManagement": "Access Management",
+  "adminAnalytics": "Admin Analytics"
 }

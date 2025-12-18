@@ -1,6 +1,8 @@
 import { createApp } from "./app";
 import { env } from "./config/env";
 import { execSync } from "child_process";
+import cron from "node-cron";
+import { generateSystemInsights } from "./services/insightService";
 
 // Run migrations before starting the server (for production deployments)
 async function runMigrations() {
@@ -16,6 +18,20 @@ async function runMigrations() {
   }
 }
 
+// Schedule daily insight generation at 2:00 AM
+function setupCronJobs() {
+  cron.schedule("0 2 * * *", async () => {
+    console.log("[Cron] Running daily insight generation at 2:00 AM...");
+    try {
+      const count = await generateSystemInsights();
+      console.log(`[Cron] Generated ${count} insights`);
+    } catch (error) {
+      console.error("[Cron] Error generating insights:", error);
+    }
+  });
+  console.log("✅ Cron jobs scheduled (insight generation at 2:00 AM daily)");
+}
+
 async function startServer() {
   // Only run migrations in production (when DATABASE_URL is set to Supabase)
   if (process.env.NODE_ENV === "production" || process.env.DATABASE_URL?.includes("supabase")) {
@@ -25,6 +41,7 @@ async function startServer() {
   const app = createApp();
   app.listen(env.port, () => {
     console.log(`API listening on port ${env.port}`);
+    setupCronJobs();
   });
 }
 
@@ -32,5 +49,3 @@ startServer().catch((error) => {
   console.error("Failed to start server:", error);
   process.exit(1);
 });
-
-

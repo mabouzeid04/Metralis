@@ -8,6 +8,7 @@ import {
   Users,
   Cog,
   Bot,
+  LineChart,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -58,20 +59,36 @@ export function Sidebar({ className }: SidebarProps) {
 
       <div className="p-4 border-t space-y-1">
         {user?.role === 'ADMIN' && (
-          <NavLink
-            to="/users"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )
-            }
-          >
-            <Users className="w-4 h-4" />
-            {t('accessManagement')}
-          </NavLink>
+          <>
+            <NavLink
+              to="/admin/analytics"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )
+              }
+            >
+              <LineChart className="w-4 h-4" />
+              {t('adminAnalytics')}
+            </NavLink>
+            <NavLink
+              to="/users"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )
+              }
+            >
+              <Users className="w-4 h-4" />
+              {t('accessManagement')}
+            </NavLink>
+          </>
         )}
         <NavLink
           to="/settings"
