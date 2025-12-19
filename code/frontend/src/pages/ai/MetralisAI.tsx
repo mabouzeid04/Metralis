@@ -63,6 +63,7 @@ const MetralisAI = () => {
   const [historyError, setHistoryError] = useState<string | null>(null)
   const [feedbackSubmitting, setFeedbackSubmitting] = useState<Record<string, boolean>>({})
   const [feedbackErrors, setFeedbackErrors] = useState<Record<string, string | null>>({})
+  const [ignoreUrlChanges, setIgnoreUrlChanges] = useState(false)
 
   const historyRef = useRef<HTMLDivElement>(null)
 
@@ -85,16 +86,14 @@ const MetralisAI = () => {
 
   useEffect(() => {
     const conversationIdFromQuery = searchParams.get('conversationId')
-    // Only load from URL if we don't have a current conversation
-    // This prevents reloading when starting a new chat
-    if (!conversationIdFromQuery || currentConversationId) {
+    if (!conversationIdFromQuery || conversationIdFromQuery === currentConversationId || ignoreUrlChanges) {
       return
     }
     selectConversation(conversationIdFromQuery).catch((err) => {
       console.error(err)
       setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
     })
-  }, [currentConversationId, searchParams, selectConversation, t])
+  }, [currentConversationId, searchParams, selectConversation, t, ignoreUrlChanges])
 
   useEffect(() => {
     const paramId = searchParams.get('conversationId')
@@ -172,17 +171,21 @@ const MetralisAI = () => {
   }
 
   const handleStartNew = () => {
-    // Clear URL first, then state
-    const next = new URLSearchParams(searchParams)
-    next.delete('conversationId')
-    setSearchParams(next, { replace: true })
+    // Prevent URL-based loading during transition
+    setIgnoreUrlChanges(true)
 
-    // Then clear the conversation state
     startNewConversation()
     setMachineId('')
     setShowHistory(false)
     setInput('')
     setHistoryError(null)
+
+    const next = new URLSearchParams(searchParams)
+    next.delete('conversationId')
+    setSearchParams(next, { replace: true })
+
+    // Allow URL changes again after transition
+    setTimeout(() => setIgnoreUrlChanges(false), 100)
   }
 
   const machineDisabled = Boolean(activeMachineId)
