@@ -85,7 +85,9 @@ const MetralisAI = () => {
 
   useEffect(() => {
     const conversationIdFromQuery = searchParams.get('conversationId')
-    if (!conversationIdFromQuery || conversationIdFromQuery === currentConversationId) {
+    // Only load from URL if we don't have a current conversation
+    // This prevents reloading when starting a new chat
+    if (!conversationIdFromQuery || currentConversationId) {
       return
     }
     selectConversation(conversationIdFromQuery).catch((err) => {
@@ -170,14 +172,17 @@ const MetralisAI = () => {
   }
 
   const handleStartNew = () => {
+    // Clear URL first, then state
+    const next = new URLSearchParams(searchParams)
+    next.delete('conversationId')
+    setSearchParams(next, { replace: true })
+
+    // Then clear the conversation state
     startNewConversation()
     setMachineId('')
     setShowHistory(false)
     setInput('')
     setHistoryError(null)
-    const next = new URLSearchParams(searchParams)
-    next.delete('conversationId')
-    setSearchParams(next, { replace: true })
   }
 
   const machineDisabled = Boolean(activeMachineId)
