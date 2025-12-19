@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -42,6 +42,7 @@ const MetralisAI = () => {
     conversations,
     messages,
     currentConversation,
+    currentConversationId,
     fetchConversations,
     selectConversation,
     startNewConversation,
@@ -51,6 +52,7 @@ const MetralisAI = () => {
     historyLoading,
   } = useAIChat()
 
+  const [searchParams, setSearchParams] = useSearchParams()
   const [machines, setMachines] = useState<MachineOption[]>([])
   const [loadingMachines, setLoadingMachines] = useState(false)
   const [machineId, setMachineId] = useState('')
@@ -58,8 +60,11 @@ const MetralisAI = () => {
   const [input, setInput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+  const [historyError, setHistoryError] = useState<string | null>(null)
   const [feedbackSubmitting, setFeedbackSubmitting] = useState<Record<string, boolean>>({})
   const [feedbackErrors, setFeedbackErrors] = useState<Record<string, string | null>>({})
+
+  const historyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const load = async () => {
@@ -77,6 +82,47 @@ const MetralisAI = () => {
     load()
     fetchConversations()
   }, [fetchConversations, t])
+
+  useEffect(() => {
+    const conversationIdFromQuery = searchParams.get('conversationId')
+    if (!conversationIdFromQuery || conversationIdFromQuery === currentConversationId) {
+      return
+    }
+    selectConversation(conversationIdFromQuery).catch((err) => {
+      console.error(err)
+      setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
+    })
+  }, [currentConversationId, searchParams, selectConversation, t])
+
+  useEffect(() => {
+    const paramId = searchParams.get('conversationId')
+    if (currentConversationId && currentConversationId !== paramId) {
+      const next = new URLSearchParams(searchParams)
+      next.set('conversationId', currentConversationId)
+      setSearchParams(next, { replace: true })
+    } else if (!currentConversationId && paramId) {
+      const next = new URLSearchParams(searchParams)
+      next.delete('conversationId')
+      setSearchParams(next, { replace: true })
+    }
+  }, [currentConversationId, searchParams, setSearchParams])
+
+  // Handle clicks outside the history window to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (historyRef.current && !historyRef.current.contains(event.target as Node) && showHistory) {
+        setShowHistory(false)
+      }
+    }
+
+    if (showHistory) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showHistory])
 
   const activeMachineId = useMemo(() => currentConversation?.machineId ?? currentConversation?.machine?.id ?? '', [currentConversation])
 
@@ -109,9 +155,18 @@ const MetralisAI = () => {
   }
 
   const handleSelectConversation = async (conversation: ConversationSummary) => {
-    await selectConversation(conversation.id)
-    setShowHistory(false)
-    setMachineId('')
+    setHistoryError(null)
+    try {
+      await selectConversation(conversation.id)
+      const next = new URLSearchParams(searchParams)
+      next.set('conversationId', conversation.id)
+      setSearchParams(next, { replace: true })
+      setShowHistory(false)
+      setMachineId('')
+    } catch (err) {
+      console.error(err)
+      setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
+    }
   }
 
   const handleStartNew = () => {
@@ -119,6 +174,10 @@ const MetralisAI = () => {
     setMachineId('')
     setShowHistory(false)
     setInput('')
+    setHistoryError(null)
+    const next = new URLSearchParams(searchParams)
+    next.delete('conversationId')
+    setSearchParams(next, { replace: true })
   }
 
   const machineDisabled = Boolean(activeMachineId)
@@ -341,9 +400,12 @@ const MetralisAI = () => {
   const tips = useMemo(() => t('active.tips', { returnObjects: true }) as string[], [t])
 
   return (
-    <div className="relative flex h-[calc(100vh-6rem)] flex-col gap-4">
+    <div className="relative flex h-[calc(100vh-6rem)] flex-col gap-4 overflow-hidden">
       {showHistory && (
-        <div className="absolute right-0 top-14 z-20 w-full max-w-sm rounded-xl border bg-background shadow-2xl animate-in slide-in-from-right-10 fade-in duration-200">
+        <div
+          ref={historyRef}
+          className="absolute right-0 top-14 z-20 w-full max-w-sm rounded-xl border bg-background shadow-2xl animate-in slide-in-from-right-10 fade-in duration-200"
+        >
           <div className="flex items-center justify-between border-b px-4 py-3">
             <div>
               <p className="text-sm font-semibold">{t('historyPanel.title')}</p>
@@ -353,6 +415,11 @@ const MetralisAI = () => {
               <X className="h-4 w-4" />
             </Button>
           </div>
+          {historyError && (
+            <div className="px-4 py-2 text-xs text-destructive bg-destructive/5 border-b border-destructive/20">
+              {historyError}
+            </div>
+          )}
           <div className="max-h-[420px] divide-y overflow-y-auto">
             {historyLoading && (
               <div className="flex items-center gap-2 px-4 py-3 text-sm text-muted-foreground">
@@ -364,9 +431,10 @@ const MetralisAI = () => {
               <div className="px-4 py-6 text-sm text-muted-foreground">{t('historyPanel.empty')}</div>
             )}
             {conversations.map((conversation) => (
-              <button
+              <Link
                 key={conversation.id}
-                className="w-full px-4 py-3 text-left hover:bg-muted/60 transition-colors"
+                to={{ pathname: '/ai', search: `?conversationId=${encodeURIComponent(conversation.id)}` }}
+                className="block w-full px-4 py-3 text-left hover:bg-muted/60 transition-colors"
                 onClick={() => handleSelectConversation(conversation)}
               >
                 <p className="text-sm font-medium text-foreground">{conversation.title}</p>
@@ -378,7 +446,7 @@ const MetralisAI = () => {
                 <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
                   {conversation.lastMessagePreview ?? t('historyPanel.noMessages')}
                 </p>
-              </button>
+              </Link>
             ))}
           </div>
           <div className="border-t px-4 py-3 bg-muted/20">
@@ -465,9 +533,9 @@ const MetralisAI = () => {
         </div>
       </div>
 
-      <div className="grid flex-1 gap-6 overflow-hidden lg:grid-cols-[1fr_280px]">
+      <div className="grid flex-1 gap-6 overflow-hidden h-full lg:grid-cols-[1fr_280px]">
         {/* Chat Area */}
-        <Card className="flex flex-col overflow-hidden shadow-sm border-border">
+        <Card className="flex flex-col overflow-hidden h-full shadow-sm border-border">
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth bg-muted/10">
             {messages.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
@@ -532,6 +600,21 @@ const MetralisAI = () => {
                     </div>
                   )
                 })}
+
+                {/* Thinking indicator when AI is processing */}
+                {isSending && (
+                  <div className="flex w-full justify-start">
+                    <div className="w-full max-w-4xl pr-4 text-sm">
+                      <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
+                        <BotIcon className="h-3 w-3" /> {t('assistantLabel')}
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm">{t('thinking', { defaultValue: 'Thinking...' })}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
