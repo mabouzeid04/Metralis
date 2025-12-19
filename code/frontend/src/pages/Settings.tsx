@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Loader2,
   CheckCircle2,
@@ -328,12 +329,13 @@ export default function Settings() {
                       {t('profile.whatsappDescription')}
                     </p>
                   </div>
-                  <input
+                  <Checkbox
                     id="assignmentWhatsappOptIn"
-                    type="checkbox"
-                    className="h-5 w-5 cursor-pointer rounded border border-input bg-background text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     disabled={!hasPhoneForWhatsapp}
-                    {...profileForm.register('assignmentWhatsappOptIn')}
+                    checked={profileForm.watch('assignmentWhatsappOptIn') || false}
+                    onCheckedChange={(checked) => {
+                      profileForm.setValue('assignmentWhatsappOptIn', checked as boolean)
+                    }}
                   />
                 </div>
                 {profileForm.formState.errors.assignmentWhatsappOptIn && (
@@ -348,7 +350,7 @@ export default function Settings() {
               <Label>{t('profile.roleLabel')}</Label>
               <div>
                 <Badge variant={getRoleBadgeVariant(user?.role || '')}>
-                  {user?.role}
+                  {t(`common:roles.${user?.role?.toLowerCase()}`, { defaultValue: user?.role })}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">

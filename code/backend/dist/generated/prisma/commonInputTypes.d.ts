@@ -401,6 +401,51 @@ export type EnumAiFeedbackValueWithAggregatesFilter<$PrismaModel = never> = {
     _min?: Prisma.NestedEnumAiFeedbackValueFilter<$PrismaModel>;
     _max?: Prisma.NestedEnumAiFeedbackValueFilter<$PrismaModel>;
 };
+export type EnumInsightCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightCategory | Prisma.EnumInsightCategoryFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel> | $Enums.InsightCategory;
+};
+export type EnumInsightPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightPriority | Prisma.EnumInsightPriorityFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel> | $Enums.InsightPriority;
+};
+export type EnumInsightStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightStatus | Prisma.EnumInsightStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel> | $Enums.InsightStatus;
+};
+export type EnumInsightCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightCategory | Prisma.EnumInsightCategoryFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InsightCategory;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel>;
+};
+export type EnumInsightPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightPriority | Prisma.EnumInsightPriorityFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InsightPriority;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel>;
+};
+export type EnumInsightStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightStatus | Prisma.EnumInsightStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightStatusWithAggregatesFilter<$PrismaModel> | $Enums.InsightStatus;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel>;
+};
 export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | Prisma.StringFieldRefInput<$PrismaModel>;
     in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>;
@@ -792,5 +837,50 @@ export type NestedEnumAiFeedbackValueWithAggregatesFilter<$PrismaModel = never> 
     _count?: Prisma.NestedIntFilter<$PrismaModel>;
     _min?: Prisma.NestedEnumAiFeedbackValueFilter<$PrismaModel>;
     _max?: Prisma.NestedEnumAiFeedbackValueFilter<$PrismaModel>;
+};
+export type NestedEnumInsightCategoryFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightCategory | Prisma.EnumInsightCategoryFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel> | $Enums.InsightCategory;
+};
+export type NestedEnumInsightPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightPriority | Prisma.EnumInsightPriorityFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel> | $Enums.InsightPriority;
+};
+export type NestedEnumInsightStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightStatus | Prisma.EnumInsightStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel> | $Enums.InsightStatus;
+};
+export type NestedEnumInsightCategoryWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightCategory | Prisma.EnumInsightCategoryFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightCategory[] | Prisma.ListEnumInsightCategoryFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightCategoryWithAggregatesFilter<$PrismaModel> | $Enums.InsightCategory;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightCategoryFilter<$PrismaModel>;
+};
+export type NestedEnumInsightPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightPriority | Prisma.EnumInsightPriorityFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightPriority[] | Prisma.ListEnumInsightPriorityFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InsightPriority;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightPriorityFilter<$PrismaModel>;
+};
+export type NestedEnumInsightStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InsightStatus | Prisma.EnumInsightStatusFieldRefInput<$PrismaModel>;
+    in?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    notIn?: $Enums.InsightStatus[] | Prisma.ListEnumInsightStatusFieldRefInput<$PrismaModel>;
+    not?: Prisma.NestedEnumInsightStatusWithAggregatesFilter<$PrismaModel> | $Enums.InsightStatus;
+    _count?: Prisma.NestedIntFilter<$PrismaModel>;
+    _min?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel>;
+    _max?: Prisma.NestedEnumInsightStatusFilter<$PrismaModel>;
 };
 //# sourceMappingURL=commonInputTypes.d.ts.map

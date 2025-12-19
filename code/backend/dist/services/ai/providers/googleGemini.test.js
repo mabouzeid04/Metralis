@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const vitest_1 = require("vitest");
-const generateContentMock = vitest_1.vi.fn(async () => ({
+const generateContentMock = vitest_1.vi.fn().mockImplementation(async () => ({
     response: { text: () => "gemini-response" },
 }));
 vitest_1.vi.mock("@google/generative-ai", () => ({

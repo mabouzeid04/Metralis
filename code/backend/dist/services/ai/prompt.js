@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildPrompt = void 0;
+exports.buildSystemAnalysisPrompt = exports.buildPrompt = void 0;
 const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHistory }) => {
     const machineContext = machine
         ? `Machine Context:
@@ -53,4 +53,79 @@ Instructions:
 - Use background knowledge only after using provided context, and mark it as general when you do.`;
 };
 exports.buildPrompt = buildPrompt;
+const buildSystemAnalysisPrompt = (snapshot) => {
+    const workOrdersSummary = snapshot.recentWorkOrders.length > 0
+        ? snapshot.recentWorkOrders
+            .map((wo, i) => {
+            const failureInfo = wo.failureMode ? ` (Failure: ${wo.failureMode})` : "";
+            const rootCauseInfo = wo.rootCause ? ` [Root Cause: ${wo.rootCause}]` : "";
+            return `[WO${i + 1}] ${wo.machineName}: ${wo.title} — ${wo.status}${failureInfo}${rootCauseInfo}`;
+        })
+            .join("\n")
+        : "No work orders in the last 48 hours.";
+    const recurringFailuresSummary = snapshot.recurringFailures.length > 0
+        ? snapshot.recurringFailures
+            .map((rf) => `- ${rf.machineName}: "${rf.failureMode}" occurred ${rf.count} times`)
+            .join("\n")
+        : "No recurring failure patterns detected.";
+    const docGapsSummary = snapshot.machinesWithoutDocs.length > 0
+        ? snapshot.machinesWithoutDocs
+            .map((m) => `- ${m.name} (ID: ${m.id})`)
+            .join("\n")
+        : "All machines have documentation.";
+    const inventoryRisksSummary = snapshot.lowStockParts.length > 0
+        ? snapshot.lowStockParts
+            .map((p) => `- ${p.name}: ${p.stockQty} in stock (min: ${p.minStock})`)
+            .join("\n")
+        : "No parts below minimum stock level.";
+    const metricsText = `
+Performance Metrics (Last 24h):
+- Total AI Queries: ${snapshot.totalAiQueries}
+- AI Feedback: ${snapshot.negativeFeedbackCount} marked "Not Helpful"
+- Avg Time to Diagnose: ${snapshot.avgDiagnosisTimeHours !== null ? `${snapshot.avgDiagnosisTimeHours.toFixed(1)} hours` : "N/A"}
+- Avg Time to Repair: ${snapshot.avgRepairTimeDays !== null ? `${snapshot.avgRepairTimeDays.toFixed(1)} days` : "N/A"}`;
+    return `You are an AI maintenance analyst for a manufacturing plant. Analyze the following system snapshot and generate actionable insights.
+
+${metricsText}
+
+Recent Work Orders (Last 48 hours):
+${workOrdersSummary}
+
+Recurring Failure Patterns:
+${recurringFailuresSummary}
+
+Machines Without Documentation:
+${docGapsSummary}
+
+Inventory Risks (Parts Below Min Stock):
+${inventoryRisksSummary}
+
+Instructions:
+- Generate 3-5 prioritized insights based on this data.
+- Each insight should have:
+  1. A clear, concise title
+  2. A 2-3 sentence explanation with specific data points
+  3. Category: MAINTENANCE, INVENTORY, DOCUMENTATION, or TRAINING
+  4. Priority: HIGH (urgent action needed), MEDIUM (should address soon), LOW (informational)
+  5. Suggested action
+
+Respond ONLY with valid JSON in this exact format:
+{
+  "insights": [
+    {
+      "title": "string",
+      "content": "string",
+      "category": "MAINTENANCE" | "INVENTORY" | "DOCUMENTATION" | "TRAINING",
+      "priority": "HIGH" | "MEDIUM" | "LOW",
+      "metadata": {
+        "relatedWorkOrders": ["id1", "id2"],
+        "relatedMachines": ["id1"],
+        "relatedParts": ["id1"],
+        "dataPoints": ["string describing evidence"]
+      }
+    }
+  ]
+}`;
+};
+exports.buildSystemAnalysisPrompt = buildSystemAnalysisPrompt;
 //# sourceMappingURL=prompt.js.map

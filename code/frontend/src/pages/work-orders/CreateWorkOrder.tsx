@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -51,6 +52,7 @@ const formatFileSize = (bytes?: number | null) => {
 export default function CreateWorkOrder() {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const { t } = useTranslation('common')
   const [isLoading, setIsLoading] = useState(false)
   const [machines, setMachines] = useState<Machine[]>([])
   const [loadingMachines, setLoadingMachines] = useState(true)
@@ -263,7 +265,7 @@ export default function CreateWorkOrder() {
                                 </DropdownMenuItem>
                               ))}
                             {machines.length === 0 && !loadingMachines && (
-                              <div className="p-2 text-sm text-muted-foreground">No machines found</div>
+                              <div className="p-2 text-sm text-muted-foreground">{t('noMachinesFound')}</div>
                             )}
                           </div>
                         </DropdownMenuContent>

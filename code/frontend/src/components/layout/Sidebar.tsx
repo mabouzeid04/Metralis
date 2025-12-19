@@ -32,7 +32,7 @@ export function Sidebar({ className }: SidebarProps) {
   ]
 
   return (
-    <aside className={cn("w-64 bg-background border-r h-full flex flex-col", className)}>
+    <aside className={cn("w-64 bg-background h-full flex flex-col", document.dir === 'rtl' ? 'border-l' : 'border-r', className)}>
       <div className="p-6 h-16 flex items-center justify-center border-b">
         <img src="/metralis-logo.png" alt="Metralis" className="h-10" />
       </div>

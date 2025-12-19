@@ -10,5 +10,6 @@ export type * from './models/IncidentChunk';
 export type * from './models/ChatConversation';
 export type * from './models/ChatMessage';
 export type * from './models/ChatMessageFeedback';
+export type * from './models/SystemInsight';
 export type * from './commonInputTypes';
 //# sourceMappingURL=models.d.ts.map

@@ -34,3 +34,5 @@ describe("extractTextFromBuffer", () => {
     expect(result).toBe("unknown-data");
   });
 });
+
+

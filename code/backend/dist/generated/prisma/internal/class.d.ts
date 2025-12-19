@@ -243,6 +243,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get chatMessageFeedback(): Prisma.ChatMessageFeedbackDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    /**
+     * `prisma.systemInsight`: Exposes CRUD operations for the **SystemInsight** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more SystemInsights
+      * const systemInsights = await prisma.systemInsight.findMany()
+      * ```
+      */
+    get systemInsight(): Prisma.SystemInsightDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(dirname: string): PrismaClientConstructor;
 //# sourceMappingURL=class.d.ts.map

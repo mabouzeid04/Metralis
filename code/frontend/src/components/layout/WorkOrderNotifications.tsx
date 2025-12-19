@@ -177,9 +177,9 @@ export function WorkOrderNotifications() {
 
     if (!assignments.length) {
       return (
-        <div className="flex items-center gap-3 p-3 text-sm text-muted-foreground">
+        <div className={`flex items-center gap-3 p-3 text-sm text-muted-foreground ${document.dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
           <Inbox className="h-4 w-4" />
-          <div>
+          <div className={document.dir === 'rtl' ? 'text-right' : ''}>
             <p className="font-medium text-foreground">{t('notifications.noneTitle')}</p>
             <p className="text-xs text-muted-foreground">{t('notifications.noneBody')}</p>
           </div>
@@ -190,13 +190,13 @@ export function WorkOrderNotifications() {
     return (
       <div className="max-h-80 w-[320px] space-y-1 overflow-y-auto p-1">
         {assignments.map((wo) => (
-          <DropdownMenuItem key={wo.id} asChild className="flex flex-col items-start gap-1">
+          <DropdownMenuItem key={wo.id} asChild className={`flex flex-col gap-1 ${document.dir === 'rtl' ? 'items-end' : 'items-start'}`}>
             <Link to={`/work-orders/${wo.id}`} className="flex w-full flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-medium leading-none truncate">{wo.title}</span>
+              <div className={`flex items-center justify-between gap-2 ${document.dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
+                <span className={`text-sm font-medium leading-none truncate ${document.dir === 'rtl' ? 'text-right' : ''}`}>{wo.title}</span>
                 <StatusBadge status={wo.status} className="text-[10px] px-2 py-0" />
               </div>
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className={`flex items-center justify-between text-xs text-muted-foreground ${document.dir === 'rtl' ? 'flex-row-reverse' : ''}`}>
                 <span className="truncate">{wo.machine?.name || t('status.noMachine')}</span>
                 <span>{formatDate(wo.createdAt)}</span>
               </div>
@@ -238,7 +238,7 @@ export function WorkOrderNotifications() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[340px] p-0">
-        <DropdownMenuLabel className="flex flex-col items-start gap-1">
+        <DropdownMenuLabel className={`flex flex-col gap-1 ${document.dir === 'rtl' ? 'items-end' : ''}`}>
           <span className="text-sm font-semibold">{t('notifications.title')}</span>
           <span className="text-xs text-muted-foreground">{t('notifications.workOrders')}</span>
         </DropdownMenuLabel>

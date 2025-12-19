@@ -3,6 +3,7 @@
   "subtitle": "Maintenance Copilot",
   "description": "Ask troubleshooting questions, reference manuals, and capture learnings.",
   "welcomeTitle": "How can I help you?",
+  "machineTip": "Tip: Select a machine for specific maintenance context",
   "inputPlaceholder": "Describe the issue, alarm code, or maintenance question...",
   "emptyState": "Ask a question to get started. Metralis AI will cite specific manual sections and past incidents.",
   "send": "Send",
@@ -11,6 +12,7 @@
   "history": "History",
   "machineContext": "Machine Context",
   "selectMachine": "Select a machine (optional)",
+  "noMachinesFound": "No machines found",
   "boundTo": "Bound to",
   "error": "Failed to send message",
   "feedback": {
@@ -49,6 +51,7 @@
     "label": "Citations",
     "docLabel": "Docs"
   },
+  "disclaimer": "Metralis AI can make mistakes. Please verify critical maintenance information.",
   "structured": {
     "summaryTitle": "Summary",
     "summaryFallback": "No summary available.",

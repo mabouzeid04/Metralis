@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const vitest_1 = require("vitest");
-const testDb_1 = require("../../tests/utils/testDb");
+const testDb_1 = require("../tests/utils/testDb");
 const downloadDocumentBuffer = vitest_1.vi.hoisted(() => vitest_1.vi.fn(async () => Buffer.from("Example text for chunking")));
 const extractTextFromBuffer = vitest_1.vi.hoisted(() => vitest_1.vi.fn(async () => "Example text for chunking"));
 const embedTexts = vitest_1.vi.hoisted(() => vitest_1.vi.fn(async (chunks) => chunks.map(() => [0.1, 0.2])));

@@ -34,17 +34,17 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const vitest_1 = require("vitest");
-const geminiFactory = vitest_1.vi.fn(() => ({
+const geminiFactory = vitest_1.vi.fn().mockImplementation(() => ({
     generate: vitest_1.vi.fn(async () => ({ text: "gemini-text" })),
 }));
-const openaiFactory = vitest_1.vi.fn(() => ({
+const openaiFactory = vitest_1.vi.fn().mockImplementation(() => ({
     generate: vitest_1.vi.fn(async () => ({ text: "openai-text" })),
 }));
 vitest_1.vi.doMock("./googleGemini", () => ({
-    GoogleGeminiProvider: geminiFactory,
+    GoogleGeminiProvider: vitest_1.vi.fn().mockImplementation(() => geminiFactory()),
 }));
 vitest_1.vi.doMock("./openai", () => ({
-    OpenAIProvider: openaiFactory,
+    OpenAIProvider: vitest_1.vi.fn().mockImplementation(() => openaiFactory()),
 }));
 (0, vitest_1.describe)("getLLMProvider", () => {
     (0, vitest_1.it)("returns cached provider instances and supports aliases", async () => {

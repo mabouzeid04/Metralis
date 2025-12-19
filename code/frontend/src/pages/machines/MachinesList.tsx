@@ -93,7 +93,7 @@ export default function MachinesList() {
           {filteredMachines.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <ServerOff className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No machines found</h3>
+              <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
                 {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>

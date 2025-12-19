@@ -1,0 +1,56 @@
+{
+  "title": "Admin Analytics",
+  "subtitle": "System health, performance metrics, and AI-driven insights.",
+  "metrics": {
+    "aiQueries": {
+      "title": "AI Queries (7d)",
+      "description": "Total queries across organization",
+      "footer": "Last 7 days"
+    },
+    "meanTimeToDiagnose": {
+      "title": "Mean Time to Diagnose",
+      "description": "Avg time from report to diagnosis",
+      "footer": "Based on recent work orders"
+    },
+    "meanTimeToRepair": {
+      "title": "Mean Time to Repair",
+      "description": "Avg time to close work order",
+      "footer": "Based on closed work orders"
+    },
+    "knowledgeBaseCoverage": {
+      "title": "Knowledge Base Coverage",
+      "description": "{{withDocs}} of {{total}} machines",
+      "footer": {
+        "complete": "All machines have documentation",
+        "incomplete": "{{machineName}} missing docs"
+      }
+    }
+  },
+  "commandCenter": {
+    "title": "Command Center",
+    "description": "AI-generated proactive system reports and improvement suggestions"
+  },
+  "insights": {
+    "generate": "Generate Insights",
+    "loading": "Loading insights...",
+    "empty": "No active insights. Click \"Generate Insights\" to analyze your system.",
+    "actions": {
+      "scheduleInspection": "Schedule Inspection",
+      "restockInventory": "Restock Inventory",
+      "uploadManuals": "Upload Manuals",
+      "scheduleTraining": "Schedule Training",
+      "takeAction": "Take Action"
+    },
+    "evidence": {
+      "workOrders": "{{count}} Work Orders",
+      "machines": "{{count}} Machines",
+      "default": "AI Analysis"
+    }
+  },
+  "time": {
+    "notAvailable": "N/A",
+    "minutes": "m",
+    "hours": "hrs",
+    "days": "days"
+  }
+}

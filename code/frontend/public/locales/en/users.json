@@ -37,8 +37,11 @@
     "action": "Action failed",
     "create": "Failed to create user",
     "delete": "Failed to delete user",
-    "deleteSelf": "You cannot delete your own account"
+    "deleteSelf": "You cannot delete your own account",
+    "changeOwnRole": "You cannot change your own role",
+    "updateRole": "Failed to update user role"
   },
   "confirmDelete": "Delete {{name}}? This will remove their access.",
-  "deleteUser": "Delete {{name}}"
+  "deleteUser": "Delete {{name}}",
+  "changeRole": "Change role for {{name}}"
 }

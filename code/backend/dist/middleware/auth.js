@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requireRole = exports.requireAuth = void 0;
+exports.requireAdmin = exports.requireRole = exports.requireAuth = void 0;
 const jwt_1 = require("../utils/jwt");
 const requireAuth = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -36,4 +36,12 @@ const requireRole = (roles) => {
     };
 };
 exports.requireRole = requireRole;
+// Convenience middleware for admin-only routes
+const requireAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== "ADMIN") {
+        return res.status(403).json({ error: { message: "Admin access required" } });
+    }
+    return next();
+};
+exports.requireAdmin = requireAdmin;
 //# sourceMappingURL=auth.js.map

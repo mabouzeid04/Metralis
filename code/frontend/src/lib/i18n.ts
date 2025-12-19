@@ -13,6 +13,7 @@ import enWorkOrders from '../../public/locales/en/workOrders.json'
 import enDocuments from '../../public/locales/en/documents.json'
 import enUsers from '../../public/locales/en/users.json'
 import enAi from '../../public/locales/en/ai.json'
+import enAnalytics from '../../public/locales/en/analytics.json'
 import enNotFound from '../../public/locales/en/notFound.json'
 import arCommon from '../../public/locales/ar/common.json'
 import arNav from '../../public/locales/ar/nav.json'
@@ -25,6 +26,7 @@ import arWorkOrders from '../../public/locales/ar/workOrders.json'
 import arDocuments from '../../public/locales/ar/documents.json'
 import arUsers from '../../public/locales/ar/users.json'
 import arAi from '../../public/locales/ar/ai.json'
+import arAnalytics from '../../public/locales/ar/analytics.json'
 import arNotFound from '../../public/locales/ar/notFound.json'
 
 export const SUPPORTED_LANGUAGES = [
@@ -63,6 +65,7 @@ i18n
         documents: enDocuments,
         users: enUsers,
         ai: enAi,
+        analytics: enAnalytics,
         notFound: enNotFound,
       },
       ar: {
@@ -77,6 +80,7 @@ i18n
         documents: arDocuments,
         users: arUsers,
         ai: arAi,
+        analytics: arAnalytics,
         notFound: arNotFound,
       },
     },
@@ -99,6 +103,7 @@ i18n
       'settings',
       'users',
       'ai',
+      'analytics',
       'notFound',
     ],
     load: 'languageOnly',

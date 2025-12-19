@@ -44,7 +44,8 @@
     "unknown": "Unknown",
     "low": "Low",
     "none": "-",
-    "noMachine": "No machine"
+    "noMachine": "No machine",
+    "noMachinesFound": "No machines found"
   },
   "priority": {
     "critical": "Critical",

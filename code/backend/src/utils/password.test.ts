@@ -15,3 +15,5 @@ describe("password utils", () => {
     expect(await comparePassword("WrongPass!", hash)).toBe(false);
   });
 });
+
+

@@ -93,7 +93,6 @@ All routes except `/auth/*` require the `Authorization: Bearer <token>` header.
 
 ## Next Steps
 
-- Seed script for demo data
 - Expand AI provider registry (e.g., OpenAI GPT-4o, DeepSeek R1) by binding new adapters
 - Tighten retrieval eval + add automated regression prompts
 - Support streaming answers and richer UI states in the Metralis AI panel

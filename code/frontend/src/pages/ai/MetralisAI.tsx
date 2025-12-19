@@ -442,7 +442,7 @@ const MetralisAI = () => {
                   </DropdownMenuItem>
                 ))}
                 {filteredMachines.length === 0 && (
-                  <div className="p-4 text-center text-sm text-muted-foreground">No machines found</div>
+                  <div className="p-4 text-center text-sm text-muted-foreground">{t('noMachinesFound')}</div>
                 )}
               </div>
             </DropdownMenuContent>
@@ -479,7 +479,7 @@ const MetralisAI = () => {
                 {/* Quick suggestions could go here */}
                 {!selectedMachineId && (
                   <div className="text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full border border-border/50">
-                    Tip: Select a machine for specific maintenance context
+                    {t('machineTip')}
                   </div>
                 )}
               </div>
@@ -577,7 +577,7 @@ const MetralisAI = () => {
               </div>
             </div>
             <p className="mt-2 text-center text-[10px] text-muted-foreground">
-              Metralis AI can make mistakes. Please verify critical maintenance information.
+              {t('disclaimer')}
             </p>
           </div>
         </Card>
