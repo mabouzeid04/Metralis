@@ -718,6 +718,43 @@ Error Format: { error: { code, message, fields } }
 
 ## Recent Changes & Updates
 
+### December 20, 2025 - Build Fixes and Admin Features
+
+**Build Error Resolution:**
+- **Fix**: Removed undefined 'ignoreUrlChanges' reference that was causing build failures
+- **Technical Details**: Cleaned up component props and removed unused references
+- **Impact**: Resolved build pipeline issues preventing deployment
+
+**Admin Role Management:**
+- **Feature**: Added comprehensive admin role management functionality
+- **Implementation**: Extended user management system to support admin permissions
+- **Technical Details**: Updated authentication system and role-based access controls
+- **Files Modified**: Authentication components and user management interfaces
+
+**API URL Inference Enhancement:**
+- **Fix**: Updated API URL inference to support all Vercel domains
+- **Technical Details**: Improved domain detection logic for staging/production environments
+- **Impact**: Better deployment compatibility across different Vercel environments
+
+**Codebase Cleanup:**
+- **Fix**: Resolved build errors and performed comprehensive codebase cleanup
+- **Technical Details**: Fixed TypeScript errors, removed unused imports, improved code quality
+- **Impact**: Cleaner, more maintainable codebase with improved build reliability
+
+### December 20, 2025 - AI Chat Navigation Improvements
+
+**New Chat Transition Fixes:**
+- **Fix**: Prevent URL-based conversation loading during New Chat transition
+- **Fix**: Prevent New Chat button from staying on old conversation after navigation
+- **Technical Details**: Improved state management for conversation transitions
+- **Impact**: Smoother user experience when starting new AI conversations
+
+**History Window Enhancement:**
+- **Feature**: Add click-outside functionality to close history window
+- **Implementation**: Added event listeners for outside clicks on conversation history panel
+- **Technical Details**: Improved UX with intuitive window management
+- **Files Modified**: `code/frontend/src/pages/ai/MetralisAI.tsx`
+
 ### December 20, 2025 - Chat Interface Improvements
 
 **AI Chat Auto-Scroll Enhancement:**

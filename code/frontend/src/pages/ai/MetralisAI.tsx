@@ -63,6 +63,7 @@ const MetralisAI = () => {
   const [historyError, setHistoryError] = useState<string | null>(null)
   const [feedbackSubmitting, setFeedbackSubmitting] = useState<Record<string, boolean>>({})
   const [feedbackErrors, setFeedbackErrors] = useState<Record<string, string | null>>({})
+  const [selectingConversationId, setSelectingConversationId] = useState<string | null>(null)
 
   const historyRef = useRef<HTMLDivElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
@@ -183,6 +184,7 @@ const MetralisAI = () => {
 
   const handleSelectConversation = async (conversation: ConversationSummary) => {
     setHistoryError(null)
+    setSelectingConversationId(conversation.id)
     try {
       await selectConversation(conversation.id)
       const next = new URLSearchParams(searchParams)
@@ -194,6 +196,7 @@ const MetralisAI = () => {
       console.error(err)
       setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
     }
+    setSelectingConversationId(null)
   }
 
   const handleStartNew = () => {
@@ -462,7 +465,11 @@ const MetralisAI = () => {
               <Link
                 key={conversation.id}
                 to={{ pathname: '/ai', search: `?conversationId=${encodeURIComponent(conversation.id)}` }}
-                className="block w-full px-4 py-3 text-left hover:bg-muted/60 transition-colors"
+                className={`block w-full px-4 py-3 text-left hover:bg-muted/60 transition-colors border-l-4 ${
+                  selectingConversationId === conversation.id
+                    ? 'bg-primary/10 border-primary'
+                    : 'border-transparent'
+                }`}
                 onClick={() => handleSelectConversation(conversation)}
               >
                 <p className="text-sm font-medium text-foreground">{conversation.title}</p>
