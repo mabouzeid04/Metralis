@@ -88,7 +88,7 @@ const MetralisAI = () => {
   // Only load conversation from URL on initial mount
   useEffect(() => {
     const conversationIdFromQuery = searchParams.get('conversationId')
-    if (!conversationIdFromQuery || currentConversationId || ignoreUrlChanges) {
+    if (!conversationIdFromQuery || currentConversationId) {
       return
     }
     selectConversation(conversationIdFromQuery).catch((err) => {
