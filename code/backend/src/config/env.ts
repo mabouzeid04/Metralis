@@ -21,10 +21,13 @@ requiredEnv.forEach((key) => {
   }
 });
 
-// Conditionally require GEMINI_API_KEY based on AI provider
+// Conditionally require API keys based on AI provider
 const aiProvider = (process.env.AI_PROVIDER || "gemini").toLowerCase();
 if (aiProvider === "gemini" && !process.env.GEMINI_API_KEY) {
   throw new Error(`Missing required environment variable: GEMINI_API_KEY (required when AI_PROVIDER is gemini)`);
+}
+if (aiProvider === "grok" && !process.env.GROK_API_KEY) {
+  throw new Error(`Missing required environment variable: GROK_API_KEY (required when AI_PROVIDER is grok)`);
 }
 
 const whatsappEnabled = process.env.WHATSAPP_ASSIGNMENT_ENABLED === "true";
@@ -64,6 +67,9 @@ export const env = {
     provider: process.env.AI_PROVIDER || "gemini",
     temperature: Number(process.env.AI_TEMPERATURE ?? "0.4"),
     maxTokens: Number(process.env.AI_MAX_TOKENS ?? "1024"),
+    // Feature-specific providers (fallback to default provider if not specified)
+    chatProvider: process.env.AI_CHAT_PROVIDER || process.env.AI_PROVIDER || "gemini",
+    insightsProvider: process.env.AI_INSIGHTS_PROVIDER || process.env.AI_PROVIDER || "gemini",
     gemini: {
       apiKey: process.env.GEMINI_API_KEY as string,
       model: process.env.GEMINI_MODEL || "gemini-3-flash-preview",
@@ -71,6 +77,10 @@ export const env = {
     openai: {
       apiKey: process.env.OPENAI_API_KEY as string,
       model: process.env.OPENAI_MODEL || "gpt-5.1-2025-11-13",
+    },
+    grok: {
+      apiKey: process.env.GROK_API_KEY as string,
+      model: process.env.GROK_MODEL || "grok-4-1-fast-non-reasoning",
     },
   },
   whatsapp: whatsappConfig,

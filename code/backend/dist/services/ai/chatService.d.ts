@@ -44,7 +44,7 @@ export declare const getConversationDetail: (userId: string, conversationId: str
         userId: string;
     };
     messages: {
-        feedback: AiFeedbackValue[];
+        feedback: never[];
         id: string;
         role: ChatMessageRole;
         createdAt: Date;

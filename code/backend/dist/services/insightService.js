@@ -182,7 +182,7 @@ const generateSystemInsights = async () => {
         recurringFailures: snapshot.recurringFailures.length,
     });
     const prompt = (0, prompt_1.buildSystemAnalysisPrompt)(snapshot);
-    const response = await (0, provider_1.generateLLMResponse)({
+    const response = await (0, provider_1.generateInsightsLLMResponse)({
         history: [],
         prompt,
         temperature: 0.3, // Lower temperature for more consistent structured output

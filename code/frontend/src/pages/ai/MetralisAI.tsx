@@ -63,9 +63,10 @@ const MetralisAI = () => {
   const [historyError, setHistoryError] = useState<string | null>(null)
   const [feedbackSubmitting, setFeedbackSubmitting] = useState<Record<string, boolean>>({})
   const [feedbackErrors, setFeedbackErrors] = useState<Record<string, string | null>>({})
-  const [ignoreUrlChanges, setIgnoreUrlChanges] = useState(false)
 
   const historyRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const prevMessagesLengthRef = useRef(messages.length)
 
   useEffect(() => {
     const load = async () => {
@@ -84,29 +85,19 @@ const MetralisAI = () => {
     fetchConversations()
   }, [fetchConversations, t])
 
+  // Only load conversation from URL on initial mount
   useEffect(() => {
     const conversationIdFromQuery = searchParams.get('conversationId')
-    if (!conversationIdFromQuery || conversationIdFromQuery === currentConversationId || ignoreUrlChanges) {
+    if (!conversationIdFromQuery || currentConversationId || ignoreUrlChanges) {
       return
     }
     selectConversation(conversationIdFromQuery).catch((err) => {
       console.error(err)
       setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
     })
-  }, [currentConversationId, searchParams, selectConversation, t, ignoreUrlChanges])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run once on mount
 
-  useEffect(() => {
-    const paramId = searchParams.get('conversationId')
-    if (currentConversationId && currentConversationId !== paramId) {
-      const next = new URLSearchParams(searchParams)
-      next.set('conversationId', currentConversationId)
-      setSearchParams(next, { replace: true })
-    } else if (!currentConversationId && paramId) {
-      const next = new URLSearchParams(searchParams)
-      next.delete('conversationId')
-      setSearchParams(next, { replace: true })
-    }
-  }, [currentConversationId, searchParams, setSearchParams])
 
   // Handle clicks outside the history window to close it
   useEffect(() => {
@@ -124,6 +115,41 @@ const MetralisAI = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [showHistory])
+
+  // Auto-scroll to the start of new messages with proper padding
+  useEffect(() => {
+    const hasNewMessage = messages.length > prevMessagesLengthRef.current
+    prevMessagesLengthRef.current = messages.length
+
+    if (hasNewMessage && messagesContainerRef.current && messages.length > 0) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        const lastMessageElement = messagesContainerRef.current?.querySelector(
+          `[data-message-id="${messages[messages.length - 1].id}"]`
+        )
+        if (lastMessageElement && messagesContainerRef.current) {
+          const container = messagesContainerRef.current
+          const messageRect = lastMessageElement.getBoundingClientRect()
+          const containerRect = container.getBoundingClientRect()
+
+          // Calculate position relative to container
+          const messageTopRelativeToContainer = messageRect.top - containerRect.top + container.scrollTop
+
+          // Scroll to position the message with some padding from the top (about 20% of container height)
+          const paddingTop = container.clientHeight * 0.2
+          const scrollTarget = Math.max(0, messageTopRelativeToContainer - paddingTop)
+
+          container.scrollTo({
+            top: scrollTarget,
+            behavior: 'smooth'
+          })
+        }
+      }, 50)
+    } else if (isSending && messagesContainerRef.current) {
+      // When AI starts thinking, scroll to bottom to show the thinking indicator
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
+  }, [messages, isSending])
 
   const activeMachineId = useMemo(() => currentConversation?.machineId ?? currentConversation?.machine?.id ?? '', [currentConversation])
 
@@ -171,9 +197,6 @@ const MetralisAI = () => {
   }
 
   const handleStartNew = () => {
-    // Prevent URL-based loading during transition
-    setIgnoreUrlChanges(true)
-
     startNewConversation()
     setMachineId('')
     setShowHistory(false)
@@ -183,9 +206,6 @@ const MetralisAI = () => {
     const next = new URLSearchParams(searchParams)
     next.delete('conversationId')
     setSearchParams(next, { replace: true })
-
-    // Allow URL changes again after transition
-    setTimeout(() => setIgnoreUrlChanges(false), 100)
   }
 
   const machineDisabled = Boolean(activeMachineId)
@@ -544,7 +564,7 @@ const MetralisAI = () => {
       <div className="grid flex-1 gap-6 overflow-hidden h-full lg:grid-cols-[1fr_280px]">
         {/* Chat Area */}
         <Card className="flex flex-col overflow-hidden h-full shadow-sm border-border">
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth bg-muted/10">
+          <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth bg-muted/10">
             {messages.length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
                 <div className="mb-6">
@@ -564,7 +584,7 @@ const MetralisAI = () => {
                 {messages.map((message) => {
                   const isAssistant = message.role === 'ASSISTANT'
                   return (
-                    <div key={message.id} className={`flex w-full ${isAssistant ? 'justify-start' : 'justify-end'}`}>
+                    <div key={message.id} data-message-id={message.id} className={`flex w-full ${isAssistant ? 'justify-start' : 'justify-end'}`}>
                       {isAssistant ? (
                         <div className="w-full max-w-4xl pr-4 text-sm">
                           <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
