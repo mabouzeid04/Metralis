@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import {
     Activity,
     Clock,
@@ -76,6 +77,7 @@ const updateInsightStatus = async ({ id, status }: { id: string; status: string 
 export default function AdminAnalytics() {
     const { t } = useTranslation('analytics')
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ['analytics', 'stats'],
@@ -174,9 +176,9 @@ export default function AdminAnalytics() {
 
     const getPrimaryAction = (category: SystemInsight['category']): string => {
         switch (category) {
-            case 'MAINTENANCE': return t('insights.actions.scheduleInspection')
-            case 'INVENTORY': return t('insights.actions.restockInventory')
-            case 'DOCUMENTATION': return t('insights.actions.uploadManuals')
+            case 'MAINTENANCE': return t('insights.actions.viewWorkOrders')
+            case 'INVENTORY': return t('insights.actions.viewParts')
+            case 'DOCUMENTATION': return t('insights.actions.viewDocuments')
             case 'TRAINING': return t('insights.actions.scheduleTraining')
             default: return t('insights.actions.takeAction')
         }
@@ -253,9 +255,24 @@ export default function AdminAnalytics() {
                                 description={insight.content}
                                 evidence={getEvidenceFromMetadata(insight)}
                                 primaryActionLabel={getPrimaryAction(insight.category)}
-                                onPrimaryAction={() => console.log('Primary action', insight.id)}
+                                onPrimaryAction={() => {
+                                    switch (insight.category) {
+                                        case 'MAINTENANCE':
+                                            navigate('/work-orders')
+                                            break
+                                        case 'INVENTORY':
+                                            navigate('/parts')
+                                            break
+                                        case 'DOCUMENTATION':
+                                            navigate('/documents')
+                                            break
+                                        default:
+                                            console.log('Primary action', insight.id)
+                                    }
+                                }}
                                 onViewEvidence={() => console.log('View evidence', insight.id)}
                                 onDismiss={() => dismissMutation.mutate({ id: insight.id, status: 'DISMISSED' })}
+                                primaryActionDisabled={insight.category === 'TRAINING'}
                             />
                         ))
                     )}

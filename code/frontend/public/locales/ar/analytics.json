@@ -35,9 +35,9 @@
     "loading": "جارٍ تحميل الرؤى...",
     "empty": "لا توجد رؤى نشطة. انقر على \"توليد الرؤى\" لتحليل النظام.",
     "actions": {
-      "scheduleInspection": "جدولة الفحص",
-      "restockInventory": "إعادة تخزين المخزون",
-      "uploadManuals": "رفع الدلائل",
+      "viewWorkOrders": "عرض أوامر العمل",
+      "viewParts": "عرض القطع",
+      "viewDocuments": "عرض المستندات",
       "scheduleTraining": "جدولة التدريب",
       "takeAction": "اتخاذ إجراء"
     },

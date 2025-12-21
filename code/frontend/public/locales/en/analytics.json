@@ -35,9 +35,9 @@
     "loading": "Loading insights...",
     "empty": "No active insights. Click \"Generate Insights\" to analyze your system.",
     "actions": {
-      "scheduleInspection": "Schedule Inspection",
-      "restockInventory": "Restock Inventory",
-      "uploadManuals": "Upload Manuals",
+      "viewWorkOrders": "View Work Orders",
+      "viewParts": "View Parts",
+      "viewDocuments": "View Documents",
       "scheduleTraining": "Schedule Training",
       "takeAction": "Take Action"
     },

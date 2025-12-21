@@ -15,6 +15,7 @@ interface InsightCardProps {
     onPrimaryAction: () => void
     onViewEvidence: () => void
     onDismiss: () => void
+    primaryActionDisabled?: boolean
 }
 
 const categoryIcons: Record<InsightCategory, LucideIcon> = {
@@ -47,6 +48,7 @@ export function InsightCard({
     onPrimaryAction,
     onViewEvidence,
     onDismiss,
+    primaryActionDisabled = false,
 }: InsightCardProps) {
     const Icon = categoryIcons[category]
     const priorityStyles = priorityConfig[priority]
@@ -110,14 +112,18 @@ export function InsightCard({
             {/* Footer / Action Bar */}
             <div className="flex items-center justify-between px-5 py-3 bg-muted/30 border-t pl-12">
                 <div className="flex gap-2">
-                    <Button
-                        size="sm"
-                        onClick={onPrimaryAction}
-                        className={cn(priority === 'high' ? "bg-orange-600 hover:bg-orange-700 text-white" : "")}
-                    >
-                        {primaryActionLabel}
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                    {!primaryActionDisabled && (
+                        <Button
+                            size="sm"
+                            onClick={onPrimaryAction}
+                            className={cn(
+                                priority === 'high' ? "bg-orange-600 hover:bg-orange-700 text-white" : ""
+                            )}
+                        >
+                            {primaryActionLabel}
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                    )}
                     {/* <Button variant="outline" size="sm" onClick={onViewEvidence}>
             View Evidence
           </Button> */}

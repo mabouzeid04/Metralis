@@ -718,6 +718,23 @@ Error Format: { error: { code, message, fields } }
 
 ## Recent Changes & Updates
 
+### December 21, 2025 - Analytics Insights Action Implementation
+
+**Insight Card Primary Actions:**
+- **Feature**: Implemented functional primary action buttons for system insights in Admin Analytics
+- **Implementation**: Added navigation functionality for MAINTENANCE, INVENTORY, and DOCUMENTATION insights
+- **Technical Details**:
+  - MAINTENANCE insights navigate to `/work-orders` page
+  - INVENTORY insights navigate to `/parts` page
+  - DOCUMENTATION insights navigate to `/documents` page
+  - TRAINING insights display no action button (functionality not available)
+- **UI Improvements**: Updated button labels from action-specific to navigation-specific terms
+- **Files Modified**:
+  - `code/frontend/src/pages/analytics/AdminAnalytics.tsx` - Added navigation logic and updated labels
+  - `code/frontend/src/components/analytics/InsightCard.tsx` - Added disabled state for training insights
+  - `code/frontend/public/locales/en/analytics.json` - Updated English translations
+  - `code/frontend/public/locales/ar/analytics.json` - Updated Arabic translations
+
 ### December 20, 2025 - Build Fixes and Admin Features
 
 **Build Error Resolution:**
@@ -780,5 +797,5 @@ This is more than a maintenance system—it's the **intelligence layer** that wi
 
 ---
 
-*Last Updated: December 19, 2025*
+*Last Updated: December 21, 2025*
 *System Version: 1.0 - Factory Intelligence Layer Foundation*
