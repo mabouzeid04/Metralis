@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, DollarSign, Edit, Loader2, Package } from 'lucide-react'
+import { ArrowLeft, MapPin, DollarSign, Edit, Loader2, Package, History, Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { api } from '@/lib/api'
 import { useTranslatedText } from '@/lib/translation'
+import { format } from 'date-fns'
 
 interface Part {
   id: string
@@ -14,14 +15,25 @@ interface Part {
   partNumber: string | null
   category: string | null
   description: string | null
-  stockQuantity: number
+  stockQty: number
   minStock: number
   manufacturer: string | null
   location: string | null
-  unitCost: number | null
-  supplier: string | null
-  createdAt: string
-  updatedAt: string
+  cost: number | null
+    updatedAt: string
+    workOrders: {
+    quantity: number
+    createdAt: string
+    workOrder: {
+      id: string
+      publicId: string
+      title: string
+      machine: {
+        id: string
+        name: string
+      }
+    }
+  }[]
 }
 
 export default function PartDetail() {
@@ -82,7 +94,6 @@ export default function PartDetail() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
@@ -104,7 +115,6 @@ export default function PartDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline">{t('actions.adjustStock')}</Button>
             <Button asChild>
                 <Link to={`/parts/${id}/edit`}>
                   <Edit className="mr-2 h-4 w-4" /> {t('actions.editPart')}
@@ -113,80 +123,122 @@ export default function PartDetail() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Main Details */}
+      <div className="grid gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle>{t('detail.partDetails')}</CardTitle>
+          <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-6 border-b mb-6">
+            <CardTitle className="text-lg font-semibold">{t('detail.partDetails')}</CardTitle>
+            <div className="flex items-center gap-6">
+              <div className="text-right">
+                <div className="text-2xl font-bold tabular-nums leading-none">{part.stockQty}</div>
+                <div className="text-[10px] text-muted-foreground uppercase font-semibold mt-1">{t('detail.currentStock')}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold tabular-nums leading-none text-muted-foreground/60">{part.minStock}</div>
+                <div className="text-[10px] text-muted-foreground uppercase font-semibold mt-1">{t('detail.minLevel')}</div>
+              </div>
+              <Badge variant={part.stockQty <= part.minStock ? "destructive" : "outline"} className="h-7 px-3">
+                {part.stockQty <= part.minStock ? t('detail.lowStock') : t('detail.inStock')}
+              </Badge>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="space-y-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">{t('detail.manufacturer')}</label>
-                <p className="text-sm font-medium">{part.manufacturer || '-'}</p>
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('detail.manufacturer')}</label>
+                <p className="text-sm font-medium mt-1">{part.manufacturer || '-'}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">{t('detail.supplier')}</label>
-                <p className="text-sm font-medium">{part.supplier || '-'}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">{t('detail.cost')}</label>
-                <div className="flex items-center gap-1">
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('detail.cost')}</label>
+                <div className="flex items-center gap-1 mt-1">
+                  <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-sm font-medium">
-                    {part.unitCost ? Number(part.unitCost).toFixed(2) : '-'}
+                    {part.cost ? Number(part.cost).toFixed(2) : '-'}
                   </span>
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">{t('detail.location')}</label>
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('detail.location')}</label>
+                <div className="flex items-center gap-1 mt-1">
+                  <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="text-sm font-medium">{part.location || '-'}</span>
                 </div>
               </div>
             </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">{t('detail.description')}</label>
-              <p className="text-sm mt-1">
+            <div className="pt-6 border-t">
+              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t('detail.description')}</label>
+              <p className="text-sm mt-2 text-muted-foreground leading-relaxed max-w-3xl">
                 {translatedDescription || t('detail.noDescription')}
               </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Inventory Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('detail.inventoryStatus')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between mb-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold">{part.stockQuantity}</div>
-                <div className="text-sm text-muted-foreground">{t('detail.currentStock')}</div>
-              </div>
-              <div className="h-12 w-px bg-border mx-4"></div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-muted-foreground">{part.minStock}</div>
-                <div className="text-sm text-muted-foreground">{t('detail.minLevel')}</div>
-              </div>
-              <div className="h-12 w-px bg-border mx-4"></div>
-               <div className="text-center">
-                 <Badge variant={part.stockQuantity <= part.minStock ? "destructive" : "secondary"} className="text-sm">
-                    {part.stockQuantity <= part.minStock ? t('detail.lowStock') : t('detail.inStock')}
-                 </Badge>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-                <h4 className="text-sm font-medium mb-2">{t('detail.recentActivity')}</h4>
-                <div className="border rounded-md p-3 text-sm text-muted-foreground text-center py-6">
-                    {t('detail.noActivity')}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 px-1">
+            <History className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              {t('detail.recentActivity')}
+            </h3>
+          </div>
+
+          <Card>
+            <CardContent className="p-0">
+              <div className="divide-y">
+                <div className="p-4 flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                      <Settings className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Stock record modified</p>
+                      <p className="text-xs text-muted-foreground">Manual adjustment or record update</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-medium">{format(new Date(part.updatedAt), 'MMM d, yyyy')}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase">{format(new Date(part.updatedAt), 'HH:mm')}</p>
+                  </div>
                 </div>
-            </div>
-          </CardContent>
-        </Card>
+
+                {part.workOrders.map((usage, idx) => (
+                  <div key={idx} className="p-4 flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+                        <Package className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-foreground">
+                            Used {usage.quantity} {usage.quantity === 1 ? 'unit' : 'units'}
+                          </span>
+                          <Link 
+                            to={`/work-orders/${usage.workOrder.publicId}`}
+                            className="text-xs text-primary hover:underline font-mono"
+                          >
+                            #{usage.workOrder.publicId}
+                          </Link>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          For <span className="font-medium text-foreground">{usage.workOrder.machine.name}</span> — {usage.workOrder.title}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-medium">{format(new Date(usage.createdAt), 'MMM d, yyyy')}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase">{format(new Date(usage.createdAt), 'HH:mm')}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {part.workOrders.length === 0 && (
+                  <div className="p-6 text-center text-xs text-muted-foreground/60 italic border-t border-dashed">
+                    No work order usage recorded yet
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

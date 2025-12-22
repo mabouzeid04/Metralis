@@ -138,10 +138,10 @@ export default function PartsList() {
                     <TableCell className="hidden md:table-cell">{part.category || '-'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span className={part.stockQuantity <= part.minStock ? 'text-destructive font-bold' : ''}>
-                          {part.stockQuantity}
+                        <span className={part.stockQty <= part.minStock ? 'text-destructive font-bold' : ''}>
+                          {part.stockQty}
                         </span>
-                        {part.stockQuantity <= part.minStock && (
+                        {part.stockQty <= part.minStock && (
                           <Badge variant="destructive" className="text-[10px] h-5 px-1">
                             {t('list.lowStock')}
                           </Badge>
@@ -150,7 +150,7 @@ export default function PartsList() {
                     </TableCell>
                     <TableCell className="hidden lg:table-cell">{part.location || '-'}</TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {part.unitCost ? `$${Number(part.unitCost).toFixed(2)}` : '-'}
+                      {part.cost ? `$${Number(part.cost).toFixed(2)}` : '-'}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" asChild>

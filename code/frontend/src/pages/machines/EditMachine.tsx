@@ -130,16 +130,16 @@ export default function EditMachine() {
     try {
       const payload = {
         name: values.name.trim(),
-        code: values.code?.trim(),
-        category: values.category?.trim(),
-        area: values.area?.trim(),
-        line: values.line?.trim(),
-        manufacturer: values.manufacturer?.trim(),
-        model: values.model?.trim(),
-        serialNumber: values.serialNumber?.trim(),
+        code: values.code?.trim() || null,
+        category: values.category?.trim() || null,
+        area: values.area?.trim() || null,
+        line: values.line?.trim() || null,
+        manufacturer: values.manufacturer?.trim() || null,
+        model: values.model?.trim() || null,
+        serialNumber: values.serialNumber?.trim() || null,
         commissionedAt: values.commissionedAt
           ? new Date(values.commissionedAt).toISOString()
-          : '',
+          : null,
         status: values.status,
       }
 

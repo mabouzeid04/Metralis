@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { ArrowLeft, Loader2, Trash2 } from 'lucide-react'
 import { api } from '@/lib/api'
 
 const buildPartSchema = (t: (key: string) => string) =>
@@ -22,7 +23,7 @@ const buildPartSchema = (t: (key: string) => string) =>
     description: z.string().optional(),
     stockQty: z.number().int().min(0, { message: t('validation.stockMin') }),
     minStock: z.number().int().min(0, { message: t('validation.minStockMin') }),
-    cost: z.number().min(0, { message: t('validation.costMin') }).optional().or(z.undefined()),
+    cost: z.number().min(0, { message: t('validation.costMin') }).optional(),
   })
 
 type PartFormValues = z.infer<ReturnType<typeof buildPartSchema>>
@@ -71,10 +72,11 @@ export default function EditPart() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation(['parts', 'common'])
-  const partSchema = useMemo(() => buildPartSchema(t), [t])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const {
     register,
@@ -82,7 +84,7 @@ export default function EditPart() {
     formState: { errors },
     reset,
   } = useForm<PartFormValues>({
-    resolver: zodResolver(partSchema),
+    resolver: zodResolver(buildPartSchema(t)),
     defaultValues,
   })
 
@@ -141,7 +143,7 @@ export default function EditPart() {
         description: values.description?.trim() || undefined,
         stockQty: values.stockQty,
         minStock: values.minStock,
-        cost: typeof values.cost === 'number' ? values.cost : undefined,
+        cost: (typeof values.cost === 'number' && !isNaN(values.cost)) ? values.cost : undefined,
       }
 
       await api.patch(`/parts/${id}`, payload)
@@ -150,6 +152,21 @@ export default function EditPart() {
       setError(getApiError(err) || t('errors.update'))
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    setError(null)
+
+    try {
+      await api.delete(`/parts/${id}`)
+      navigate('/parts')
+    } catch (err: unknown) {
+      setError(getApiError(err) || t('errors.delete'))
+      setIsDeleteDialogOpen(false)
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -215,10 +232,7 @@ export default function EditPart() {
                   type="number"
                   step="0.01"
                   placeholder={t('form.placeholders.cost')}
-                  {...register('cost', {
-                    valueAsNumber: true,
-                    setValueAs: (v) => (v === '' || Number.isNaN(v) ? undefined : Number(v)),
-                  })}
+                  {...register('cost', { valueAsNumber: true })}
                 />
                 {errors.cost && <p className="text-sm text-destructive">{errors.cost.message}</p>}
               </div>
@@ -260,17 +274,56 @@ export default function EditPart() {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => navigate(`/parts/${id ?? ''}`)}>
-              {t('form.cancel')}
+          <CardFooter className="flex justify-between gap-3">
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              disabled={isSubmitting || isDeleting}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t('form.delete')}
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t('form.submitEdit')}
-            </Button>
+            <div className="flex gap-3">
+              <Button type="button" variant="outline" onClick={() => navigate(`/parts/${id ?? ''}`)} disabled={isDeleting}>
+                {t('form.cancel')}
+              </Button>
+              <Button type="submit" disabled={isSubmitting || isDeleting}>
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {t('form.submitEdit')}
+              </Button>
+            </div>
           </CardFooter>
         </form>
       </Card>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('form.deleteConfirmTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('form.deleteConfirmMessage')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={isDeleting}
+            >
+              {t('form.cancel')}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('form.confirmDelete')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

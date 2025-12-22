@@ -6,11 +6,11 @@ export interface Part {
     name: string
     partNumber: string | null
     category: string | null
-    stockQuantity: number
+    stockQty: number
     minStock: number
     manufacturer: string | null
     location: string | null
-    unitCost: number | null
+    cost: number | null
 }
 
 async function fetchParts(): Promise<Part[]> {

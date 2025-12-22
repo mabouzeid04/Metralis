@@ -29,6 +29,7 @@
     "model": "Model",
     "serialNumber": "Serial Number",
     "commissionedAt": "Commissioned",
+    "updatedAt": "Last Updated",
     "notAvailable": "-",
     "noCode": "No code",
     "uncategorized": "Uncategorized",

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, User, Calendar, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus, Eye, X } from 'lucide-react'
+import { ArrowLeft, User, Calendar, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus, Eye, X, Edit } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/shared/StatusBadge'
@@ -16,6 +16,7 @@ import { format } from 'date-fns'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import EditWorkOrderModal from './EditWorkOrderModal'
 
 interface Attachment {
   id: string
@@ -180,6 +181,7 @@ export default function WorkOrderDetail() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)
   const [previewError, setPreviewError] = useState<string | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [repairForm, setRepairForm] = useState<RepairFormState>({
     actions: '',
     success: true,
@@ -479,6 +481,10 @@ export default function WorkOrderDetail() {
           <h3 className="text-xl font-medium text-muted-foreground font-mono break-all">{displayId}</h3>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setIsEditModalOpen(true)}>
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={updatingStatus}>
@@ -944,6 +950,13 @@ export default function WorkOrderDetail() {
           </div>
         </div>
       )}
+
+      <EditWorkOrderModal
+        workOrder={workOrder}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onUpdate={() => fetchWorkOrder()}
+      />
     </div>
   )
 }

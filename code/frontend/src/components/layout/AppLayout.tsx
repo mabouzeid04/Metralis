@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 
 export default function AppLayout() {
@@ -40,6 +41,7 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
+      <Toaster />
     </div>
   )
 }

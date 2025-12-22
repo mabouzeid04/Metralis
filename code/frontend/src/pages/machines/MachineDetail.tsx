@@ -188,6 +188,11 @@ export default function MachineDetail() {
               <span className="font-medium text-right">
                 {machine.commissionedAt ? new Date(machine.commissionedAt).toLocaleDateString() : t('detail.notAvailable')}
               </span>
+
+              <span className="text-muted-foreground">{t('detail.updatedAt')}</span>
+              <span className="font-medium text-right">
+                {new Date(machine.updatedAt).toLocaleDateString()}
+              </span>
             </div>
             
             <div className="pt-4 border-t">

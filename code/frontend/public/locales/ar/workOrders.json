@@ -28,6 +28,17 @@
   },
   "unassigned": "غير مسند",
   "view": "عرض",
+  "editWorkOrder": "تعديل أمر العمل",
+  "deleteWorkOrder": "حذف أمر العمل",
+  "deleteWorkOrderConfirm": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف أمر العمل نهائياً وجميع إجراءات الإصلاح المرتبطة به.",
+  "workOrderUpdated": "تم تحديث أمر العمل",
+  "workOrderUpdatedDescription": "تم تحديث أمر العمل بنجاح.",
+  "workOrderDeleted": "تم حذف أمر العمل",
+  "workOrderDeletedDescription": "تم حذف أمر العمل نهائياً.",
+  "updateFailed": "فشل التحديث",
+  "updateFailedDescription": "فشل في تحديث أمر العمل. يرجى المحاولة مرة أخرى.",
+  "deleteFailed": "فشل الحذف",
+  "deleteFailedDescription": "فشل في حذف أمر العمل. يرجى المحاولة مرة أخرى.",
   "errors": {
     "load": "فشل تحميل أوامر العمل"
   }

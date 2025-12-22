@@ -11,12 +11,11 @@
     "edit": "تعديل",
     "apply": "تطبيق",
     "close": "إغلاق",
-    "view": "عرض",
-    "add": "إضافة",
     "create": "إنشاء",
     "upload": "رفع",
     "search": "بحث",
-    "filter": "تصفية"
+    "filter": "تصفية",
+    "delete": "حذف"
   },
   "states": {
     "loading": "جارٍ التحميل...",
@@ -69,6 +68,11 @@
     "searchPlaceholder": "ابحث...",
     "required": "هذا الحقل مطلوب"
   },
+  "title": "العنوان",
+  "machine": "الآلة",
+  "type": "النوع",
+  "priority": "الأولوية",
+  "assignTo": "التعيين إلى",
   "notifications": {
     "title": "الإشعارات",
     "workOrders": "أوامر العمل المخصصة لك",

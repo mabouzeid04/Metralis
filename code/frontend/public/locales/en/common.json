@@ -11,12 +11,11 @@
     "edit": "Edit",
     "apply": "Apply",
     "close": "Close",
-    "view": "View",
-    "add": "Add",
     "create": "Create",
     "upload": "Upload",
     "search": "Search",
-    "filter": "Filter"
+    "filter": "Filter",
+    "delete": "Delete"
   },
   "states": {
     "loading": "Loading...",
@@ -69,6 +68,11 @@
     "searchPlaceholder": "Search...",
     "required": "This field is required"
   },
+  "title": "Title",
+  "machine": "Machine",
+  "type": "Type",
+  "priority": "Priority",
+  "assignTo": "Assign To",
   "notifications": {
     "title": "Notifications",
     "workOrders": "Work orders assigned to you",
