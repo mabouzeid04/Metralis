@@ -28,7 +28,7 @@ describe("saveDocumentToS3", () => {
 
     expect(key).toMatch(/documents\/.+-test\.txt/);
     expect(s3Send).toHaveBeenCalled();
-    expect(s3Send.mock.calls[0][0].params.Bucket).toBe(process.env.S3_BUCKET);
+    expect(s3Send.mock.calls[0]![0]!.params.Bucket).toBe(process.env.S3_BUCKET);
   });
 });
 

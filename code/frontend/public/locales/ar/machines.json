@@ -29,6 +29,7 @@
     "model": "الطراز",
     "serialNumber": "الرقم التسلسلي",
     "commissionedAt": "تاريخ التشغيل",
+    "updatedAt": "آخر تحديث",
     "notAvailable": "-",
     "noCode": "بدون رمز",
     "uncategorized": "غير مصنّفة",

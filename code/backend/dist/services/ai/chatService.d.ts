@@ -44,13 +44,13 @@ export declare const getConversationDetail: (userId: string, conversationId: str
         userId: string;
     };
     messages: {
-        feedback: AiFeedbackValue[];
+        feedback: never[];
         id: string;
         role: ChatMessageRole;
         createdAt: Date;
-        content: string;
         citations: import("@prisma/client/runtime/library").JsonValue | null;
         conversationId: string;
+        content: string;
         contextChunks: import("@prisma/client/runtime/library").JsonValue | null;
         structuredOutput: import("@prisma/client/runtime/library").JsonValue | null;
     }[];
@@ -84,9 +84,9 @@ export declare const handleChatMessage: ({ userId, message, conversationId, mach
         id: string;
         role: ChatMessageRole;
         createdAt: Date;
-        content: string;
         citations: import("@prisma/client/runtime/library").JsonValue | null;
         conversationId: string;
+        content: string;
         contextChunks: import("@prisma/client/runtime/library").JsonValue | null;
         structuredOutput: import("@prisma/client/runtime/library").JsonValue | null;
     };
@@ -94,9 +94,9 @@ export declare const handleChatMessage: ({ userId, message, conversationId, mach
         id: string;
         role: ChatMessageRole;
         createdAt: Date;
-        content: string;
         citations: import("@prisma/client/runtime/library").JsonValue | null;
         conversationId: string;
+        content: string;
         contextChunks: import("@prisma/client/runtime/library").JsonValue | null;
         structuredOutput: import("@prisma/client/runtime/library").JsonValue | null;
     };

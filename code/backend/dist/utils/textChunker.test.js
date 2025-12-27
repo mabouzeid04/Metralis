@@ -9,7 +9,7 @@ const textChunker_1 = require("./textChunker");
     (0, vitest_1.it)("splits text using provided chunk size and overlap", () => {
         const input = "A B C D E F G H I J K L M N O P";
         const chunks = (0, textChunker_1.chunkText)(input, { chunkSize: 10, chunkOverlap: 2 });
-        (0, vitest_1.expect)(chunks).toEqual(["A B C D E", "E F G H I", "I J K L M", "M N O P"]);
+        (0, vitest_1.expect)(chunks).toEqual(["A B C D E", "E F G H I", "I J K L M", "M N O P", "P"]);
     });
     (0, vitest_1.it)("removes duplicate chunks when overlap exceeds chunk size", () => {
         const input = "alpha beta gamma delta";

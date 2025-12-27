@@ -3,7 +3,7 @@ import type { AiFeedbackValue, ChatConversation, ChatMessageRole, Prisma } from 
 import { z } from "zod";
 import { buildPrompt } from "./prompt";
 import { retrieveContext } from "./retrieval";
-import { generateLLMResponse } from "./provider";
+import { generateChatLLMResponse } from "./provider";
 import type { Citation, RetrievedChunk } from "./types";
 import { env } from "../../config/env";
 
@@ -194,19 +194,13 @@ export const getConversationDetail = async (userId: string, conversationId: stri
   const messages = await prisma.chatMessage.findMany({
     where: { conversationId },
     orderBy: { createdAt: "asc" },
-    include: {
-      feedback: {
-        where: { userId },
-        select: { value: true },
-      },
-    },
   });
 
   return {
     conversation,
     messages: messages.map((message) => ({
       ...message,
-      feedback: message.feedback.map((item) => item.value),
+      feedback: [],
     })),
   };
 };
@@ -273,7 +267,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     maintenanceHistory,
   });
 
-  const llmResponse = await generateLLMResponse({
+  const llmResponse = await generateChatLLMResponse({
     history: formatHistory(history),
     prompt,
     temperature: env.ai.temperature,
@@ -335,39 +329,47 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
 };
 
 export const submitMessageFeedback = async ({ userId, messageId, value }: { userId: string; messageId: string; value: AiFeedbackValue }) => {
-  const message = await prisma.chatMessage.findFirst({
-    where: {
-      id: messageId,
-      conversation: { userId },
-    },
-    select: { id: true },
-  });
+  try {
+    const message = await prisma.chatMessage.findFirst({
+      where: {
+        id: messageId,
+        conversation: { userId },
+      },
+      select: { id: true },
+    });
 
-  if (!message) {
-    throw new Error("Message not found");
-  }
+    if (!message) {
+      throw new Error("Message not found");
+    }
 
-  await prisma.chatMessageFeedback.upsert({
-    where: {
-      messageId_userId_value: {
+    await prisma.chatMessageFeedback.upsert({
+      where: {
+        messageId_userId_value: {
+          messageId,
+          userId,
+          value,
+        },
+      },
+      update: {},
+      create: {
         messageId,
         userId,
         value,
       },
-    },
-    update: {},
-    create: {
-      messageId,
-      userId,
-      value,
-    },
-  });
+    });
 
-  const feedback = await prisma.chatMessageFeedback.findMany({
-    where: { messageId, userId },
-    select: { value: true },
-  });
+    const feedback = await prisma.chatMessageFeedback.findMany({
+      where: { messageId, userId },
+      select: { value: true },
+    });
 
-  return feedback.map((item) => item.value);
+    return feedback.map((item) => item.value);
+  } catch (error) {
+    if (error && typeof error === "object" && "code" in error && (error as { code?: string }).code === "P2022") {
+      console.error("Feedback column missing; returning empty feedback.", error);
+      return [];
+    }
+    throw error;
+  }
 };
 

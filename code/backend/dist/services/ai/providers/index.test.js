@@ -34,31 +34,57 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const vitest_1 = require("vitest");
-const geminiFactory = vitest_1.vi.fn(() => ({
+const geminiFactory = vitest_1.vi.fn().mockImplementation(() => ({
     generate: vitest_1.vi.fn(async () => ({ text: "gemini-text" })),
 }));
-const openaiFactory = vitest_1.vi.fn(() => ({
+const openaiFactory = vitest_1.vi.fn().mockImplementation(() => ({
     generate: vitest_1.vi.fn(async () => ({ text: "openai-text" })),
 }));
+const grokFactory = vitest_1.vi.fn().mockImplementation(() => ({
+    generate: vitest_1.vi.fn(async () => ({ text: "grok-text" })),
+}));
 vitest_1.vi.doMock("./googleGemini", () => ({
-    GoogleGeminiProvider: geminiFactory,
+    GoogleGeminiProvider: vitest_1.vi.fn().mockImplementation(() => geminiFactory()),
 }));
 vitest_1.vi.doMock("./openai", () => ({
-    OpenAIProvider: openaiFactory,
+    OpenAIProvider: vitest_1.vi.fn().mockImplementation(() => openaiFactory()),
+}));
+vitest_1.vi.doMock("./grok", () => ({
+    GrokProvider: vitest_1.vi.fn().mockImplementation(() => grokFactory()),
 }));
 (0, vitest_1.describe)("getLLMProvider", () => {
     (0, vitest_1.it)("returns cached provider instances and supports aliases", async () => {
         vitest_1.vi.resetModules();
         const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
-        const first = getLLMProvider("gemini");
-        const second = getLLMProvider("google-gemini");
-        (0, vitest_1.expect)(first).toBe(second);
+        const gemini1 = getLLMProvider("gemini");
+        const gemini2 = getLLMProvider("google-gemini");
+        const grok1 = getLLMProvider("grok");
+        const grok2 = getLLMProvider("grok-4-latest");
+        (0, vitest_1.expect)(gemini1).toBe(gemini2);
+        (0, vitest_1.expect)(grok1).toBe(grok2);
         (0, vitest_1.expect)(geminiFactory).toHaveBeenCalledTimes(1);
+        (0, vitest_1.expect)(grokFactory).toHaveBeenCalledTimes(1);
     });
     (0, vitest_1.it)("throws for unsupported providers", async () => {
         vitest_1.vi.resetModules();
         const { getLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
         (0, vitest_1.expect)(() => getLLMProvider("unknown")).toThrow("Unsupported AI provider");
+    });
+    (0, vitest_1.describe)("feature-specific providers", () => {
+        (0, vitest_1.it)("getChatLLMProvider returns the configured chat provider", async () => {
+            vitest_1.vi.resetModules();
+            const { getChatLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
+            const provider = getChatLLMProvider();
+            (0, vitest_1.expect)(geminiFactory).toHaveBeenCalledTimes(1); // Uses gemini as default
+            (0, vitest_1.expect)(typeof provider.generate).toBe("function");
+        });
+        (0, vitest_1.it)("getInsightsLLMProvider returns the configured insights provider", async () => {
+            vitest_1.vi.resetModules();
+            const { getInsightsLLMProvider } = await Promise.resolve().then(() => __importStar(require("./index")));
+            const provider = getInsightsLLMProvider();
+            (0, vitest_1.expect)(geminiFactory).toHaveBeenCalledTimes(1); // Uses gemini as default
+            (0, vitest_1.expect)(typeof provider.generate).toBe("function");
+        });
     });
 });
 //# sourceMappingURL=index.test.js.map

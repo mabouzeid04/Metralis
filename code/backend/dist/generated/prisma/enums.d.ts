@@ -68,4 +68,24 @@ export declare const AiFeedbackValue: {
     readonly CORRECT_CAUSE: "CORRECT_CAUSE";
 };
 export type AiFeedbackValue = (typeof AiFeedbackValue)[keyof typeof AiFeedbackValue];
+export declare const InsightCategory: {
+    readonly MAINTENANCE: "MAINTENANCE";
+    readonly INVENTORY: "INVENTORY";
+    readonly DOCUMENTATION: "DOCUMENTATION";
+    readonly TRAINING: "TRAINING";
+};
+export type InsightCategory = (typeof InsightCategory)[keyof typeof InsightCategory];
+export declare const InsightPriority: {
+    readonly HIGH: "HIGH";
+    readonly MEDIUM: "MEDIUM";
+    readonly LOW: "LOW";
+};
+export type InsightPriority = (typeof InsightPriority)[keyof typeof InsightPriority];
+export declare const InsightStatus: {
+    readonly NEW: "NEW";
+    readonly REVIEWED: "REVIEWED";
+    readonly ACTIONED: "ACTIONED";
+    readonly DISMISSED: "DISMISSED";
+};
+export type InsightStatus = (typeof InsightStatus)[keyof typeof InsightStatus];
 //# sourceMappingURL=enums.d.ts.map

@@ -1,0 +1,56 @@
+{
+  "title": "تحليلات المسؤول",
+  "subtitle": "صحة النظام ومقاييس الأداء والرؤى المعتمدة على الذكاء الاصطناعي.",
+  "metrics": {
+    "aiQueries": {
+      "title": "استعلامات الذكاء الاصطناعي (7 أيام)",
+      "description": "إجمالي الاستعلامات عبر المؤسسة",
+      "footer": "آخر 7 أيام"
+    },
+    "meanTimeToDiagnose": {
+      "title": "متوسط وقت التشخيص",
+      "description": "متوسط الوقت من التقرير إلى التشخيص",
+      "footer": "بناءً على أوامر العمل الأخيرة"
+    },
+    "meanTimeToRepair": {
+      "title": "متوسط وقت الإصلاح",
+      "description": "متوسط الوقت لإغلاق أمر العمل",
+      "footer": "بناءً على أوامر العمل المغلقة"
+    },
+    "knowledgeBaseCoverage": {
+      "title": "تغطية قاعدة المعرفة",
+      "description": "{{withDocs}} من {{total}} ماكينة",
+      "footer": {
+        "complete": "جميع الماكينات لها وثائق",
+        "incomplete": "{{machineName}} مفقودة الوثائق"
+      }
+    }
+  },
+  "commandCenter": {
+    "title": "مركز التحكم",
+    "description": "تقارير النظام الاستباقية والاقتراحات التحسينية المولدة بالذكاء الاصطناعي"
+  },
+  "insights": {
+    "generate": "توليد الرؤى",
+    "loading": "جارٍ تحميل الرؤى...",
+    "empty": "لا توجد رؤى نشطة. انقر على \"توليد الرؤى\" لتحليل النظام.",
+    "actions": {
+      "viewWorkOrders": "عرض أوامر العمل",
+      "viewParts": "عرض القطع",
+      "viewDocuments": "عرض المستندات",
+      "scheduleTraining": "جدولة التدريب",
+      "takeAction": "اتخاذ إجراء"
+    },
+    "evidence": {
+      "workOrders": "{{count}} أوامر عمل",
+      "machines": "{{count}} ماكينات",
+      "default": "تحليل الذكاء الاصطناعي"
+    }
+  },
+  "time": {
+    "notAvailable": "غير متوفر",
+    "minutes": "د",
+    "hours": "س",
+    "days": "ي"
+  }
+}

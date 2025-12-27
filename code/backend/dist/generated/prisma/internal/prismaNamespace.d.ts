@@ -265,6 +265,7 @@ export declare const ModelName: {
     readonly ChatConversation: "ChatConversation";
     readonly ChatMessage: "ChatMessage";
     readonly ChatMessageFeedback: "ChatMessageFeedback";
+    readonly SystemInsight: "SystemInsight";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -277,7 +278,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "machine" | "workOrder" | "repairAction" | "part" | "workOrderPart" | "document" | "documentChunk" | "incidentChunk" | "chatConversation" | "chatMessage" | "chatMessageFeedback";
+        modelProps: "user" | "machine" | "workOrder" | "repairAction" | "part" | "workOrderPart" | "document" | "documentChunk" | "incidentChunk" | "chatConversation" | "chatMessage" | "chatMessageFeedback" | "systemInsight";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -1137,6 +1138,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
+        SystemInsight: {
+            payload: Prisma.$SystemInsightPayload<ExtArgs>;
+            fields: Prisma.SystemInsightFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.SystemInsightFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.SystemInsightFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                findFirst: {
+                    args: Prisma.SystemInsightFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.SystemInsightFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                findMany: {
+                    args: Prisma.SystemInsightFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>[];
+                };
+                create: {
+                    args: Prisma.SystemInsightCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                createMany: {
+                    args: Prisma.SystemInsightCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.SystemInsightCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>[];
+                };
+                delete: {
+                    args: Prisma.SystemInsightDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                update: {
+                    args: Prisma.SystemInsightUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.SystemInsightDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.SystemInsightUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.SystemInsightUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>[];
+                };
+                upsert: {
+                    args: Prisma.SystemInsightUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemInsightPayload>;
+                };
+                aggregate: {
+                    args: Prisma.SystemInsightAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateSystemInsight>;
+                };
+                groupBy: {
+                    args: Prisma.SystemInsightGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.SystemInsightGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.SystemInsightCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.SystemInsightCountAggregateOutputType> | number;
+                };
+            };
+        };
     };
 } & {
     other: {
@@ -1350,6 +1425,18 @@ export declare const ChatMessageFeedbackScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type ChatMessageFeedbackScalarFieldEnum = (typeof ChatMessageFeedbackScalarFieldEnum)[keyof typeof ChatMessageFeedbackScalarFieldEnum];
+export declare const SystemInsightScalarFieldEnum: {
+    readonly id: "id";
+    readonly title: "title";
+    readonly content: "content";
+    readonly category: "category";
+    readonly priority: "priority";
+    readonly status: "status";
+    readonly metadata: "metadata";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type SystemInsightScalarFieldEnum = (typeof SystemInsightScalarFieldEnum)[keyof typeof SystemInsightScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
@@ -1537,6 +1624,30 @@ export type EnumAiFeedbackValueFieldRefInput<$PrismaModel> = FieldRefInputType<$
  */
 export type ListEnumAiFeedbackValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AiFeedbackValue[]'>;
 /**
+ * Reference to a field of type 'InsightCategory'
+ */
+export type EnumInsightCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightCategory'>;
+/**
+ * Reference to a field of type 'InsightCategory[]'
+ */
+export type ListEnumInsightCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightCategory[]'>;
+/**
+ * Reference to a field of type 'InsightPriority'
+ */
+export type EnumInsightPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightPriority'>;
+/**
+ * Reference to a field of type 'InsightPriority[]'
+ */
+export type ListEnumInsightPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightPriority[]'>;
+/**
+ * Reference to a field of type 'InsightStatus'
+ */
+export type EnumInsightStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightStatus'>;
+/**
+ * Reference to a field of type 'InsightStatus[]'
+ */
+export type ListEnumInsightStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InsightStatus[]'>;
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
@@ -1640,6 +1751,7 @@ export type GlobalOmitConfig = {
     chatConversation?: Prisma.ChatConversationOmit;
     chatMessage?: Prisma.ChatMessageOmit;
     chatMessageFeedback?: Prisma.ChatMessageFeedbackOmit;
+    systemInsight?: Prisma.SystemInsightOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

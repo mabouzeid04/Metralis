@@ -66,3 +66,6 @@ export function useTranslatedText(text?: string | null) {
 
   return translated
 }
+
+
+

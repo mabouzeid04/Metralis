@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemInsightScalarFieldEnum = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -86,7 +86,8 @@ exports.ModelName = {
     IncidentChunk: 'IncidentChunk',
     ChatConversation: 'ChatConversation',
     ChatMessage: 'ChatMessage',
-    ChatMessageFeedback: 'ChatMessageFeedback'
+    ChatMessageFeedback: 'ChatMessageFeedback',
+    SystemInsight: 'SystemInsight'
 };
 /*
  * Enums
@@ -263,6 +264,17 @@ exports.ChatMessageFeedbackScalarFieldEnum = {
     userId: 'userId',
     value: 'value',
     createdAt: 'createdAt'
+};
+exports.SystemInsightScalarFieldEnum = {
+    id: 'id',
+    title: 'title',
+    content: 'content',
+    category: 'category',
+    priority: 'priority',
+    status: 'status',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 exports.SortOrder = {
     asc: 'asc',

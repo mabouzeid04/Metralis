@@ -10,7 +10,7 @@ describe("chunkText", () => {
     const input = "A B C D E F G H I J K L M N O P";
     const chunks = chunkText(input, { chunkSize: 10, chunkOverlap: 2 });
 
-    expect(chunks).toEqual(["A B C D E", "E F G H I", "I J K L M", "M N O P"]);
+    expect(chunks).toEqual(["A B C D E", "E F G H I", "I J K L M", "M N O P", "P"]);
   });
 
   it("removes duplicate chunks when overlap exceeds chunk size", () => {

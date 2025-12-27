@@ -11,5 +11,7 @@
   "logout": "تسجيل الخروج",
   "welcome": "مرحبًا",
   "appSubtitle": "طبقة ذكاء للمصانع",
-  "accessManagement": "Access Management"
+  "accessManagement": "إدارة الوصول",
+  "adminAnalytics": "تحليلات المسؤول"
 }
+

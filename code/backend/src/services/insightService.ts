@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import type { InsightCategory, InsightPriority } from "../generated/prisma/client";
 import { buildSystemAnalysisPrompt, type SystemSnapshot } from "./ai/prompt";
-import { generateLLMResponse } from "./ai/provider";
+import { generateInsightsLLMResponse } from "./ai/provider";
 
 type InsightFromLLM = {
     title: string;
@@ -218,7 +218,7 @@ export const generateSystemInsights = async (): Promise<number> => {
 
     const prompt = buildSystemAnalysisPrompt(snapshot);
 
-    const response = await generateLLMResponse({
+    const response = await generateInsightsLLMResponse({
         history: [],
         prompt,
         temperature: 0.3, // Lower temperature for more consistent structured output

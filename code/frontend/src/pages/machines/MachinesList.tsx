@@ -93,7 +93,7 @@ export default function MachinesList() {
           {filteredMachines.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <ServerOff className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold">No machines found</h3>
+              <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
                 {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
@@ -120,7 +120,6 @@ export default function MachinesList() {
                   <TableHead>{t('table.code')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('table.category')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('table.location')}</TableHead>
-                  <TableHead className="hidden lg:table-cell">{t('table.updated')}</TableHead>
                   <TableHead className="text-right">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -138,9 +137,6 @@ export default function MachinesList() {
                     <TableCell>{machine.code || '-'}</TableCell>
                     <TableCell className="hidden md:table-cell">{machine.category || '-'}</TableCell>
                     <TableCell className="hidden md:table-cell">{machine.area || machine.line || '-'}</TableCell>
-                    <TableCell className="hidden lg:table-cell">
-                      {new Date(machine.updatedAt).toLocaleDateString()}
-                    </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" asChild>
                         <Link to={`/machines/${machine.id}`}>{t('view')}</Link>

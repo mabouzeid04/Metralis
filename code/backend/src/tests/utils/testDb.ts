@@ -6,11 +6,13 @@ import {
   PrismaClient,
   UserRole,
   UserStatus,
-} from "../../src/generated/prisma/client";
+} from "../../generated/prisma/client";
 
 export const prisma = new PrismaClient();
 
 const TABLES = [
+  "SystemInsight",
+  "IncidentChunk",
   "ChatMessageFeedback",
   "ChatMessage",
   "ChatConversation",

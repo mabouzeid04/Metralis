@@ -76,7 +76,12 @@ export const sendWorkOrderAssignmentWhatsapp = async (
       | { messages?: Array<{ id?: string }> }
       | null;
 
-    return { status: "sent", messageId: result?.messages?.[0]?.id };
+    const messageId = result?.messages?.[0]?.id;
+    if (messageId) {
+      return { status: "sent", messageId };
+    }
+
+    return { status: "sent" };
   } catch (err) {
     return { status: "failed", reason: "network or fetch error", details: err };
   }

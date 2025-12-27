@@ -20,11 +20,17 @@ export declare const env: {
         provider: string;
         temperature: number;
         maxTokens: number;
+        chatProvider: string;
+        insightsProvider: string;
         gemini: {
             apiKey: string;
             model: string;
         };
         openai: {
+            apiKey: string;
+            model: string;
+        };
+        grok: {
             apiKey: string;
             model: string;
         };

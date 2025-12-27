@@ -66,3 +66,6 @@ if (hasDiff) {
 } else {
   console.log('Locale keys are aligned between en and ar.')
 }
+
+
+

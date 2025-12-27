@@ -54,7 +54,11 @@
     },
     "submitCreate": "Save Part",
     "submitEdit": "Save Changes",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete Part",
+    "deleteConfirmTitle": "Delete Part",
+    "deleteConfirmMessage": "Are you sure you want to delete this part? This action cannot be undone.",
+    "confirmDelete": "Delete"
   },
   "detail": {
     "partDetails": "Part Details",
@@ -79,7 +83,8 @@
     "loadDetail": "Failed to load part details",
     "notFound": "Part not found",
     "update": "Failed to update part",
-    "create": "Failed to create part"
+    "create": "Failed to create part",
+    "delete": "Failed to delete part"
   },
   "validation": {
     "nameMin": "Name must be at least 2 characters",
@@ -88,3 +93,6 @@
     "costMin": "Must be 0 or greater"
   }
 }
+
+
+

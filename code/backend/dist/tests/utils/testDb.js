@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.seedBaseData = exports.resetDatabase = exports.ensureDatabase = exports.prisma = void 0;
 const child_process_1 = require("child_process");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const client_1 = require("../../src/generated/prisma/client");
+const client_1 = require("../../generated/prisma/client");
 exports.prisma = new client_1.PrismaClient();
 const TABLES = [
+    "SystemInsight",
+    "IncidentChunk",
     "ChatMessageFeedback",
     "ChatMessage",
     "ChatConversation",

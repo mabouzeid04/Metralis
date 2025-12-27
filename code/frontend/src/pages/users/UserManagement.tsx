@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { ChevronDown, Check, Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon } from 'lucide-react'
+import { ChevronDown, Check, Loader2, RefreshCw, ShieldCheck, Trash2, Users as UsersIcon, Settings } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -134,6 +134,27 @@ export default function UserManagement() {
         setError(null)
       } catch (err) {
         setError(getApiErrorMessage(err) || t('errors.delete'))
+      } finally {
+        setActionLoading(null)
+      }
+    },
+    [currentUser?.id, fetchUsers, t],
+  )
+
+  const handleUserRoleChange = useCallback(
+    async (user: UserRecord, newRole: UserRecord['role']) => {
+      if (currentUser?.id === user.id) {
+        setError(t('errors.changeOwnRole'))
+        return
+      }
+
+      setActionLoading(`${user.id}-role`)
+      try {
+        await api.patch(`/users/${user.id}`, { role: newRole })
+        await fetchUsers()
+        setError(null)
+      } catch (err) {
+        setError(getApiErrorMessage(err) || t('errors.updateRole'))
       } finally {
         setActionLoading(null)
       }
@@ -300,16 +321,44 @@ export default function UserManagement() {
                           : '—'}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-destructive hover:text-destructive"
-                          disabled={actionLoading !== null}
-                          onClick={() => handleDeleteUser(user)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          <span className="sr-only">{t('deleteUser', { name: user.name })}</span>
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={actionLoading !== null}
+                                className="h-8 w-8 p-0"
+                              >
+                                <Settings className="h-4 w-4" />
+                                <span className="sr-only">{t('changeRole', { name: user.name })}</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-[160px]">
+                              {roleOptions.map((role) => (
+                                <DropdownMenuItem
+                                  key={role}
+                                  onSelect={() => handleUserRoleChange(user, role)}
+                                  disabled={user.role === role || actionLoading === `${user.id}-role`}
+                                  className="cursor-pointer flex items-center justify-between"
+                                >
+                                  {t(`common:roles.${role.toLowerCase()}`, { defaultValue: role })}
+                                  {user.role === role && <Check className="h-4 w-4 opacity-50" />}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                            disabled={actionLoading !== null}
+                            onClick={() => handleDeleteUser(user)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">{t('deleteUser', { name: user.name })}</span>
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -1,1 +1,1 @@
-{"version":3,"file":"incidentIngestion.d.ts","sourceRoot":"","sources":["../../src/services/incidentIngestion.ts"],"names":[],"mappings":"AAmGA,eAAO,MAAM,gCAAgC,GAAU,aAAa,MAAM,kBAmEzE,CAAC"}
+{"version":3,"file":"incidentIngestion.d.ts","sourceRoot":"","sources":["../../src/services/incidentIngestion.ts"],"names":[],"mappings":"AAgIA,eAAO,MAAM,gCAAgC,GAAU,aAAa,MAAM,kBAuDzE,CAAC"}

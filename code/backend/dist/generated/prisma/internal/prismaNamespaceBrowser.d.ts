@@ -53,6 +53,7 @@ export declare const ModelName: {
     readonly ChatConversation: "ChatConversation";
     readonly ChatMessage: "ChatMessage";
     readonly ChatMessageFeedback: "ChatMessageFeedback";
+    readonly SystemInsight: "SystemInsight";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -241,6 +242,18 @@ export declare const ChatMessageFeedbackScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type ChatMessageFeedbackScalarFieldEnum = (typeof ChatMessageFeedbackScalarFieldEnum)[keyof typeof ChatMessageFeedbackScalarFieldEnum];
+export declare const SystemInsightScalarFieldEnum: {
+    readonly id: "id";
+    readonly title: "title";
+    readonly content: "content";
+    readonly category: "category";
+    readonly priority: "priority";
+    readonly status: "status";
+    readonly metadata: "metadata";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type SystemInsightScalarFieldEnum = (typeof SystemInsightScalarFieldEnum)[keyof typeof SystemInsightScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

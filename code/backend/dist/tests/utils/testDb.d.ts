@@ -1,0 +1,64 @@
+import { MachineCriticality, MachineStatus, UserRole, UserStatus } from "../../generated/prisma/client";
+export declare const prisma: import("../../generated/prisma/internal/class").PrismaClient<never, import("../../generated/prisma/internal/prismaNamespace").GlobalOmitConfig | undefined, import("@prisma/client/runtime/library").DefaultArgs>;
+export declare const ensureDatabase: () => Promise<void>;
+export declare const resetDatabase: () => Promise<void>;
+export declare const seedBaseData: () => Promise<{
+    admin: {
+        name: string;
+        email: string;
+        id: string;
+        passwordHash: string;
+        role: UserRole;
+        status: UserStatus;
+        active: boolean;
+        lastLoginAt: Date | null;
+        approvedAt: Date | null;
+        rejectedAt: Date | null;
+        rejectionReason: string | null;
+        preferences: import("@prisma/client/runtime/library").JsonValue | null;
+        phoneNumber: string | null;
+        assignmentWhatsappOptIn: boolean;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        createdAt: Date;
+        updatedAt: Date;
+        approvedById: string | null;
+    };
+    technician: {
+        name: string;
+        email: string;
+        id: string;
+        passwordHash: string;
+        role: UserRole;
+        status: UserStatus;
+        active: boolean;
+        lastLoginAt: Date | null;
+        approvedAt: Date | null;
+        rejectedAt: Date | null;
+        rejectionReason: string | null;
+        preferences: import("@prisma/client/runtime/library").JsonValue | null;
+        phoneNumber: string | null;
+        assignmentWhatsappOptIn: boolean;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        createdAt: Date;
+        updatedAt: Date;
+        approvedById: string | null;
+    };
+    machine: {
+        name: string;
+        id: string;
+        status: MachineStatus;
+        metadata: import("@prisma/client/runtime/library").JsonValue | null;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string | null;
+        category: string | null;
+        line: string | null;
+        area: string | null;
+        manufacturer: string | null;
+        model: string | null;
+        serialNumber: string | null;
+        commissionedAt: Date | null;
+        criticality: MachineCriticality;
+    };
+}>;
+//# sourceMappingURL=testDb.d.ts.map

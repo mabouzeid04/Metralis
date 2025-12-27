@@ -13,7 +13,7 @@ async function main() {
         process.exit(1);
     }
 
-    const loginData = await loginRes.json() as any;
+    const loginData = (await loginRes.json()) as { data: { token: string } };
     const token = loginData.data.token;
     // Use the known machine ID from previous run (or fetch the machine named Verification Robot)
 
@@ -22,8 +22,8 @@ async function main() {
         method: "GET",
         headers: { 'Authorization': `Bearer ${token}` }
     });
-    const machinesData = await machinesRes.json() as any;
-    const machine = machinesData.data.find((m: any) => m.name === 'Verification Robot');
+    const machinesData = (await machinesRes.json()) as { data: Array<{ id: string; name: string }> };
+    const machine = machinesData.data.find((m) => m.name === 'Verification Robot');
 
     if (!machine) {
         console.error('Verification Robot not found');
@@ -45,13 +45,13 @@ async function main() {
         process.exit(1);
     }
 
-    const woData = await woRes.json() as any;
+    const woData = (await woRes.json()) as { data: Array<{ id: string; title: string; status: string }> };
     console.log('Work Orders:', woData.data.length);
-    woData.data.forEach((wo: any) => {
+    woData.data.forEach((wo) => {
         console.log(`- ${wo.title} (${wo.status})`);
     });
 
-    const uiWo = woData.data.find((wo: any) => wo.title === 'UI Verification WO');
+    const uiWo = woData.data.find((wo) => wo.title === 'UI Verification WO');
     if (uiWo) {
         console.log('✅ UI Verification WO FOUND!');
     } else {

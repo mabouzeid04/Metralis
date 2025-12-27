@@ -162,18 +162,12 @@ const getConversationDetail = async (userId, conversationId) => {
     const messages = await prisma_1.prisma.chatMessage.findMany({
         where: { conversationId },
         orderBy: { createdAt: "asc" },
-        include: {
-            feedback: {
-                where: { userId },
-                select: { value: true },
-            },
-        },
     });
     return {
         conversation,
         messages: messages.map((message) => ({
             ...message,
-            feedback: message.feedback.map((item) => item.value),
+            feedback: [],
         })),
     };
 };
@@ -227,7 +221,7 @@ const handleChatMessage = async ({ userId, message, conversationId, machineId })
         retrievedChunks,
         maintenanceHistory,
     });
-    const llmResponse = await (0, provider_1.generateLLMResponse)({
+    const llmResponse = await (0, provider_1.generateChatLLMResponse)({
         history: formatHistory(history),
         prompt,
         temperature: env_1.env.ai.temperature,
@@ -283,36 +277,45 @@ const handleChatMessage = async ({ userId, message, conversationId, machineId })
 };
 exports.handleChatMessage = handleChatMessage;
 const submitMessageFeedback = async ({ userId, messageId, value }) => {
-    const message = await prisma_1.prisma.chatMessage.findFirst({
-        where: {
-            id: messageId,
-            conversation: { userId },
-        },
-        select: { id: true },
-    });
-    if (!message) {
-        throw new Error("Message not found");
-    }
-    await prisma_1.prisma.chatMessageFeedback.upsert({
-        where: {
-            messageId_userId_value: {
+    try {
+        const message = await prisma_1.prisma.chatMessage.findFirst({
+            where: {
+                id: messageId,
+                conversation: { userId },
+            },
+            select: { id: true },
+        });
+        if (!message) {
+            throw new Error("Message not found");
+        }
+        await prisma_1.prisma.chatMessageFeedback.upsert({
+            where: {
+                messageId_userId_value: {
+                    messageId,
+                    userId,
+                    value,
+                },
+            },
+            update: {},
+            create: {
                 messageId,
                 userId,
                 value,
             },
-        },
-        update: {},
-        create: {
-            messageId,
-            userId,
-            value,
-        },
-    });
-    const feedback = await prisma_1.prisma.chatMessageFeedback.findMany({
-        where: { messageId, userId },
-        select: { value: true },
-    });
-    return feedback.map((item) => item.value);
+        });
+        const feedback = await prisma_1.prisma.chatMessageFeedback.findMany({
+            where: { messageId, userId },
+            select: { value: true },
+        });
+        return feedback.map((item) => item.value);
+    }
+    catch (error) {
+        if (error && typeof error === "object" && "code" in error && error.code === "P2022") {
+            console.error("Feedback column missing; returning empty feedback.", error);
+            return [];
+        }
+        throw error;
+    }
 };
 exports.submitMessageFeedback = submitMessageFeedback;
 //# sourceMappingURL=chatService.js.map

@@ -79,4 +79,9 @@ export type ChatMessage = Prisma.ChatMessageModel;
  *
  */
 export type ChatMessageFeedback = Prisma.ChatMessageFeedbackModel;
+/**
+ * Model SystemInsight
+ *
+ */
+export type SystemInsight = Prisma.SystemInsightModel;
 //# sourceMappingURL=client.d.ts.map

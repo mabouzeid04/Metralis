@@ -19,7 +19,7 @@ const inferBaseUrl = () => {
   }
 
   // Production environments where the frontend is hosted on Vercel but API lives on Render.
-  if (hostname.endsWith('metralis.vercel.app')) {
+  if (hostname.endsWith('vercel.app')) {
     return 'https://metralis-api.onrender.com/api/v1'
   }
 

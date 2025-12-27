@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -22,7 +22,7 @@ const buildPartSchema = (t: (key: string) => string) =>
     description: z.string().optional(),
     stockQty: z.number().int().min(0, { message: t('validation.stockMin') }),
     minStock: z.number().int().min(0, { message: t('validation.minStockMin') }),
-    cost: z.number().min(0, { message: t('validation.costMin') }).optional().or(z.undefined()),
+    cost: z.number().min(0, { message: t('validation.costMin') }).optional(),
   })
 
 type PartFormValues = z.infer<ReturnType<typeof buildPartSchema>>
@@ -44,7 +44,6 @@ export default function CreatePart() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { t } = useTranslation(['parts', 'common'])
-  const partSchema = useMemo(() => buildPartSchema(t), [t])
 
   const {
     register,
@@ -52,7 +51,7 @@ export default function CreatePart() {
     formState: { errors },
     reset,
   } = useForm<PartFormValues>({
-    resolver: zodResolver(partSchema),
+    resolver: zodResolver(buildPartSchema(t)),
     defaultValues,
   })
 
@@ -70,7 +69,7 @@ export default function CreatePart() {
         description: values.description?.trim() || undefined,
         stockQty: values.stockQty,
         minStock: values.minStock,
-        cost: typeof values.cost === 'number' ? values.cost : undefined,
+        cost: (typeof values.cost === 'number' && !isNaN(values.cost)) ? values.cost : undefined,
       }
 
       await api.post('/parts', payload)
@@ -138,10 +137,7 @@ export default function CreatePart() {
                   type="number"
                   step="0.01"
                   placeholder={t('form.placeholders.cost')}
-                  {...register('cost', {
-                    valueAsNumber: true,
-                    setValueAs: (v) => (v === '' || Number.isNaN(v) ? undefined : Number(v)),
-                  })}
+                  {...register('cost', { valueAsNumber: true })}
                 />
                 {errors.cost && <p className="text-sm text-destructive">{errors.cost.message}</p>}
               </div>

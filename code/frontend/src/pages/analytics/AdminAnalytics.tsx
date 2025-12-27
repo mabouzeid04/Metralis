@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import {
     Activity,
     Clock,
@@ -12,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { InsightCard, type InsightCategory, type InsightPriority } from '@/components/analytics/InsightCard'
 import { api } from '@/lib/api'
+import { useTranslation } from 'react-i18next'
 
 type AnalyticsStats = {
     totalAiQueries: number
@@ -73,7 +75,9 @@ const updateInsightStatus = async ({ id, status }: { id: string; status: string 
 }
 
 export default function AdminAnalytics() {
+    const { t } = useTranslation('analytics')
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ['analytics', 'stats'],
@@ -102,50 +106,55 @@ export default function AdminAnalytics() {
     })
 
     const formatHours = (hours: number | null) => {
-        if (hours === null) return 'N/A'
-        if (hours < 1) return `${Math.round(hours * 60)}m`
-        return `${hours.toFixed(1)} hrs`
+        if (hours === null) return t('time.notAvailable')
+        if (hours < 1) return `${Math.round(hours * 60)}${t('time.minutes')}`
+        return `${hours.toFixed(1)} ${t('time.hours')}`
     }
 
     const formatDays = (days: number | null) => {
-        if (days === null) return 'N/A'
-        if (days < 1) return `${Math.round(days * 24)} hrs`
-        return `${days.toFixed(1)} days`
+        if (days === null) return t('time.notAvailable')
+        if (days < 1) return `${Math.round(days * 24)} ${t('time.hours')}`
+        return `${days.toFixed(1)} ${t('time.days')}`
     }
 
     const metrics = [
         {
-            title: "AI Queries (7d)",
+            title: t('metrics.aiQueries.title'),
             value: stats?.totalAiQueries?.toLocaleString() ?? '-',
             icon: Search,
-            description: "Total queries across organization",
-            footer: "Last 7 days"
+            description: t('metrics.aiQueries.description'),
+            footer: t('metrics.aiQueries.footer')
         },
         {
-            title: "Mean Time to Diagnose",
+            title: t('metrics.meanTimeToDiagnose.title'),
             value: formatHours(stats?.avgDiagnosisTimeHours ?? null),
             icon: Activity,
-            description: "Avg time from report to diagnosis",
-            footer: "Based on recent work orders"
+            description: t('metrics.meanTimeToDiagnose.description'),
+            footer: t('metrics.meanTimeToDiagnose.footer')
         },
         {
-            title: "Mean Time to Repair",
+            title: t('metrics.meanTimeToRepair.title'),
             value: formatDays(stats?.avgRepairTimeDays ?? null),
             icon: Clock,
-            description: "Avg time to close work order",
-            footer: "Based on closed work orders"
+            description: t('metrics.meanTimeToRepair.description'),
+            footer: t('metrics.meanTimeToRepair.footer')
         },
         {
-            title: "Knowledge Base Coverage",
+            title: t('metrics.knowledgeBaseCoverage.title'),
             value: `${Math.round(stats?.kbCoveragePercent ?? 0)}%`,
             icon: BookOpen,
-            description: `${stats?.machinesWithDocs ?? 0} of ${stats?.totalMachines ?? 0} machines`,
+            description: t('metrics.knowledgeBaseCoverage.description', {
+                withDocs: stats?.machinesWithDocs ?? 0,
+                total: stats?.totalMachines ?? 0
+            }),
             footer: stats?.machinesWithoutDocs?.length ? (
                 <span className="text-amber-500 font-medium flex items-center gap-1.5">
                     <AlertTriangle className="w-3 h-3" />
-                    {stats.machinesWithoutDocs[0]?.name ?? 'Some machines'} missing docs
+                    {t('metrics.knowledgeBaseCoverage.footer.incomplete', {
+                        machineName: stats.machinesWithoutDocs[0]?.name ?? t('common:states.unknown')
+                    })}
                 </span>
-            ) : "All machines have documentation",
+            ) : t('metrics.knowledgeBaseCoverage.footer.complete'),
         }
     ]
 
@@ -154,32 +163,32 @@ export default function AdminAnalytics() {
     const getEvidenceFromMetadata = (insight: SystemInsight): string[] => {
         const evidence: string[] = []
         if (insight.metadata?.relatedWorkOrders?.length) {
-            evidence.push(`${insight.metadata.relatedWorkOrders.length} Work Orders`)
+            evidence.push(t('insights.evidence.workOrders', { count: insight.metadata.relatedWorkOrders.length }))
         }
         if (insight.metadata?.relatedMachines?.length) {
-            evidence.push(`${insight.metadata.relatedMachines.length} Machines`)
+            evidence.push(t('insights.evidence.machines', { count: insight.metadata.relatedMachines.length }))
         }
         if (insight.metadata?.dataPoints) {
             evidence.push(...insight.metadata.dataPoints.slice(0, 2))
         }
-        return evidence.length ? evidence : ['AI Analysis']
+        return evidence.length ? evidence : [t('insights.evidence.default')]
     }
 
     const getPrimaryAction = (category: SystemInsight['category']): string => {
         switch (category) {
-            case 'MAINTENANCE': return 'Schedule Inspection'
-            case 'INVENTORY': return 'Restock Inventory'
-            case 'DOCUMENTATION': return 'Upload Manuals'
-            case 'TRAINING': return 'Schedule Training'
-            default: return 'Take Action'
+            case 'MAINTENANCE': return t('insights.actions.viewWorkOrders')
+            case 'INVENTORY': return t('insights.actions.viewParts')
+            case 'DOCUMENTATION': return t('insights.actions.viewDocuments')
+            case 'TRAINING': return t('insights.actions.scheduleTraining')
+            default: return t('insights.actions.takeAction')
         }
     }
 
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex flex-col gap-1">
-                <h2 className="text-3xl font-bold tracking-tight">Admin Analytics</h2>
-                <p className="text-muted-foreground">System health, performance metrics, and AI-driven insights.</p>
+                <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+                <p className="text-muted-foreground">{t('subtitle')}</p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -214,8 +223,8 @@ export default function AdminAnalytics() {
                             <Zap className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold">Command Center</h2>
-                            <p className="text-sm text-muted-foreground">Proactive system reports and improvement suggestions</p>
+                            <h2 className="text-xl font-semibold">{t('commandCenter.title')}</h2>
+                            <p className="text-sm text-muted-foreground">{t('commandCenter.description')}</p>
                         </div>
                     </div>
                     <Button
@@ -225,16 +234,16 @@ export default function AdminAnalytics() {
                         disabled={generateMutation.isPending}
                     >
                         <RefreshCw className={`w-4 h-4 mr-2 ${generateMutation.isPending ? 'animate-spin' : ''}`} />
-                        Generate Insights
+{t('insights.generate')}
                     </Button>
                 </div>
 
                 <div className="grid gap-4">
                     {insightsLoading ? (
-                        <div className="text-center py-8 text-muted-foreground">Loading insights...</div>
+                        <div className="text-center py-8 text-muted-foreground">{t('insights.loading')}</div>
                     ) : activeInsights.length === 0 ? (
                         <div className="text-center py-8 text-muted-foreground">
-                            No active insights. Click "Generate Insights" to analyze your system.
+                            {t('insights.empty')}
                         </div>
                     ) : (
                         activeInsights.map((insight) => (
@@ -246,9 +255,24 @@ export default function AdminAnalytics() {
                                 description={insight.content}
                                 evidence={getEvidenceFromMetadata(insight)}
                                 primaryActionLabel={getPrimaryAction(insight.category)}
-                                onPrimaryAction={() => console.log('Primary action', insight.id)}
+                                onPrimaryAction={() => {
+                                    switch (insight.category) {
+                                        case 'MAINTENANCE':
+                                            navigate('/work-orders')
+                                            break
+                                        case 'INVENTORY':
+                                            navigate('/parts')
+                                            break
+                                        case 'DOCUMENTATION':
+                                            navigate('/documents')
+                                            break
+                                        default:
+                                            console.log('Primary action', insight.id)
+                                    }
+                                }}
                                 onViewEvidence={() => console.log('View evidence', insight.id)}
                                 onDismiss={() => dismissMutation.mutate({ id: insight.id, status: 'DISMISSED' })}
+                                primaryActionDisabled={insight.category === 'TRAINING'}
                             />
                         ))
                     )}

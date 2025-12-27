@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
+import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 
 export default function AppLayout() {
@@ -21,12 +22,13 @@ export default function AppLayout() {
       )}
 
       {/* Mobile Sidebar */}
-      <div
-        className={cn(
-          'app-sidebar-drawer fixed inset-y-0 left-0 z-40 w-64 bg-background border-r transform transition-transform duration-200 ease-in-out md:hidden',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-        )}
-      >
+        <div
+          className={cn(
+            'app-sidebar-drawer fixed inset-y-0 left-0 z-40 w-64 bg-background transform transition-transform duration-200 ease-in-out md:hidden',
+            document.dir === 'rtl' ? 'border-l' : 'border-r',
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          )}
+        >
         <Sidebar />
       </div>
 
@@ -39,6 +41,7 @@ export default function AppLayout() {
           </div>
         </main>
       </div>
+      <Toaster />
     </div>
   )
 }

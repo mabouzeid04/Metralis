@@ -10,6 +10,7 @@ const prompt_1 = require("./prompt");
             retrievedChunks: [
                 {
                     id: "chunk-1",
+                    source: "DOCUMENT",
                     documentId: "doc-1",
                     chunkIndex: 0,
                     content: "Check the bearing alignment.",

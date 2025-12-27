@@ -11,12 +11,11 @@
     "edit": "Edit",
     "apply": "Apply",
     "close": "Close",
-    "view": "View",
-    "add": "Add",
     "create": "Create",
     "upload": "Upload",
     "search": "Search",
-    "filter": "Filter"
+    "filter": "Filter",
+    "delete": "Delete"
   },
   "states": {
     "loading": "Loading...",
@@ -44,7 +43,8 @@
     "unknown": "Unknown",
     "low": "Low",
     "none": "-",
-    "noMachine": "No machine"
+    "noMachine": "No machine",
+    "noMachinesFound": "No machines found"
   },
   "priority": {
     "critical": "Critical",
@@ -68,6 +68,11 @@
     "searchPlaceholder": "Search...",
     "required": "This field is required"
   },
+  "title": "Title",
+  "machine": "Machine",
+  "type": "Type",
+  "priority": "Priority",
+  "assignTo": "Assign To",
   "notifications": {
     "title": "Notifications",
     "workOrders": "Work orders assigned to you",

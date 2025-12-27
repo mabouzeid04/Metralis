@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.upsertIncidentChunksForWorkOrder = void 0;
 const prisma_1 = require("../lib/prisma");
+const textChunker_1 = require("../utils/textChunker");
 const embeddings_1 = require("./embeddings");
 const vectorStore_1 = require("./vectorStore");
-const textChunker_1 = require("../utils/textChunker");
 const formatParts = (parts) => {
     if (!parts || !parts.length)
         return "None recorded";
@@ -17,16 +17,26 @@ const formatParts = (parts) => {
     })
         .join("; ");
 };
+const formatPartsUsed = (partsUsed) => {
+    if (!Array.isArray(partsUsed) || partsUsed.length === 0)
+        return "none";
+    return partsUsed
+        .map((p) => {
+        if (!p || typeof p !== "object")
+            return "part x1";
+        const entry = p;
+        const name = typeof entry.name === "string" ? entry.name : typeof entry.partId === "string" ? entry.partId : "part";
+        const quantity = typeof entry.quantity === "number" ? entry.quantity : 1;
+        return `${name} x${quantity}`;
+    })
+        .join(", ");
+};
 const formatRepairActions = (repairs) => {
     if (!repairs.length)
         return "No repair actions logged yet.";
     return repairs
         .map((repair, idx) => {
-        const partsList = Array.isArray(repair.partsUsed) && repair.partsUsed.length
-            ? repair.partsUsed
-                .map((p) => `${p.name ?? p.partId ?? "part"} x${p.quantity ?? 1}`)
-                .join(", ")
-            : "none";
+        const partsList = formatPartsUsed(repair.partsUsed);
         const status = repair.success ? "success" : "incomplete/failed";
         const performer = repair.performedBy?.name ? ` by ${repair.performedBy.name}` : "";
         return [
@@ -42,6 +52,22 @@ const formatRepairActions = (repairs) => {
             .join(" ");
     })
         .join("\n");
+};
+const workOrderInclude = {
+    machine: {
+        select: { id: true, name: true, model: true, manufacturer: true, line: true },
+    },
+    parts: {
+        include: { part: true },
+    },
+    repairActions: {
+        orderBy: { createdAt: "asc" },
+        include: {
+            performedBy: {
+                select: { name: true },
+            },
+        },
+    },
 };
 const buildIncidentText = (workOrder) => {
     if (!workOrder)
@@ -81,22 +107,7 @@ const buildIncidentText = (workOrder) => {
 const upsertIncidentChunksForWorkOrder = async (workOrderId) => {
     const workOrder = await prisma_1.prisma.workOrder.findUnique({
         where: { id: workOrderId },
-        include: {
-            machine: {
-                select: { id: true, name: true, model: true, manufacturer: true, line: true },
-            },
-            parts: {
-                include: { part: true },
-            },
-            repairActions: {
-                orderBy: { createdAt: "asc" },
-                include: {
-                    performedBy: {
-                        select: { name: true },
-                    },
-                },
-            },
-        },
+        include: workOrderInclude,
     });
     if (!workOrder) {
         throw new Error("Work order not found");
@@ -113,6 +124,9 @@ const upsertIncidentChunksForWorkOrder = async (workOrderId) => {
     }
     const records = chunkContents.map((content, idx) => {
         const embedding = embeddings[idx];
+        if (!embedding) {
+            throw new Error(`Failed to generate embedding for chunk ${idx}`);
+        }
         return {
             workOrderId,
             chunkIndex: idx,

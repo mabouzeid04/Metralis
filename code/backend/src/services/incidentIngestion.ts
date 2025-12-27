@@ -1,7 +1,8 @@
+import type { Prisma } from "../generated/prisma/client";
 import { prisma } from "../lib/prisma";
+import { chunkText, countApproxTokens } from "../utils/textChunker";
 import { embedTexts } from "./embeddings";
 import { replaceIncidentChunks, type IncidentChunkRecord } from "./vectorStore";
-import { chunkText, countApproxTokens } from "../utils/textChunker";
 
 const formatParts = (parts?: Array<{ part?: { name: string | null; partNumber: string | null; manufacturer: string | null } }>) => {
   if (!parts || !parts.length) return "None recorded";
@@ -15,6 +16,20 @@ const formatParts = (parts?: Array<{ part?: { name: string | null; partNumber: s
     .join("; ");
 };
 
+const formatPartsUsed = (partsUsed: Prisma.JsonValue | null | undefined) => {
+  if (!Array.isArray(partsUsed) || partsUsed.length === 0) return "none";
+
+  return partsUsed
+    .map((p) => {
+      if (!p || typeof p !== "object") return "part x1";
+      const entry = p as Record<string, unknown>;
+      const name = typeof entry.name === "string" ? entry.name : typeof entry.partId === "string" ? entry.partId : "part";
+      const quantity = typeof entry.quantity === "number" ? entry.quantity : 1;
+      return `${name} x${quantity}`;
+    })
+    .join(", ");
+};
+
 const formatRepairActions = (
   repairs: Array<{
     id: string;
@@ -24,7 +39,7 @@ const formatRepairActions = (
     failureNote: string | null;
     adjustments: string | null;
     verification: string | null;
-    partsUsed: unknown;
+    partsUsed: Prisma.JsonValue | null;
     createdAt: Date;
     performedBy?: { name: string | null } | null;
   }>,
@@ -33,12 +48,7 @@ const formatRepairActions = (
 
   return repairs
     .map((repair, idx) => {
-      const partsList =
-        Array.isArray(repair.partsUsed) && repair.partsUsed.length
-          ? (repair.partsUsed as Array<{ partId?: string; quantity?: number; name?: string }>)
-              .map((p) => `${p.name ?? p.partId ?? "part"} x${p.quantity ?? 1}`)
-              .join(", ")
-          : "none";
+      const partsList = formatPartsUsed(repair.partsUsed);
       const status = repair.success ? "success" : "incomplete/failed";
       const performer = repair.performedBy?.name ? ` by ${repair.performedBy.name}` : "";
       return [
@@ -56,13 +66,32 @@ const formatRepairActions = (
     .join("\n");
 };
 
-const buildIncidentText = (workOrder: Awaited<ReturnType<typeof prisma.workOrder.findUnique>>) => {
+const workOrderInclude = {
+  machine: {
+    select: { id: true, name: true, model: true, manufacturer: true, line: true },
+  },
+  parts: {
+    include: { part: true },
+  },
+  repairActions: {
+    orderBy: { createdAt: "asc" },
+    include: {
+      performedBy: {
+        select: { name: true },
+      },
+    },
+  },
+} satisfies Prisma.WorkOrderInclude;
+
+type WorkOrderWithRelations = Prisma.WorkOrderGetPayload<{ include: typeof workOrderInclude }>;
+
+const buildIncidentText = (workOrder: WorkOrderWithRelations) => {
   if (!workOrder) return "";
 
   const machine = workOrder.machine;
   const repairs = workOrder.repairActions ?? [];
   const parts = workOrder.parts ?? [];
-  const symptoms = Array.isArray(workOrder.symptoms) ? (workOrder.symptoms as string[]).join(", ") : "";
+  const symptoms = Array.isArray(workOrder.symptoms) ? workOrder.symptoms.join(", ") : "";
 
   const header = [
     `Work Order ${workOrder.publicId ?? workOrder.id}: ${workOrder.title}`,
@@ -100,22 +129,7 @@ const buildIncidentText = (workOrder: Awaited<ReturnType<typeof prisma.workOrder
 export const upsertIncidentChunksForWorkOrder = async (workOrderId: string) => {
   const workOrder = await prisma.workOrder.findUnique({
     where: { id: workOrderId },
-    include: {
-      machine: {
-        select: { id: true, name: true, model: true, manufacturer: true, line: true },
-      },
-      parts: {
-        include: { part: true },
-      },
-      repairActions: {
-        orderBy: { createdAt: "asc" },
-        include: {
-          performedBy: {
-            select: { name: true },
-          },
-        },
-      },
-    },
+    include: workOrderInclude,
   });
 
   if (!workOrder) {
@@ -137,6 +151,9 @@ export const upsertIncidentChunksForWorkOrder = async (workOrderId: string) => {
 
   const records: IncidentChunkRecord[] = chunkContents.map((content, idx) => {
     const embedding = embeddings[idx];
+    if (!embedding) {
+      throw new Error(`Failed to generate embedding for chunk ${idx}`);
+    }
     return {
       workOrderId,
       chunkIndex: idx,

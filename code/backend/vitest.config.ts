@@ -4,10 +4,11 @@ import path from "path";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts", "tests/**/*.test.ts"],
-    setupFiles: [path.resolve(__dirname, "tests/setupTestEnv.ts")],
+    include: ["src/**/*.test.ts"],
+    setupFiles: [path.resolve(__dirname, "src/tests/setupTestEnv.ts")],
     clearMocks: true,
     globals: true,
+    fileParallelism: false,
     coverage: {
       provider: "v8",
       reportsDirectory: "coverage",

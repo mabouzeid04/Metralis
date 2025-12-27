@@ -28,6 +28,17 @@
   },
   "unassigned": "Unassigned",
   "view": "View",
+  "editWorkOrder": "Edit Work Order",
+  "deleteWorkOrder": "Delete Work Order",
+  "deleteWorkOrderConfirm": "This action cannot be undone. This will permanently delete the work order and all associated repair actions.",
+  "workOrderUpdated": "Work order updated",
+  "workOrderUpdatedDescription": "The work order has been successfully updated.",
+  "workOrderDeleted": "Work order deleted",
+  "workOrderDeletedDescription": "The work order has been permanently deleted.",
+  "updateFailed": "Update failed",
+  "updateFailedDescription": "Failed to update the work order. Please try again.",
+  "deleteFailed": "Delete failed",
+  "deleteFailedDescription": "Failed to delete the work order. Please try again.",
   "errors": {
     "load": "Failed to load work orders"
   }

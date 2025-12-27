@@ -9,7 +9,7 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AiFeedbackValue = exports.ChatMessageRole = exports.DocumentIngestionStatus = exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserStatus = exports.UserRole = void 0;
+exports.InsightStatus = exports.InsightPriority = exports.InsightCategory = exports.AiFeedbackValue = exports.ChatMessageRole = exports.DocumentIngestionStatus = exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserStatus = exports.UserRole = void 0;
 exports.UserRole = {
     ADMIN: 'ADMIN',
     TECHNICIAN: 'TECHNICIAN'
@@ -68,5 +68,22 @@ exports.AiFeedbackValue = {
     HELPFUL: 'HELPFUL',
     NOT_HELPFUL: 'NOT_HELPFUL',
     CORRECT_CAUSE: 'CORRECT_CAUSE'
+};
+exports.InsightCategory = {
+    MAINTENANCE: 'MAINTENANCE',
+    INVENTORY: 'INVENTORY',
+    DOCUMENTATION: 'DOCUMENTATION',
+    TRAINING: 'TRAINING'
+};
+exports.InsightPriority = {
+    HIGH: 'HIGH',
+    MEDIUM: 'MEDIUM',
+    LOW: 'LOW'
+};
+exports.InsightStatus = {
+    NEW: 'NEW',
+    REVIEWED: 'REVIEWED',
+    ACTIONED: 'ACTIONED',
+    DISMISSED: 'DISMISSED'
 };
 //# sourceMappingURL=enums.js.map
