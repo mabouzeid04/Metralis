@@ -1,11 +1,13 @@
 import { embedTexts } from "../embeddings";
 import { searchSimilarChunks, searchSimilarIncidents } from "../vectorStore";
+import { getDocumentsForAsset } from "../documentService";
 import type { RetrievedChunk } from "./types";
 
 type RetrieveParams = {
   question: string;
   machineId?: string | null | undefined;
   machineType?: string | null | undefined;
+  assetId?: string | null | undefined;
   language?: string | null | undefined;
   limit?: number;
 };
@@ -14,6 +16,7 @@ export const retrieveContext = async ({
   question,
   machineId,
   machineType,
+  assetId,
   language,
   limit = 5,
 }: RetrieveParams): Promise<RetrievedChunk[]> => {
@@ -23,8 +26,18 @@ export const retrieveContext = async ({
     return [];
   }
 
+  // If assetId is provided, resolve all applicable document IDs
+  // (direct + inherited from ancestors + factory-wide) and filter by those
+  let applicableDocumentIds: string[] | undefined;
+  if (assetId) {
+    const applicableDocs = await getDocumentsForAsset(assetId);
+    applicableDocumentIds = applicableDocs.map((d) => d.document.id);
+  }
+
   const docChunks = await searchSimilarChunks(questionEmbedding, limit, {
-    machineId: machineId ?? undefined,
+    // Use asset-based document scoping when available, fall back to machineId
+    documentIds: applicableDocumentIds,
+    machineId: !applicableDocumentIds ? (machineId ?? undefined) : undefined,
     machineType: machineType ?? undefined,
     language: language ?? undefined,
   });

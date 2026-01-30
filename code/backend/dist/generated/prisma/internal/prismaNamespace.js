@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemInsightScalarFieldEnum = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.NullsOrder = exports.JsonNullValueFilter = exports.QueryMode = exports.JsonNullValueInput = exports.NullableJsonNullValueInput = exports.SortOrder = exports.SystemInsightScalarFieldEnum = exports.ChatMessageFeedbackScalarFieldEnum = exports.ChatMessageScalarFieldEnum = exports.ChatConversationScalarFieldEnum = exports.IncidentChunkScalarFieldEnum = exports.DocumentChunkScalarFieldEnum = exports.DocumentScalarFieldEnum = exports.WorkOrderPartScalarFieldEnum = exports.PartScalarFieldEnum = exports.RepairActionScalarFieldEnum = exports.WorkOrderScalarFieldEnum = exports.MachineScalarFieldEnum = exports.DocumentAssetScalarFieldEnum = exports.AssetScalarFieldEnum = exports.FactoryConfigScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/library"));
 /**
  * Prisma Errors
@@ -104,6 +104,9 @@ exports.JsonNull = runtime.objectEnumValues.instances.JsonNull;
 exports.AnyNull = runtime.objectEnumValues.instances.AnyNull;
 exports.ModelName = {
     User: 'User',
+    FactoryConfig: 'FactoryConfig',
+    Asset: 'Asset',
+    DocumentAsset: 'DocumentAsset',
     Machine: 'Machine',
     WorkOrder: 'WorkOrder',
     RepairAction: 'RepairAction',
@@ -146,6 +149,43 @@ exports.UserScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+exports.FactoryConfigScalarFieldEnum = {
+    id: 'id',
+    primaryLanguage: 'primaryLanguage',
+    supportedLanguages: 'supportedLanguages',
+    hierarchyLevels: 'hierarchyLevels',
+    defaultMaxDepth: 'defaultMaxDepth',
+    statusReasonOptions: 'statusReasonOptions',
+    maintenanceDisciplines: 'maintenanceDisciplines',
+    maintenanceTypes: 'maintenanceTypes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.AssetScalarFieldEnum = {
+    id: 'id',
+    parentId: 'parentId',
+    depth: 'depth',
+    name: 'name',
+    nameTranslations: 'nameTranslations',
+    code: 'code',
+    levelType: 'levelType',
+    pathString: 'pathString',
+    pathStringTranslations: 'pathStringTranslations',
+    status: 'status',
+    statusReason: 'statusReason',
+    criticality: 'criticality',
+    attributes: 'attributes',
+    commissionedAt: 'commissionedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+exports.DocumentAssetScalarFieldEnum = {
+    id: 'id',
+    documentId: 'documentId',
+    assetId: 'assetId',
+    isPrimary: 'isPrimary',
+    createdAt: 'createdAt'
+};
 exports.MachineScalarFieldEnum = {
     id: 'id',
     name: 'name',
@@ -167,6 +207,7 @@ exports.WorkOrderScalarFieldEnum = {
     id: 'id',
     publicId: 'publicId',
     machineId: 'machineId',
+    assetId: 'assetId',
     title: 'title',
     descriptionRaw: 'descriptionRaw',
     status: 'status',
@@ -184,7 +225,27 @@ exports.WorkOrderScalarFieldEnum = {
     environmentContext: 'environmentContext',
     metadata: 'metadata',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    maintenanceType: 'maintenanceType',
+    maintenanceDisciplines: 'maintenanceDisciplines',
+    equipmentStopTime: 'equipmentStopTime',
+    faultReportTime: 'faultReportTime',
+    repairStartTime: 'repairStartTime',
+    maintenanceStartTime: 'maintenanceStartTime',
+    maintenanceEndTime: 'maintenanceEndTime',
+    maintenanceDescription: 'maintenanceDescription',
+    correctiveAction: 'correctiveAction',
+    notesAndRecommendations: 'notesAndRecommendations',
+    equipmentStatusAfter: 'equipmentStatusAfter',
+    maintenanceDurationMin: 'maintenanceDurationMin',
+    downtimeDurationMin: 'downtimeDurationMin',
+    areaLeaderId: 'areaLeaderId',
+    maintenanceSupervisorId: 'maintenanceSupervisorId',
+    performerId: 'performerId',
+    machineReceiverId: 'machineReceiverId',
+    responsibleEngineerId: 'responsibleEngineerId',
+    maintenanceEngineerId: 'maintenanceEngineerId',
+    maintenanceManagerId: 'maintenanceManagerId'
 };
 exports.RepairActionScalarFieldEnum = {
     id: 'id',
@@ -236,11 +297,14 @@ exports.DocumentScalarFieldEnum = {
     machineType: 'machineType',
     language: 'language',
     version: 'version',
+    description: 'description',
     metadata: 'metadata',
     uploadedById: 'uploadedById',
     ingestionStatus: 'ingestionStatus',
     ingestedAt: 'ingestedAt',
     ingestionError: 'ingestionError',
+    isFactoryWide: 'isFactoryWide',
+    appliesToChildren: 'appliesToChildren',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -261,6 +325,7 @@ exports.IncidentChunkScalarFieldEnum = {
     tokens: 'tokens',
     machineId: 'machineId',
     machineType: 'machineType',
+    assetId: 'assetId',
     language: 'language',
     metadata: 'metadata',
     createdAt: 'createdAt'
@@ -269,6 +334,7 @@ exports.ChatConversationScalarFieldEnum = {
     id: 'id',
     userId: 'userId',
     machineId: 'machineId',
+    assetId: 'assetId',
     title: 'title',
     summary: 'summary',
     metadata: 'metadata',
@@ -310,6 +376,9 @@ exports.SortOrder = {
 };
 exports.NullableJsonNullValueInput = {
     DbNull: exports.DbNull,
+    JsonNull: exports.JsonNull
+};
+exports.JsonNullValueInput = {
     JsonNull: exports.JsonNull
 };
 exports.QueryMode = {

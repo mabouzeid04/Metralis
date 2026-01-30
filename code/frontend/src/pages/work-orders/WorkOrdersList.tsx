@@ -57,6 +57,7 @@ export default function WorkOrdersList() {
       return (
         wo.title.toLowerCase().includes(search) ||
         displayId.includes(search) ||
+        (wo.asset?.name && wo.asset.name.toLowerCase().includes(search)) ||
         (wo.machine?.name && wo.machine.name.toLowerCase().includes(search))
       )
     })
@@ -115,7 +116,7 @@ export default function WorkOrdersList() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>{t('filters.status')}</DropdownMenuLabel>
                 <DropdownMenuGroup>
-                  {['OPEN', 'IN_PROGRESS', 'COMPLETED'].map((status) => (
+                  {['OPEN', 'IN_PROGRESS', 'WAITING', 'CLOSED'].map((status) => (
                     <DropdownMenuCheckboxItem
                       key={status}
                       checked={filters.status === status}
@@ -186,7 +187,7 @@ export default function WorkOrdersList() {
                   <TableHead>{t('table.id')}</TableHead>
                   <TableHead>{t('table.status')}</TableHead>
                   <TableHead>{t('table.title')}</TableHead>
-                  <TableHead className="hidden md:table-cell">{t('table.machine')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.asset')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('table.priority')}</TableHead>
                   <TableHead className="hidden lg:table-cell">{t('table.assignee')}</TableHead>
                   <TableHead className="hidden lg:table-cell">{t('table.created')}</TableHead>
@@ -208,7 +209,7 @@ export default function WorkOrdersList() {
                           {wo.title}
                         </Link>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{wo.machine?.name || '-'}</TableCell>
+                      <TableCell className="hidden md:table-cell">{wo.asset?.name || wo.machine?.name || '-'}</TableCell>
                       <TableCell className="hidden md:table-cell">
                         <Badge
                           variant={

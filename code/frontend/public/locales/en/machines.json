@@ -7,6 +7,10 @@
   "emptyTitle": "No machines found",
   "emptySearchHint": "Try a different search term",
   "emptyCreateHint": "Get started by adding your first machine",
+  "filters": {
+    "status": "Status",
+    "clear": "Clear"
+  },
   "table": {
     "status": "Status",
     "name": "Name",

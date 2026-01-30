@@ -1,6 +1,8 @@
 {
   "title": "Admin Analytics",
   "subtitle": "System health, performance metrics, and AI-driven insights.",
+  "maintenanceTitle": "Maintenance Analytics",
+  "maintenanceSubtitle": "KPIs, trends, and breakdowns for maintenance performance.",
   "metrics": {
     "aiQueries": {
       "title": "AI Queries (7d)",
@@ -52,5 +54,55 @@
     "minutes": "m",
     "hours": "hrs",
     "days": "days"
+  },
+  "filters": {
+    "dateRange": "Date Range",
+    "asset": "Asset",
+    "maintenanceType": "Maintenance Type",
+    "includeChildren": "Include child assets",
+    "allAssets": "All assets",
+    "allTypes": "All types"
+  },
+  "presets": {
+    "7d": "Last 7 days",
+    "30d": "Last 30 days",
+    "90d": "Last 90 days",
+    "12m": "Last 12 months",
+    "ytd": "Year to date",
+    "custom": "Custom range"
+  },
+  "kpis": {
+    "totalWorkOrders": "Total Work Orders",
+    "openWorkOrders": "Open Work Orders",
+    "avgMttr": "Avg. MTTR",
+    "totalDowntime": "Total Downtime",
+    "mtbf": "MTBF"
+  },
+  "charts": {
+    "workOrdersOverTime": "Work Orders Over Time",
+    "byStatus": "By Status",
+    "byType": "By Maintenance Type",
+    "byDiscipline": "By Discipline",
+    "topFailingAssets": "Top Failing Assets",
+    "noData": "No data available for the selected period."
+  },
+  "table": {
+    "asset": "Asset",
+    "workOrders": "Work Orders",
+    "downtime": "Downtime",
+    "avgMttr": "Avg. MTTR",
+    "assetsBreakdown": "Assets Breakdown"
+  },
+  "export": {
+    "button": "Export",
+    "csv": "Export CSV",
+    "excel": "Export Excel"
+  },
+  "units": {
+    "minutes": "min",
+    "hours": "h"
+  },
+  "comparison": {
+    "vsPrevious": "vs previous period"
   }
 }

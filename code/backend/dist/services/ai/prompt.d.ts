@@ -1,4 +1,15 @@
 import type { RetrievedChunk } from "./types";
+type AssetContext = {
+    id: string;
+    name: string;
+    nameTranslations: Record<string, string> | null;
+    code: string | null;
+    pathString: string;
+    pathStringTranslations: Record<string, string> | null;
+    status: string | null;
+    statusReason: string | null;
+    criticality: string | null;
+} | null;
 type BuildPromptParams = {
     question: string;
     machine?: {
@@ -18,15 +29,17 @@ type BuildPromptParams = {
         reportedAt: Date;
         completedAt: Date | null;
     }>;
+    language?: "en" | "ar";
+    asset?: AssetContext;
 };
-export declare const buildPrompt: ({ question, machine, retrievedChunks, maintenanceHistory }: BuildPromptParams) => string;
+export declare const buildPrompt: ({ question, machine, retrievedChunks, maintenanceHistory, language, asset }: BuildPromptParams) => string;
 export type SystemSnapshot = {
     recentWorkOrders: Array<{
         id: string;
         title: string;
-        machineId: string;
+        machineId?: string;
         machineName: string;
-        type: string;
+        type: string | null;
         status: string;
         rootCause?: string | null;
         failureMode?: string | null;

@@ -1,6 +1,16 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
+export interface DocumentAsset {
+    id: string
+    asset: {
+        id: string
+        name: string
+        pathString: string
+    }
+    isPrimary: boolean
+}
+
 export interface Document {
     id: string
     title: string
@@ -8,7 +18,10 @@ export interface Document {
     filename: string
     fileSize: number | null
     mimeType: string | null
+    description: string | null
+    language: string | null
     createdAt: string
+    isFactoryWide: boolean
     machine: {
         id: string
         name: string
@@ -17,6 +30,7 @@ export interface Document {
         id: string
         name: string
     } | null
+    assets?: DocumentAsset[]
 }
 
 export type DocumentType = 'MANUAL' | 'SOP' | 'TROUBLESHOOTING' | 'OTHER'

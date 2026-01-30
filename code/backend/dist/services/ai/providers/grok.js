@@ -14,7 +14,7 @@ class GrokProvider {
             content: message.content,
         }));
         const messages = [
-            { role: "system", content: systemPrompt_1.SYSTEM_PROMPT },
+            { role: "system", content: (0, systemPrompt_1.buildSystemPrompt)(params.language) },
             ...historyMessages,
             { role: "user", content: params.prompt },
         ];

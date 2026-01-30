@@ -61,6 +61,7 @@ export type ConversationDetail = {
     id: string
     title: string
     machineId: string | null
+    assetId?: string | null
     machine?: {
       id: string
       name: string
@@ -93,16 +94,22 @@ export type SendMessageResponse = {
 export const sendChatMessage = async ({
   message,
   machineId,
+  assetId,
   conversationId,
+  language,
 }: {
   message: string
   machineId?: string
+  assetId?: string
   conversationId?: string | null
+  language?: 'en' | 'ar'
 }) => {
   const { data } = await api.post<{ data: SendMessageResponse }>('/ai/chat', {
     message,
     machineId,
+    assetId,
     conversationId: conversationId ?? undefined,
+    language,
   })
   return data.data
 }

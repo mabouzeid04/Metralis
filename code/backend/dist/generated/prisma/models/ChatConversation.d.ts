@@ -14,6 +14,7 @@ export type ChatConversationMinAggregateOutputType = {
     id: string | null;
     userId: string | null;
     machineId: string | null;
+    assetId: string | null;
     title: string | null;
     summary: string | null;
     lastMessageAt: Date | null;
@@ -24,6 +25,7 @@ export type ChatConversationMaxAggregateOutputType = {
     id: string | null;
     userId: string | null;
     machineId: string | null;
+    assetId: string | null;
     title: string | null;
     summary: string | null;
     lastMessageAt: Date | null;
@@ -34,6 +36,7 @@ export type ChatConversationCountAggregateOutputType = {
     id: number;
     userId: number;
     machineId: number;
+    assetId: number;
     title: number;
     summary: number;
     metadata: number;
@@ -46,6 +49,7 @@ export type ChatConversationMinAggregateInputType = {
     id?: true;
     userId?: true;
     machineId?: true;
+    assetId?: true;
     title?: true;
     summary?: true;
     lastMessageAt?: true;
@@ -56,6 +60,7 @@ export type ChatConversationMaxAggregateInputType = {
     id?: true;
     userId?: true;
     machineId?: true;
+    assetId?: true;
     title?: true;
     summary?: true;
     lastMessageAt?: true;
@@ -66,6 +71,7 @@ export type ChatConversationCountAggregateInputType = {
     id?: true;
     userId?: true;
     machineId?: true;
+    assetId?: true;
     title?: true;
     summary?: true;
     metadata?: true;
@@ -140,6 +146,7 @@ export type ChatConversationGroupByOutputType = {
     id: string;
     userId: string;
     machineId: string | null;
+    assetId: string | null;
     title: string;
     summary: string | null;
     metadata: runtime.JsonValue | null;
@@ -160,6 +167,7 @@ export type ChatConversationWhereInput = {
     id?: Prisma.StringFilter<"ChatConversation"> | string;
     userId?: Prisma.StringFilter<"ChatConversation"> | string;
     machineId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     title?: Prisma.StringFilter<"ChatConversation"> | string;
     summary?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"ChatConversation">;
@@ -168,12 +176,14 @@ export type ChatConversationWhereInput = {
     updatedAt?: Prisma.DateTimeFilter<"ChatConversation"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null;
+    asset?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null;
     messages?: Prisma.ChatMessageListRelationFilter;
 };
 export type ChatConversationOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assetId?: Prisma.SortOrderInput | Prisma.SortOrder;
     title?: Prisma.SortOrder;
     summary?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -182,6 +192,7 @@ export type ChatConversationOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
     machine?: Prisma.MachineOrderByWithRelationInput;
+    asset?: Prisma.AssetOrderByWithRelationInput;
     messages?: Prisma.ChatMessageOrderByRelationAggregateInput;
 };
 export type ChatConversationWhereUniqueInput = Prisma.AtLeast<{
@@ -191,6 +202,7 @@ export type ChatConversationWhereUniqueInput = Prisma.AtLeast<{
     NOT?: Prisma.ChatConversationWhereInput | Prisma.ChatConversationWhereInput[];
     userId?: Prisma.StringFilter<"ChatConversation"> | string;
     machineId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     title?: Prisma.StringFilter<"ChatConversation"> | string;
     summary?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"ChatConversation">;
@@ -199,12 +211,14 @@ export type ChatConversationWhereUniqueInput = Prisma.AtLeast<{
     updatedAt?: Prisma.DateTimeFilter<"ChatConversation"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
     machine?: Prisma.XOR<Prisma.MachineNullableScalarRelationFilter, Prisma.MachineWhereInput> | null;
+    asset?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null;
     messages?: Prisma.ChatMessageListRelationFilter;
 }, "id">;
 export type ChatConversationOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assetId?: Prisma.SortOrderInput | Prisma.SortOrder;
     title?: Prisma.SortOrder;
     summary?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
@@ -222,6 +236,7 @@ export type ChatConversationScalarWhereWithAggregatesInput = {
     id?: Prisma.StringWithAggregatesFilter<"ChatConversation"> | string;
     userId?: Prisma.StringWithAggregatesFilter<"ChatConversation"> | string;
     machineId?: Prisma.StringNullableWithAggregatesFilter<"ChatConversation"> | string | null;
+    assetId?: Prisma.StringNullableWithAggregatesFilter<"ChatConversation"> | string | null;
     title?: Prisma.StringWithAggregatesFilter<"ChatConversation"> | string;
     summary?: Prisma.StringNullableWithAggregatesFilter<"ChatConversation"> | string | null;
     metadata?: Prisma.JsonNullableWithAggregatesFilter<"ChatConversation">;
@@ -239,12 +254,14 @@ export type ChatConversationCreateInput = {
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutChatConversationsInput;
     machine?: Prisma.MachineCreateNestedOneWithoutChatConversationsInput;
+    asset?: Prisma.AssetCreateNestedOneWithoutChatConversationsInput;
     messages?: Prisma.ChatMessageCreateNestedManyWithoutConversationInput;
 };
 export type ChatConversationUncheckedCreateInput = {
     id?: string;
     userId: string;
     machineId?: string | null;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -263,12 +280,14 @@ export type ChatConversationUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutChatConversationsNestedInput;
     machine?: Prisma.MachineUpdateOneWithoutChatConversationsNestedInput;
+    asset?: Prisma.AssetUpdateOneWithoutChatConversationsNestedInput;
     messages?: Prisma.ChatMessageUpdateManyWithoutConversationNestedInput;
 };
 export type ChatConversationUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -281,6 +300,7 @@ export type ChatConversationCreateManyInput = {
     id?: string;
     userId: string;
     machineId?: string | null;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -301,6 +321,7 @@ export type ChatConversationUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -320,6 +341,7 @@ export type ChatConversationCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     summary?: Prisma.SortOrder;
     metadata?: Prisma.SortOrder;
@@ -331,6 +353,7 @@ export type ChatConversationMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     summary?: Prisma.SortOrder;
     lastMessageAt?: Prisma.SortOrder;
@@ -341,6 +364,7 @@ export type ChatConversationMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     userId?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     title?: Prisma.SortOrder;
     summary?: Prisma.SortOrder;
     lastMessageAt?: Prisma.SortOrder;
@@ -387,6 +411,44 @@ export type ChatConversationUncheckedUpdateManyWithoutUserNestedInput = {
     connect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
     update?: Prisma.ChatConversationUpdateWithWhereUniqueWithoutUserInput | Prisma.ChatConversationUpdateWithWhereUniqueWithoutUserInput[];
     updateMany?: Prisma.ChatConversationUpdateManyWithWhereWithoutUserInput | Prisma.ChatConversationUpdateManyWithWhereWithoutUserInput[];
+    deleteMany?: Prisma.ChatConversationScalarWhereInput | Prisma.ChatConversationScalarWhereInput[];
+};
+export type ChatConversationCreateNestedManyWithoutAssetInput = {
+    create?: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput> | Prisma.ChatConversationCreateWithoutAssetInput[] | Prisma.ChatConversationUncheckedCreateWithoutAssetInput[];
+    connectOrCreate?: Prisma.ChatConversationCreateOrConnectWithoutAssetInput | Prisma.ChatConversationCreateOrConnectWithoutAssetInput[];
+    createMany?: Prisma.ChatConversationCreateManyAssetInputEnvelope;
+    connect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+};
+export type ChatConversationUncheckedCreateNestedManyWithoutAssetInput = {
+    create?: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput> | Prisma.ChatConversationCreateWithoutAssetInput[] | Prisma.ChatConversationUncheckedCreateWithoutAssetInput[];
+    connectOrCreate?: Prisma.ChatConversationCreateOrConnectWithoutAssetInput | Prisma.ChatConversationCreateOrConnectWithoutAssetInput[];
+    createMany?: Prisma.ChatConversationCreateManyAssetInputEnvelope;
+    connect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+};
+export type ChatConversationUpdateManyWithoutAssetNestedInput = {
+    create?: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput> | Prisma.ChatConversationCreateWithoutAssetInput[] | Prisma.ChatConversationUncheckedCreateWithoutAssetInput[];
+    connectOrCreate?: Prisma.ChatConversationCreateOrConnectWithoutAssetInput | Prisma.ChatConversationCreateOrConnectWithoutAssetInput[];
+    upsert?: Prisma.ChatConversationUpsertWithWhereUniqueWithoutAssetInput | Prisma.ChatConversationUpsertWithWhereUniqueWithoutAssetInput[];
+    createMany?: Prisma.ChatConversationCreateManyAssetInputEnvelope;
+    set?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    disconnect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    delete?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    connect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    update?: Prisma.ChatConversationUpdateWithWhereUniqueWithoutAssetInput | Prisma.ChatConversationUpdateWithWhereUniqueWithoutAssetInput[];
+    updateMany?: Prisma.ChatConversationUpdateManyWithWhereWithoutAssetInput | Prisma.ChatConversationUpdateManyWithWhereWithoutAssetInput[];
+    deleteMany?: Prisma.ChatConversationScalarWhereInput | Prisma.ChatConversationScalarWhereInput[];
+};
+export type ChatConversationUncheckedUpdateManyWithoutAssetNestedInput = {
+    create?: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput> | Prisma.ChatConversationCreateWithoutAssetInput[] | Prisma.ChatConversationUncheckedCreateWithoutAssetInput[];
+    connectOrCreate?: Prisma.ChatConversationCreateOrConnectWithoutAssetInput | Prisma.ChatConversationCreateOrConnectWithoutAssetInput[];
+    upsert?: Prisma.ChatConversationUpsertWithWhereUniqueWithoutAssetInput | Prisma.ChatConversationUpsertWithWhereUniqueWithoutAssetInput[];
+    createMany?: Prisma.ChatConversationCreateManyAssetInputEnvelope;
+    set?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    disconnect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    delete?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    connect?: Prisma.ChatConversationWhereUniqueInput | Prisma.ChatConversationWhereUniqueInput[];
+    update?: Prisma.ChatConversationUpdateWithWhereUniqueWithoutAssetInput | Prisma.ChatConversationUpdateWithWhereUniqueWithoutAssetInput[];
+    updateMany?: Prisma.ChatConversationUpdateManyWithWhereWithoutAssetInput | Prisma.ChatConversationUpdateManyWithWhereWithoutAssetInput[];
     deleteMany?: Prisma.ChatConversationScalarWhereInput | Prisma.ChatConversationScalarWhereInput[];
 };
 export type ChatConversationCreateNestedManyWithoutMachineInput = {
@@ -448,11 +510,13 @@ export type ChatConversationCreateWithoutUserInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     machine?: Prisma.MachineCreateNestedOneWithoutChatConversationsInput;
+    asset?: Prisma.AssetCreateNestedOneWithoutChatConversationsInput;
     messages?: Prisma.ChatMessageCreateNestedManyWithoutConversationInput;
 };
 export type ChatConversationUncheckedCreateWithoutUserInput = {
     id?: string;
     machineId?: string | null;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -489,12 +553,58 @@ export type ChatConversationScalarWhereInput = {
     id?: Prisma.StringFilter<"ChatConversation"> | string;
     userId?: Prisma.StringFilter<"ChatConversation"> | string;
     machineId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     title?: Prisma.StringFilter<"ChatConversation"> | string;
     summary?: Prisma.StringNullableFilter<"ChatConversation"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"ChatConversation">;
     lastMessageAt?: Prisma.DateTimeFilter<"ChatConversation"> | Date | string;
     createdAt?: Prisma.DateTimeFilter<"ChatConversation"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"ChatConversation"> | Date | string;
+};
+export type ChatConversationCreateWithoutAssetInput = {
+    id?: string;
+    title: string;
+    summary?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Date | string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    user: Prisma.UserCreateNestedOneWithoutChatConversationsInput;
+    machine?: Prisma.MachineCreateNestedOneWithoutChatConversationsInput;
+    messages?: Prisma.ChatMessageCreateNestedManyWithoutConversationInput;
+};
+export type ChatConversationUncheckedCreateWithoutAssetInput = {
+    id?: string;
+    userId: string;
+    machineId?: string | null;
+    title: string;
+    summary?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Date | string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    messages?: Prisma.ChatMessageUncheckedCreateNestedManyWithoutConversationInput;
+};
+export type ChatConversationCreateOrConnectWithoutAssetInput = {
+    where: Prisma.ChatConversationWhereUniqueInput;
+    create: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput>;
+};
+export type ChatConversationCreateManyAssetInputEnvelope = {
+    data: Prisma.ChatConversationCreateManyAssetInput | Prisma.ChatConversationCreateManyAssetInput[];
+    skipDuplicates?: boolean;
+};
+export type ChatConversationUpsertWithWhereUniqueWithoutAssetInput = {
+    where: Prisma.ChatConversationWhereUniqueInput;
+    update: Prisma.XOR<Prisma.ChatConversationUpdateWithoutAssetInput, Prisma.ChatConversationUncheckedUpdateWithoutAssetInput>;
+    create: Prisma.XOR<Prisma.ChatConversationCreateWithoutAssetInput, Prisma.ChatConversationUncheckedCreateWithoutAssetInput>;
+};
+export type ChatConversationUpdateWithWhereUniqueWithoutAssetInput = {
+    where: Prisma.ChatConversationWhereUniqueInput;
+    data: Prisma.XOR<Prisma.ChatConversationUpdateWithoutAssetInput, Prisma.ChatConversationUncheckedUpdateWithoutAssetInput>;
+};
+export type ChatConversationUpdateManyWithWhereWithoutAssetInput = {
+    where: Prisma.ChatConversationScalarWhereInput;
+    data: Prisma.XOR<Prisma.ChatConversationUpdateManyMutationInput, Prisma.ChatConversationUncheckedUpdateManyWithoutAssetInput>;
 };
 export type ChatConversationCreateWithoutMachineInput = {
     id?: string;
@@ -505,11 +615,13 @@ export type ChatConversationCreateWithoutMachineInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutChatConversationsInput;
+    asset?: Prisma.AssetCreateNestedOneWithoutChatConversationsInput;
     messages?: Prisma.ChatMessageCreateNestedManyWithoutConversationInput;
 };
 export type ChatConversationUncheckedCreateWithoutMachineInput = {
     id?: string;
     userId: string;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -549,11 +661,13 @@ export type ChatConversationCreateWithoutMessagesInput = {
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutChatConversationsInput;
     machine?: Prisma.MachineCreateNestedOneWithoutChatConversationsInput;
+    asset?: Prisma.AssetCreateNestedOneWithoutChatConversationsInput;
 };
 export type ChatConversationUncheckedCreateWithoutMessagesInput = {
     id?: string;
     userId: string;
     machineId?: string | null;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -584,11 +698,13 @@ export type ChatConversationUpdateWithoutMessagesInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutChatConversationsNestedInput;
     machine?: Prisma.MachineUpdateOneWithoutChatConversationsNestedInput;
+    asset?: Prisma.AssetUpdateOneWithoutChatConversationsNestedInput;
 };
 export type ChatConversationUncheckedUpdateWithoutMessagesInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -599,6 +715,7 @@ export type ChatConversationUncheckedUpdateWithoutMessagesInput = {
 export type ChatConversationCreateManyUserInput = {
     id?: string;
     machineId?: string | null;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -615,11 +732,13 @@ export type ChatConversationUpdateWithoutUserInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     machine?: Prisma.MachineUpdateOneWithoutChatConversationsNestedInput;
+    asset?: Prisma.AssetUpdateOneWithoutChatConversationsNestedInput;
     messages?: Prisma.ChatMessageUpdateManyWithoutConversationNestedInput;
 };
 export type ChatConversationUncheckedUpdateWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -631,6 +750,53 @@ export type ChatConversationUncheckedUpdateWithoutUserInput = {
 export type ChatConversationUncheckedUpdateManyWithoutUserInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type ChatConversationCreateManyAssetInput = {
+    id?: string;
+    userId: string;
+    machineId?: string | null;
+    title: string;
+    summary?: string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Date | string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type ChatConversationUpdateWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    user?: Prisma.UserUpdateOneRequiredWithoutChatConversationsNestedInput;
+    machine?: Prisma.MachineUpdateOneWithoutChatConversationsNestedInput;
+    messages?: Prisma.ChatMessageUpdateManyWithoutConversationNestedInput;
+};
+export type ChatConversationUncheckedUpdateWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    title?: Prisma.StringFieldUpdateOperationsInput | string;
+    summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    lastMessageAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    messages?: Prisma.ChatMessageUncheckedUpdateManyWithoutConversationNestedInput;
+};
+export type ChatConversationUncheckedUpdateManyWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -641,6 +807,7 @@ export type ChatConversationUncheckedUpdateManyWithoutUserInput = {
 export type ChatConversationCreateManyMachineInput = {
     id?: string;
     userId: string;
+    assetId?: string | null;
     title: string;
     summary?: string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -657,11 +824,13 @@ export type ChatConversationUpdateWithoutMachineInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutChatConversationsNestedInput;
+    asset?: Prisma.AssetUpdateOneWithoutChatConversationsNestedInput;
     messages?: Prisma.ChatMessageUpdateManyWithoutConversationNestedInput;
 };
 export type ChatConversationUncheckedUpdateWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -673,6 +842,7 @@ export type ChatConversationUncheckedUpdateWithoutMachineInput = {
 export type ChatConversationUncheckedUpdateManyWithoutMachineInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     userId?: Prisma.StringFieldUpdateOperationsInput | string;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     title?: Prisma.StringFieldUpdateOperationsInput | string;
     summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
@@ -708,6 +878,7 @@ export type ChatConversationSelect<ExtArgs extends runtime.Types.Extensions.Inte
     id?: boolean;
     userId?: boolean;
     machineId?: boolean;
+    assetId?: boolean;
     title?: boolean;
     summary?: boolean;
     metadata?: boolean;
@@ -716,6 +887,7 @@ export type ChatConversationSelect<ExtArgs extends runtime.Types.Extensions.Inte
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
     messages?: boolean | Prisma.ChatConversation$messagesArgs<ExtArgs>;
     _count?: boolean | Prisma.ChatConversationCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["chatConversation"]>;
@@ -723,6 +895,7 @@ export type ChatConversationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
     id?: boolean;
     userId?: boolean;
     machineId?: boolean;
+    assetId?: boolean;
     title?: boolean;
     summary?: boolean;
     metadata?: boolean;
@@ -731,11 +904,13 @@ export type ChatConversationSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
 }, ExtArgs["result"]["chatConversation"]>;
 export type ChatConversationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     userId?: boolean;
     machineId?: boolean;
+    assetId?: boolean;
     title?: boolean;
     summary?: boolean;
     metadata?: boolean;
@@ -744,11 +919,13 @@ export type ChatConversationSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
 }, ExtArgs["result"]["chatConversation"]>;
 export type ChatConversationSelectScalar = {
     id?: boolean;
     userId?: boolean;
     machineId?: boolean;
+    assetId?: boolean;
     title?: boolean;
     summary?: boolean;
     metadata?: boolean;
@@ -756,32 +933,37 @@ export type ChatConversationSelectScalar = {
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type ChatConversationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "machineId" | "title" | "summary" | "metadata" | "lastMessageAt" | "createdAt" | "updatedAt", ExtArgs["result"]["chatConversation"]>;
+export type ChatConversationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "machineId" | "assetId" | "title" | "summary" | "metadata" | "lastMessageAt" | "createdAt" | "updatedAt", ExtArgs["result"]["chatConversation"]>;
 export type ChatConversationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
     messages?: boolean | Prisma.ChatConversation$messagesArgs<ExtArgs>;
     _count?: boolean | Prisma.ChatConversationCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type ChatConversationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
 };
 export type ChatConversationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     machine?: boolean | Prisma.ChatConversation$machineArgs<ExtArgs>;
+    asset?: boolean | Prisma.ChatConversation$assetArgs<ExtArgs>;
 };
 export type $ChatConversationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "ChatConversation";
     objects: {
         user: Prisma.$UserPayload<ExtArgs>;
         machine: Prisma.$MachinePayload<ExtArgs> | null;
+        asset: Prisma.$AssetPayload<ExtArgs> | null;
         messages: Prisma.$ChatMessagePayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
         userId: string;
         machineId: string | null;
+        assetId: string | null;
         title: string;
         summary: string | null;
         metadata: runtime.JsonValue | null;
@@ -1119,6 +1301,7 @@ export interface Prisma__ChatConversationClient<T, Null = never, ExtArgs extends
     readonly [Symbol.toStringTag]: "PrismaPromise";
     user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
     machine<T extends Prisma.ChatConversation$machineArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatConversation$machineArgs<ExtArgs>>): Prisma.Prisma__MachineClient<runtime.Types.Result.GetResult<Prisma.$MachinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
+    asset<T extends Prisma.ChatConversation$assetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatConversation$assetArgs<ExtArgs>>): Prisma.Prisma__AssetClient<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     messages<T extends Prisma.ChatConversation$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChatConversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1148,6 +1331,7 @@ export interface ChatConversationFieldRefs {
     readonly id: Prisma.FieldRef<"ChatConversation", 'String'>;
     readonly userId: Prisma.FieldRef<"ChatConversation", 'String'>;
     readonly machineId: Prisma.FieldRef<"ChatConversation", 'String'>;
+    readonly assetId: Prisma.FieldRef<"ChatConversation", 'String'>;
     readonly title: Prisma.FieldRef<"ChatConversation", 'String'>;
     readonly summary: Prisma.FieldRef<"ChatConversation", 'String'>;
     readonly metadata: Prisma.FieldRef<"ChatConversation", 'Json'>;
@@ -1549,6 +1733,24 @@ export type ChatConversation$machineArgs<ExtArgs extends runtime.Types.Extension
      */
     include?: Prisma.MachineInclude<ExtArgs> | null;
     where?: Prisma.MachineWhereInput;
+};
+/**
+ * ChatConversation.asset
+ */
+export type ChatConversation$assetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Asset
+     */
+    select?: Prisma.AssetSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Asset
+     */
+    omit?: Prisma.AssetOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.AssetInclude<ExtArgs> | null;
+    where?: Prisma.AssetWhereInput;
 };
 /**
  * ChatConversation.messages

@@ -1,0 +1,120 @@
+{
+  "title": "Assets",
+  "subtitle": "Manage your factory asset hierarchy",
+  "addRoot": "Add Machine",
+  "addChild": "Add Child",
+  "searchPlaceholder": "Search by name or code...",
+  "emptyTitle": "No assets found",
+  "emptyHint": "Get started by adding your first machine.",
+  "emptySearchHint": "No assets match your search criteria.",
+  "adminsOnly": "Admin access required",
+  "view": "View",
+  "hierarchy": {
+    "machine": "Machine",
+    "group": "Group",
+    "component": "Component",
+    "subComponent": "Sub-component"
+  },
+  "status": {
+    "running": "Running",
+    "down": "Down",
+    "operational": "Operational",
+    "standby": "Standby",
+    "breakdown": "Breakdown",
+    "maintenance": "Scheduled Maintenance",
+    "waitingParts": "Waiting for Parts",
+    "underObservation": "Under Observation",
+    "underRepair": "Under Repair"
+  },
+  "criticality": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "picker": {
+    "label": "Select Asset",
+    "placeholder": "Select machine and optionally drill down",
+    "search": "Search assets...",
+    "noMatches": "No matches found",
+    "noItems": "No items available",
+    "loading": "Loading...",
+    "clearAll": "Clear all",
+    "hint": "Type at least 2 characters to search",
+    "allSelected": "All matches already selected",
+    "maxReached": "Maximum selections reached ({{max}})"
+  },
+  "form": {
+    "name": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "nameTranslation": "Name ({{language}})",
+    "code": "Code",
+    "codePlaceholder": "e.g. D1G02",
+    "parent": "Parent Asset",
+    "parentPlaceholder": "Select parent (leave empty for root machine)",
+    "levelType": "Asset Level",
+    "status": "Status",
+    "statusReason": "Status Reason",
+    "criticality": "Criticality",
+    "commissionedAt": "Commissioned Date",
+    "back": "Back to Assets",
+    "createTitle": "Add Asset",
+    "createDescription": "Add a new asset to the factory hierarchy.",
+    "editTitle": "Edit Asset",
+    "editDescription": "Update asset details.",
+    "save": "Save Asset",
+    "saving": "Saving...",
+    "cancel": "Cancel"
+  },
+  "detail": {
+    "overview": "Overview",
+    "children": "Sub-Assets",
+    "noChildren": "No sub-assets",
+    "recentWorkOrders": "Recent Work Orders",
+    "noWorkOrders": "No work orders for this asset",
+    "documents": "Documents",
+    "noDocuments": "No documents linked",
+    "code": "Code",
+    "level": "Level",
+    "criticality": "Criticality",
+    "status": "Status",
+    "statusReason": "Reason",
+    "commissioned": "Commissioned",
+    "updated": "Last Updated",
+    "notAvailable": "N/A",
+    "notFound": "Asset not found",
+    "path": "Path"
+  },
+  "actions": {
+    "create": "Create Asset",
+    "edit": "Edit Asset",
+    "delete": "Delete Asset",
+    "addChild": "Add Child Asset",
+    "viewDetails": "View Details",
+    "createWorkOrder": "Create Work Order",
+    "viewDocuments": "View Documents",
+    "linkDocument": "Link Document",
+    "unlinkDocument": "Unlink Document"
+  },
+  "messages": {
+    "created": "Asset created successfully",
+    "updated": "Asset updated successfully",
+    "deleted": "Asset deleted successfully",
+    "createError": "Failed to create asset",
+    "updateError": "Failed to update asset",
+    "deleteError": "Failed to delete asset",
+    "deleteConfirm": "Are you sure you want to delete this asset? This will also delete all child assets."
+  },
+  "filters": {
+    "status": "Status",
+    "level": "Level",
+    "criticality": "Criticality",
+    "all": "All"
+  },
+  "tree": {
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "noAssets": "No assets found",
+    "addRoot": "Add Machine"
+  }
+}

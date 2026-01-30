@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, User, Calendar, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus, Eye, X, Edit } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { ArrowLeft, User, AlertCircle, Loader2, CheckCircle2, ClipboardList, Paperclip, Download, Trash2, Plus, Eye, X, Edit, Clock, Wrench, Users, FileText, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/shared/StatusBadge'
@@ -60,6 +61,12 @@ interface RepairAction {
   attachments: Attachment[]
 }
 
+interface UserRef {
+  id: string
+  name: string
+  email?: string
+}
+
 interface WorkOrder {
   id: string
   publicId?: string
@@ -72,18 +79,55 @@ interface WorkOrder {
   createdAt: string
   startedAt: string | null
   completedAt: string | null
+
+  // Asset/Machine references
   machine: {
     id: string
     name: string
   } | null
-  reportedBy: {
+  asset?: {
     id: string
     name: string
+    pathString: string
+    code?: string
+    levelType?: string
   } | null
-  assignedTo: {
-    id: string
-    name: string
-  } | null
+
+  // Classification (Spec 2)
+  maintenanceType?: string | null
+  maintenanceDisciplines?: string[]
+
+  // Timestamps (Spec 2)
+  equipmentStopTime?: string | null
+  faultReportTime?: string | null
+  repairStartTime?: string | null
+  maintenanceStartTime?: string | null
+  maintenanceEndTime?: string | null
+
+  // Durations (Spec 2)
+  maintenanceDurationMin?: number | null
+  downtimeDurationMin?: number | null
+
+  // Text fields (Spec 2)
+  rootCause?: string | null
+  maintenanceDescription?: string | null
+  correctiveAction?: string | null
+  notesAndRecommendations?: string | null
+
+  // Equipment status (Spec 2)
+  equipmentStatusAfter?: string | null
+
+  // Role assignments (Spec 2)
+  reportedBy: UserRef | null
+  assignedTo: UserRef | null
+  areaLeader?: UserRef | null
+  maintenanceSupervisor?: UserRef | null
+  performer?: UserRef | null
+  machineReceiver?: UserRef | null
+  responsibleEngineer?: UserRef | null
+  maintenanceEngineer?: UserRef | null
+  maintenanceManager?: UserRef | null
+
   attachments: Attachment[]
   repairActions: RepairAction[]
   parts: WorkOrderPartSummary[]
@@ -164,6 +208,7 @@ const canPreviewAttachment = (att?: Attachment | null) => {
 export default function WorkOrderDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation('workOrders')
   const previewAttachmentIdRef = useRef<string | null>(null)
   const [workOrder, setWorkOrder] = useState<WorkOrder | null>(null)
   const [loading, setLoading] = useState(true)
@@ -481,9 +526,13 @@ export default function WorkOrderDetail() {
           <h3 className="text-xl font-medium text-muted-foreground font-mono break-all">{displayId}</h3>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setIsEditModalOpen(true)}>
+          <Button variant="outline" onClick={() => window.print()} className="no-print">
+            <Printer className="h-4 w-4 mr-2" />
+            {t('common:actions.print', 'Print')}
+          </Button>
+          <Button variant="outline" onClick={() => setIsEditModalOpen(true)} className="no-print">
             <Edit className="h-4 w-4 mr-2" />
-            Edit
+            {t('editWorkOrder', 'Edit')}
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -517,17 +566,70 @@ export default function WorkOrderDetail() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Description</CardTitle>
+              <CardTitle>{t('problemDescription', 'Description')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-wrap text-sm">{workOrder.descriptionRaw || 'No description provided'}</p>
+              <p className="whitespace-pre-wrap text-sm">{workOrder.descriptionRaw || t('emptyCreateHint', 'No description provided')}</p>
             </CardContent>
           </Card>
+
+          {/* Spec 2 text fields - only show cards that have content */}
+          {workOrder.rootCause && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" /> {t('rootCauseSection', 'Root Cause')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap text-sm">{workOrder.rootCause}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {workOrder.maintenanceDescription && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" /> {t('maintenanceDescriptionSection', 'Maintenance Description')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap text-sm">{workOrder.maintenanceDescription}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {workOrder.correctiveAction && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" /> {t('correctiveActionSection', 'Corrective Action')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap text-sm">{workOrder.correctiveAction}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {workOrder.notesAndRecommendations && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" /> {t('notesSection', 'Notes & Recommendations')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="whitespace-pre-wrap text-sm">{workOrder.notesAndRecommendations}</p>
+              </CardContent>
+            </Card>
+          )}
 
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Paperclip className="h-4 w-4" /> Attachments
+                <Paperclip className="h-4 w-4" /> {t('attachments', 'Attachments')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -817,14 +919,15 @@ export default function WorkOrderDetail() {
         </div>
 
         <div className="space-y-6">
+          {/* Details Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">Details</CardTitle>
+              <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground">{t('detailsSection', 'Details')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4" /> Priority
+                  <AlertCircle className="w-4 h-4" /> {t('priority', 'Priority')}
                 </span>
                 <Badge
                   variant={
@@ -835,51 +938,190 @@ export default function WorkOrderDetail() {
                       : 'outline'
                   }
                 >
-                  {workOrder.priority}
+                  {t(`priority_${workOrder.priority}`, workOrder.priority)}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <User className="w-4 h-4" /> Assignee
-                </span>
-                <span className="text-sm font-medium">{workOrder.assignedTo?.name || 'Unassigned'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Calendar className="w-4 h-4" /> Created
-                </span>
-                <span className="text-sm font-medium">{formatDate(workOrder.createdAt || workOrder.reportedAt)}</span>
-              </div>
-              {workOrder.startedAt && (
-                <div className="flex justify-between items-center">
+              {workOrder.asset && (
+                <div className="flex justify-between items-start">
                   <span className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Calendar className="w-4 h-4" /> Started
+                    <Wrench className="w-4 h-4" /> {t('asset', 'Asset')}
                   </span>
-                  <span className="text-sm font-medium">{formatDate(workOrder.startedAt)}</span>
+                  <span className="text-sm font-medium text-right max-w-[60%]">{workOrder.asset.pathString || workOrder.asset.name}</span>
+                </div>
+              )}
+              {!workOrder.asset && workOrder.machine && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('table.machine', 'Machine')}</span>
+                  <span className="text-sm font-medium">{workOrder.machine.name}</span>
+                </div>
+              )}
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                  <User className="w-4 h-4" /> {t('assignedTo', 'Assignee')}
+                </span>
+                <span className="text-sm font-medium">{workOrder.assignedTo?.name || t('unassigned', 'Unassigned')}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">{t('createdBy', 'Reported By')}</span>
+                <span className="text-sm font-medium">{workOrder.reportedBy?.name || '-'}</span>
+              </div>
+              {workOrder.maintenanceType && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('maintenanceType', 'Maintenance Type')}</span>
+                  <span className="text-sm font-medium capitalize">{workOrder.maintenanceType}</span>
+                </div>
+              )}
+              {workOrder.maintenanceDisciplines && workOrder.maintenanceDisciplines.length > 0 && (
+                <div className="flex justify-between items-start">
+                  <span className="text-sm text-muted-foreground">{t('maintenanceDisciplines', 'Disciplines')}</span>
+                  <div className="flex flex-wrap gap-1 justify-end max-w-[60%]">
+                    {workOrder.maintenanceDisciplines.map(d => (
+                      <Badge key={d} variant="secondary" className="capitalize text-xs">{d}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {workOrder.equipmentStatusAfter && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('equipmentStatusAfter', 'Status After')}</span>
+                  <span className="text-sm font-medium capitalize">{workOrder.equipmentStatusAfter.replace(/_/g, ' ')}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Timestamps Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                <Clock className="w-4 h-4" /> {t('timestamps', 'Timestamps')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">{t('table.created', 'Created')}</span>
+                <span className="text-sm font-medium">{formatDate(workOrder.reportedAt || workOrder.createdAt)}</span>
+              </div>
+              {workOrder.faultReportTime && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('faultReportTime', 'Fault Report')}</span>
+                  <span className="text-sm font-medium">{formatDate(workOrder.faultReportTime)}</span>
+                </div>
+              )}
+              {workOrder.equipmentStopTime && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('equipmentStopTime', 'Equip. Stop')}</span>
+                  <span className="text-sm font-medium">{formatDate(workOrder.equipmentStopTime)}</span>
+                </div>
+              )}
+              {workOrder.repairStartTime && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('repairStartTime', 'Repair Start')}</span>
+                  <span className="text-sm font-medium">{formatDate(workOrder.repairStartTime)}</span>
+                </div>
+              )}
+              {workOrder.maintenanceStartTime && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('maintenanceStartTime', 'Maint. Start')}</span>
+                  <span className="text-sm font-medium">{formatDate(workOrder.maintenanceStartTime)}</span>
+                </div>
+              )}
+              {workOrder.maintenanceEndTime && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">{t('maintenanceEndTime', 'Maint. End')}</span>
+                  <span className="text-sm font-medium">{formatDate(workOrder.maintenanceEndTime)}</span>
                 </div>
               )}
               {workOrder.completedAt && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" /> Resolved
+                    <CheckCircle2 className="w-3 h-3" /> {t('table.resolved', 'Resolved')}
                   </span>
                   <span className="text-sm font-medium">{formatDate(workOrder.completedAt)}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Type</span>
-                <span className="text-sm font-medium">{workOrder.type}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Machine</span>
-                <span className="text-sm font-medium">{workOrder.machine?.name || '-'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Reported By</span>
-                <span className="text-sm font-medium">{workOrder.reportedBy?.name || '-'}</span>
-              </div>
+              {(workOrder.maintenanceDurationMin != null || workOrder.downtimeDurationMin != null) && (
+                <>
+                  <div className="border-t my-2" />
+                  {workOrder.maintenanceDurationMin != null && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">{t('calculatedDuration', 'Maint. Duration')}</span>
+                      <span className="text-sm font-medium">
+                        {workOrder.maintenanceDurationMin >= 60
+                          ? `${Math.floor(workOrder.maintenanceDurationMin / 60)}h ${workOrder.maintenanceDurationMin % 60}m`
+                          : `${workOrder.maintenanceDurationMin}m`}
+                      </span>
+                    </div>
+                  )}
+                  {workOrder.downtimeDurationMin != null && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Downtime</span>
+                      <span className="text-sm font-medium">
+                        {workOrder.downtimeDurationMin >= 60
+                          ? `${Math.floor(workOrder.downtimeDurationMin / 60)}h ${workOrder.downtimeDurationMin % 60}m`
+                          : `${workOrder.downtimeDurationMin}m`}
+                      </span>
+                    </div>
+                  )}
+                </>
+              )}
             </CardContent>
           </Card>
+
+          {/* Role Assignments Card */}
+          {(workOrder.areaLeader || workOrder.maintenanceSupervisor || workOrder.performer || workOrder.machineReceiver || workOrder.responsibleEngineer || workOrder.maintenanceEngineer || workOrder.maintenanceManager) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                  <Users className="w-4 h-4" /> {t('roleAssignmentsSection', 'Role Assignments')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {workOrder.areaLeader && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('areaLeader', 'Area Leader')}</span>
+                    <span className="text-sm font-medium">{workOrder.areaLeader.name}</span>
+                  </div>
+                )}
+                {workOrder.maintenanceSupervisor && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('maintenanceSupervisor', 'Supervisor')}</span>
+                    <span className="text-sm font-medium">{workOrder.maintenanceSupervisor.name}</span>
+                  </div>
+                )}
+                {workOrder.performer && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('performer', 'Performer')}</span>
+                    <span className="text-sm font-medium">{workOrder.performer.name}</span>
+                  </div>
+                )}
+                {workOrder.machineReceiver && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('machineReceiver', 'Receiver')}</span>
+                    <span className="text-sm font-medium">{workOrder.machineReceiver.name}</span>
+                  </div>
+                )}
+                {workOrder.responsibleEngineer && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('responsibleEngineer', 'Resp. Engineer')}</span>
+                    <span className="text-sm font-medium">{workOrder.responsibleEngineer.name}</span>
+                  </div>
+                )}
+                {workOrder.maintenanceEngineer && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('maintenanceEngineer', 'Maint. Engineer')}</span>
+                    <span className="text-sm font-medium">{workOrder.maintenanceEngineer.name}</span>
+                  </div>
+                )}
+                {workOrder.maintenanceManager && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{t('maintenanceManager', 'Maint. Manager')}</span>
+                    <span className="text-sm font-medium">{workOrder.maintenanceManager.name}</span>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 

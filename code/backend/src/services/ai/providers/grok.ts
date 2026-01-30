@@ -1,6 +1,6 @@
 import { env } from "../../../config/env";
 import type { GenerateParams, GenerateResult, LLMProvider } from "../types";
-import { SYSTEM_PROMPT } from "./systemPrompt";
+import { buildSystemPrompt } from "./systemPrompt";
 
 interface GrokMessage {
   role: "system" | "user" | "assistant";
@@ -34,7 +34,7 @@ export class GrokProvider implements LLMProvider {
     }));
 
     const messages: GrokMessage[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: buildSystemPrompt(params.language) },
       ...historyMessages,
       { role: "user", content: params.prompt },
     ];

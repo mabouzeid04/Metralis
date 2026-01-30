@@ -254,6 +254,9 @@ export type FieldRef<Model, FieldType> = runtime.FieldRef<Model, FieldType>;
 type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>;
 export declare const ModelName: {
     readonly User: "User";
+    readonly FactoryConfig: "FactoryConfig";
+    readonly Asset: "Asset";
+    readonly DocumentAsset: "DocumentAsset";
     readonly Machine: "Machine";
     readonly WorkOrder: "WorkOrder";
     readonly RepairAction: "RepairAction";
@@ -278,7 +281,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "machine" | "workOrder" | "repairAction" | "part" | "workOrderPart" | "document" | "documentChunk" | "incidentChunk" | "chatConversation" | "chatMessage" | "chatMessageFeedback" | "systemInsight";
+        modelProps: "user" | "factoryConfig" | "asset" | "documentAsset" | "machine" | "workOrder" | "repairAction" | "part" | "workOrderPart" | "document" | "documentChunk" | "incidentChunk" | "chatConversation" | "chatMessage" | "chatMessageFeedback" | "systemInsight";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -353,6 +356,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 count: {
                     args: Prisma.UserCountArgs<ExtArgs>;
                     result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number;
+                };
+            };
+        };
+        FactoryConfig: {
+            payload: Prisma.$FactoryConfigPayload<ExtArgs>;
+            fields: Prisma.FactoryConfigFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.FactoryConfigFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.FactoryConfigFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                findFirst: {
+                    args: Prisma.FactoryConfigFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.FactoryConfigFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                findMany: {
+                    args: Prisma.FactoryConfigFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>[];
+                };
+                create: {
+                    args: Prisma.FactoryConfigCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                createMany: {
+                    args: Prisma.FactoryConfigCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.FactoryConfigCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>[];
+                };
+                delete: {
+                    args: Prisma.FactoryConfigDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                update: {
+                    args: Prisma.FactoryConfigUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.FactoryConfigDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.FactoryConfigUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.FactoryConfigUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>[];
+                };
+                upsert: {
+                    args: Prisma.FactoryConfigUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$FactoryConfigPayload>;
+                };
+                aggregate: {
+                    args: Prisma.FactoryConfigAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateFactoryConfig>;
+                };
+                groupBy: {
+                    args: Prisma.FactoryConfigGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.FactoryConfigGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.FactoryConfigCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.FactoryConfigCountAggregateOutputType> | number;
+                };
+            };
+        };
+        Asset: {
+            payload: Prisma.$AssetPayload<ExtArgs>;
+            fields: Prisma.AssetFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.AssetFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.AssetFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                findFirst: {
+                    args: Prisma.AssetFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.AssetFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                findMany: {
+                    args: Prisma.AssetFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[];
+                };
+                create: {
+                    args: Prisma.AssetCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                createMany: {
+                    args: Prisma.AssetCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.AssetCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[];
+                };
+                delete: {
+                    args: Prisma.AssetDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                update: {
+                    args: Prisma.AssetUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.AssetDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.AssetUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.AssetUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>[];
+                };
+                upsert: {
+                    args: Prisma.AssetUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetPayload>;
+                };
+                aggregate: {
+                    args: Prisma.AssetAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateAsset>;
+                };
+                groupBy: {
+                    args: Prisma.AssetGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AssetGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.AssetCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number;
+                };
+            };
+        };
+        DocumentAsset: {
+            payload: Prisma.$DocumentAssetPayload<ExtArgs>;
+            fields: Prisma.DocumentAssetFieldRefs;
+            operations: {
+                findUnique: {
+                    args: Prisma.DocumentAssetFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload> | null;
+                };
+                findUniqueOrThrow: {
+                    args: Prisma.DocumentAssetFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                findFirst: {
+                    args: Prisma.DocumentAssetFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload> | null;
+                };
+                findFirstOrThrow: {
+                    args: Prisma.DocumentAssetFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                findMany: {
+                    args: Prisma.DocumentAssetFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>[];
+                };
+                create: {
+                    args: Prisma.DocumentAssetCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                createMany: {
+                    args: Prisma.DocumentAssetCreateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                createManyAndReturn: {
+                    args: Prisma.DocumentAssetCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>[];
+                };
+                delete: {
+                    args: Prisma.DocumentAssetDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                update: {
+                    args: Prisma.DocumentAssetUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                deleteMany: {
+                    args: Prisma.DocumentAssetDeleteManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateMany: {
+                    args: Prisma.DocumentAssetUpdateManyArgs<ExtArgs>;
+                    result: BatchPayload;
+                };
+                updateManyAndReturn: {
+                    args: Prisma.DocumentAssetUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>[];
+                };
+                upsert: {
+                    args: Prisma.DocumentAssetUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$DocumentAssetPayload>;
+                };
+                aggregate: {
+                    args: Prisma.DocumentAssetAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateDocumentAsset>;
+                };
+                groupBy: {
+                    args: Prisma.DocumentAssetGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DocumentAssetGroupByOutputType>[];
+                };
+                count: {
+                    args: Prisma.DocumentAssetCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.DocumentAssetCountAggregateOutputType> | number;
                 };
             };
         };
@@ -1267,6 +1492,46 @@ export declare const UserScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export declare const FactoryConfigScalarFieldEnum: {
+    readonly id: "id";
+    readonly primaryLanguage: "primaryLanguage";
+    readonly supportedLanguages: "supportedLanguages";
+    readonly hierarchyLevels: "hierarchyLevels";
+    readonly defaultMaxDepth: "defaultMaxDepth";
+    readonly statusReasonOptions: "statusReasonOptions";
+    readonly maintenanceDisciplines: "maintenanceDisciplines";
+    readonly maintenanceTypes: "maintenanceTypes";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type FactoryConfigScalarFieldEnum = (typeof FactoryConfigScalarFieldEnum)[keyof typeof FactoryConfigScalarFieldEnum];
+export declare const AssetScalarFieldEnum: {
+    readonly id: "id";
+    readonly parentId: "parentId";
+    readonly depth: "depth";
+    readonly name: "name";
+    readonly nameTranslations: "nameTranslations";
+    readonly code: "code";
+    readonly levelType: "levelType";
+    readonly pathString: "pathString";
+    readonly pathStringTranslations: "pathStringTranslations";
+    readonly status: "status";
+    readonly statusReason: "statusReason";
+    readonly criticality: "criticality";
+    readonly attributes: "attributes";
+    readonly commissionedAt: "commissionedAt";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum];
+export declare const DocumentAssetScalarFieldEnum: {
+    readonly id: "id";
+    readonly documentId: "documentId";
+    readonly assetId: "assetId";
+    readonly isPrimary: "isPrimary";
+    readonly createdAt: "createdAt";
+};
+export type DocumentAssetScalarFieldEnum = (typeof DocumentAssetScalarFieldEnum)[keyof typeof DocumentAssetScalarFieldEnum];
 export declare const MachineScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
@@ -1289,6 +1554,7 @@ export declare const WorkOrderScalarFieldEnum: {
     readonly id: "id";
     readonly publicId: "publicId";
     readonly machineId: "machineId";
+    readonly assetId: "assetId";
     readonly title: "title";
     readonly descriptionRaw: "descriptionRaw";
     readonly status: "status";
@@ -1307,6 +1573,26 @@ export declare const WorkOrderScalarFieldEnum: {
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
+    readonly maintenanceType: "maintenanceType";
+    readonly maintenanceDisciplines: "maintenanceDisciplines";
+    readonly equipmentStopTime: "equipmentStopTime";
+    readonly faultReportTime: "faultReportTime";
+    readonly repairStartTime: "repairStartTime";
+    readonly maintenanceStartTime: "maintenanceStartTime";
+    readonly maintenanceEndTime: "maintenanceEndTime";
+    readonly maintenanceDescription: "maintenanceDescription";
+    readonly correctiveAction: "correctiveAction";
+    readonly notesAndRecommendations: "notesAndRecommendations";
+    readonly equipmentStatusAfter: "equipmentStatusAfter";
+    readonly maintenanceDurationMin: "maintenanceDurationMin";
+    readonly downtimeDurationMin: "downtimeDurationMin";
+    readonly areaLeaderId: "areaLeaderId";
+    readonly maintenanceSupervisorId: "maintenanceSupervisorId";
+    readonly performerId: "performerId";
+    readonly machineReceiverId: "machineReceiverId";
+    readonly responsibleEngineerId: "responsibleEngineerId";
+    readonly maintenanceEngineerId: "maintenanceEngineerId";
+    readonly maintenanceManagerId: "maintenanceManagerId";
 };
 export type WorkOrderScalarFieldEnum = (typeof WorkOrderScalarFieldEnum)[keyof typeof WorkOrderScalarFieldEnum];
 export declare const RepairActionScalarFieldEnum: {
@@ -1362,11 +1648,14 @@ export declare const DocumentScalarFieldEnum: {
     readonly machineType: "machineType";
     readonly language: "language";
     readonly version: "version";
+    readonly description: "description";
     readonly metadata: "metadata";
     readonly uploadedById: "uploadedById";
     readonly ingestionStatus: "ingestionStatus";
     readonly ingestedAt: "ingestedAt";
     readonly ingestionError: "ingestionError";
+    readonly isFactoryWide: "isFactoryWide";
+    readonly appliesToChildren: "appliesToChildren";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -1389,6 +1678,7 @@ export declare const IncidentChunkScalarFieldEnum: {
     readonly tokens: "tokens";
     readonly machineId: "machineId";
     readonly machineType: "machineType";
+    readonly assetId: "assetId";
     readonly language: "language";
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
@@ -1398,6 +1688,7 @@ export declare const ChatConversationScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";
     readonly machineId: "machineId";
+    readonly assetId: "assetId";
     readonly title: "title";
     readonly summary: "summary";
     readonly metadata: "metadata";
@@ -1457,6 +1748,15 @@ export declare const NullableJsonNullValueInput: {
     };
 };
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";
@@ -1536,6 +1836,30 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>;
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
+/**
+ * Reference to a field of type 'AssetStatus'
+ */
+export type EnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetStatus'>;
+/**
+ * Reference to a field of type 'AssetStatus[]'
+ */
+export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetStatus[]'>;
+/**
+ * Reference to a field of type 'AssetCriticality'
+ */
+export type EnumAssetCriticalityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetCriticality'>;
+/**
+ * Reference to a field of type 'AssetCriticality[]'
+ */
+export type ListEnumAssetCriticalityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssetCriticality[]'>;
+/**
  * Reference to a field of type 'MachineStatus'
  */
 export type EnumMachineStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MachineStatus'>;
@@ -1583,14 +1907,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>;
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
 /**
  * Reference to a field of type 'DocumentType'
  */
@@ -1740,6 +2056,9 @@ export interface PrismaClientOptions {
 }
 export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
+    factoryConfig?: Prisma.FactoryConfigOmit;
+    asset?: Prisma.AssetOmit;
+    documentAsset?: Prisma.DocumentAssetOmit;
     machine?: Prisma.MachineOmit;
     workOrder?: Prisma.WorkOrderOmit;
     repairAction?: Prisma.RepairActionOmit;

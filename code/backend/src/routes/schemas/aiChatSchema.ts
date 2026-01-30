@@ -23,6 +23,8 @@ const normalizeUuidInput = z.preprocess((value) => {
 export const chatRequestSchema = z.object({
   message: z.string().min(1, "Message cannot be empty"),
   machineId: normalizeUuidInput,
+  assetId: normalizeUuidInput,
   conversationId: normalizeUuidInput,
+  language: z.enum(["en", "ar"]).optional().default("en"),
 });
 

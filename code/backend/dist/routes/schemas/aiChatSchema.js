@@ -19,6 +19,8 @@ const normalizeUuidInput = zod_1.z.preprocess((value) => {
 exports.chatRequestSchema = zod_1.z.object({
     message: zod_1.z.string().min(1, "Message cannot be empty"),
     machineId: normalizeUuidInput,
+    assetId: normalizeUuidInput,
     conversationId: normalizeUuidInput,
+    language: zod_1.z.enum(["en", "ar"]).optional().default("en"),
 });
 //# sourceMappingURL=aiChatSchema.js.map

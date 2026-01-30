@@ -48,6 +48,7 @@ export const replaceDocumentChunks = async (documentId: string, chunks: Document
 
 export type SimilarChunkFilter = {
   documentId?: string | undefined;
+  documentIds?: string[] | undefined;
   machineId?: string | undefined;
   machineType?: string | undefined;
   language?: string | undefined;
@@ -68,6 +69,13 @@ export const searchSimilarChunks = async (embedding: number[], limit: number, fi
     filters.push(`dc."documentId" = $${paramIndex}`);
     values.push(filter.documentId);
     paramIndex += 1;
+  }
+
+  if (filter?.documentIds && filter.documentIds.length > 0) {
+    const placeholders = filter.documentIds.map((_, i) => `$${paramIndex + i}`);
+    filters.push(`dc."documentId" IN (${placeholders.join(", ")})`);
+    values.push(...filter.documentIds);
+    paramIndex += filter.documentIds.length;
   }
 
   if (filter?.machineId) {

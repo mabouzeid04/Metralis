@@ -6,12 +6,13 @@ const env_1 = require("../../../config/env");
 const systemPrompt_1 = require("./systemPrompt");
 class GoogleGeminiProvider {
     constructor() {
-        this.model = new generative_ai_1.GoogleGenerativeAI(env_1.env.ai.gemini.apiKey).getGenerativeModel({
-            model: env_1.env.ai.gemini.model,
-            systemInstruction: systemPrompt_1.SYSTEM_PROMPT,
-        });
+        this.client = new generative_ai_1.GoogleGenerativeAI(env_1.env.ai.gemini.apiKey);
     }
     async generate(params) {
+        const model = this.client.getGenerativeModel({
+            model: env_1.env.ai.gemini.model,
+            systemInstruction: (0, systemPrompt_1.buildSystemPrompt)(params.language),
+        });
         const contents = [
             ...params.history.map((message) => ({
                 role: message.role === "ASSISTANT" ? "model" : "user",
@@ -22,7 +23,7 @@ class GoogleGeminiProvider {
                 parts: [{ text: params.prompt }],
             },
         ];
-        const result = await this.model.generateContent({
+        const result = await model.generateContent({
             contents,
             generationConfig: {
                 temperature: params.temperature,

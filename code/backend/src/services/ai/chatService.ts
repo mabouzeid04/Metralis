@@ -122,6 +122,7 @@ export const ensureConversation = async (
   userId: string,
   conversationId?: string,
   machineId?: string,
+  assetId?: string,
 ): Promise<{ conversation: ChatConversation & { machine: { id: string; name: string; model: string | null; manufacturer: string | null; line: string | null } | null }; isNew: boolean }> => {
   if (conversationId) {
     const conversation = await prisma.chatConversation.findFirst({
@@ -144,6 +145,7 @@ export const ensureConversation = async (
     data: {
       userId,
       machineId: machineId ?? null,
+      assetId: assetId ?? null,
       title: "Metralis AI Chat",
     },
     include: {
@@ -210,15 +212,25 @@ type HandleChatParams = {
   message: string;
   conversationId?: string | undefined;
   machineId?: string | undefined;
+  assetId?: string | undefined;
+  language?: "en" | "ar";
 };
 
-export const handleChatMessage = async ({ userId, message, conversationId, machineId }: HandleChatParams) => {
-  const { conversation, isNew } = await ensureConversation(userId, conversationId, machineId);
+export const handleChatMessage = async ({ userId, message, conversationId, machineId, assetId: inputAssetId, language = "en" }: HandleChatParams) => {
+  const { conversation, isNew } = await ensureConversation(userId, conversationId, machineId, inputAssetId);
 
   const targetMachineId = conversation.machineId ?? machineId;
-  const maintenanceHistory = targetMachineId
+  // Resolve asset ID early so we can use it for maintenance history lookup
+  const assetId = conversation.assetId ?? inputAssetId ?? undefined;
+
+  // Query maintenance history by machineId (legacy) and/or assetId (new)
+  const historyOrConditions: Record<string, string>[] = [];
+  if (targetMachineId) historyOrConditions.push({ machineId: targetMachineId });
+  if (assetId) historyOrConditions.push({ assetId });
+
+  const maintenanceHistory = historyOrConditions.length > 0
     ? await prisma.workOrder.findMany({
-      where: { machineId: targetMachineId },
+      where: { OR: historyOrConditions },
       orderBy: { reportedAt: "desc" },
       take: 15,
       select: {
@@ -247,6 +259,14 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     }
   }
 
+  // Bind asset to conversation if not already bound
+  if (!conversation.assetId && assetId) {
+    await prisma.chatConversation.update({
+      where: { id: conversation.id },
+      data: { assetId },
+    });
+  }
+
   const history = await prisma.chatMessage.findMany({
     where: { conversationId: conversation.id },
     orderBy: { createdAt: "asc" },
@@ -254,10 +274,49 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     select: { role: true, content: true },
   });
 
+  // Load asset context for bilingual prompting when available
+  type AssetContext = {
+    id: string;
+    name: string;
+    nameTranslations: Record<string, string> | null;
+    code: string | null;
+    pathString: string;
+    pathStringTranslations: Record<string, string> | null;
+    status: string | null;
+    statusReason: string | null;
+    criticality: string | null;
+  };
+  let asset: AssetContext | null = null;
+  if (assetId) {
+    const raw = await prisma.asset.findUnique({
+      where: { id: assetId },
+      select: {
+        id: true,
+        name: true,
+        nameTranslations: true,
+        code: true,
+        pathString: true,
+        pathStringTranslations: true,
+        status: true,
+        statusReason: true,
+        criticality: true,
+      },
+    });
+    if (raw) {
+      asset = {
+        ...raw,
+        nameTranslations: raw.nameTranslations as Record<string, string> | null,
+        pathStringTranslations: raw.pathStringTranslations as Record<string, string> | null,
+      };
+    }
+  }
+
   const retrievedChunks = await retrieveContext({
     question: message,
     machineId: conversation.machineId ?? machineId,
     machineType: conversation.machine?.model ?? undefined,
+    assetId,
+    language,
   });
 
   const prompt = buildPrompt({
@@ -265,6 +324,8 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     machine: conversation.machine,
     retrievedChunks,
     maintenanceHistory,
+    language,
+    asset,
   });
 
   const llmResponse = await generateChatLLMResponse({
@@ -272,6 +333,7 @@ export const handleChatMessage = async ({ userId, message, conversationId, machi
     prompt,
     temperature: env.ai.temperature,
     maxTokens: env.ai.maxTokens,
+    language,
   });
 
   const citations = mapCitations(retrievedChunks);

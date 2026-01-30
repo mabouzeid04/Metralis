@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   BarChart,
@@ -9,7 +8,10 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell
+  Cell,
+  PieChart,
+  Pie,
+  Legend
 } from 'recharts'
 import {
   Activity,
@@ -21,46 +23,45 @@ import {
 import { useDashboardStats, useMachines, getMachineStatusChartData } from '@/lib/hooks/useDashboard'
 
 export default function Dashboard() {
-  const { t } = useTranslation(['dashboard', 'common'])
-
-  // React Query - data cached, instant on back navigation
+  // Use React Query hooks for caching and automatic background updates
   const { data: stats, isLoading: statsLoading } = useDashboardStats()
-  const { data: machines, isLoading: machinesLoading } = useMachines()
+  const { data: machinesResponse, isLoading: machinesLoading } = useMachines()
 
   const loading = statsLoading || machinesLoading
+  const machines = machinesResponse || []
 
-  // Transform machines to chart data
-  const machineStatusData = useMemo(() => {
-    if (!machines) return []
-    return getMachineStatusChartData(machines, t)
-  }, [machines, t])
+  // Use the helper function for chart data transformation
+  const machineStatusData = useMemo(() =>
+    getMachineStatusChartData(machines, (key, options) => options?.defaultValue || key),
+    [machines]
+  )
 
   const statsCards = [
     {
-      title: t('stats.activeWorkOrders'),
+      title: "Active Work Orders",
       value: stats?.openWorkOrders ?? 0,
-      change: t('stats.activeSubtitle'),
+      change: "Open tasks",
       icon: Clock,
       color: "text-blue-500"
     },
     {
-      title: t('stats.machinesDown'),
+      title: "Machines Down",
       value: stats?.machinesDown ?? 0,
-      change: stats?.machinesDown ? t('stats.machinesDownAlert') : t('stats.machinesDownOk'),
+      change: stats?.machinesDown ? "Critical Alert" : "All operational",
       icon: AlertCircle,
       color: "text-red-500"
     },
     {
-      title: t('stats.completedToday'),
+      title: "Completed Today",
       value: stats?.completedToday ?? 0,
-      change: t('stats.completedSubtitle'),
+      change: "Closed work orders",
       icon: CheckCircle2,
       color: "text-green-500"
     },
     {
-      title: t('stats.systemStatus'),
-      value: loading ? "..." : t('stats.online'),
-      change: t('stats.allOperational'),
+      title: "System Status",
+      value: loading ? "..." : "Online",
+      change: "All systems operational",
       icon: Activity,
       color: "text-orange-500"
     }
@@ -68,13 +69,13 @@ export default function Dashboard() {
 
   // Placeholder chart data (real weekly data would require additional API endpoint)
   const workOrderData = [
-    { name: t('charts.weekdays.mon'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.tue'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.wed'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.thu'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.fri'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.sat'), completed: 0, created: 0 },
-    { name: t('charts.weekdays.sun'), completed: 0, created: 0 },
+    { name: 'Mon', completed: 0, created: 0 },
+    { name: 'Tue', completed: 0, created: 0 },
+    { name: 'Wed', completed: 0, created: 0 },
+    { name: 'Thu', completed: 0, created: 0 },
+    { name: 'Fri', completed: 0, created: 0 },
+    { name: 'Sat', completed: 0, created: 0 },
+    { name: 'Sun', completed: 0, created: 0 },
   ]
 
   if (loading) {
@@ -88,7 +89,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
       </div>
 
       {/* Stats Grid */}
@@ -115,33 +116,33 @@ export default function Dashboard() {
         {/* Main Chart */}
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>{t('charts.weeklyOverview')}</CardTitle>
+            <CardTitle>Weekly Overview</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
             <div className="h-[350px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={workOrderData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis
-                    dataKey="name"
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#888888" 
+                    fontSize={12} 
+                    tickLine={false} 
+                    axisLine={false} 
                   />
-                  <YAxis
-                    stroke="#888888"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => `${value}`}
+                  <YAxis 
+                    stroke="#888888" 
+                    fontSize={12} 
+                    tickLine={false} 
+                    axisLine={false} 
+                    tickFormatter={(value) => `${value}`} 
                   />
-                  <Tooltip
+                  <Tooltip 
                     cursor={{ fill: 'transparent' }}
                     contentStyle={{ borderRadius: '8px' }}
                   />
-                  <Bar dataKey="created" name={t('charts.created')} fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="completed" name={t('charts.completed')} fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="created" name="Created" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="completed" name="Completed" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -151,35 +152,51 @@ export default function Dashboard() {
         {/* Machine Status Chart */}
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>{t('charts.machineStatus')}</CardTitle>
+            <CardTitle>Machine Status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[350px]">
               {machineStatusData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={machineStatusData} layout="vertical" margin={{ left: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" hide />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#888888"
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      width={100}
-                    />
-                    <Tooltip cursor={{ fill: 'transparent' }} />
-                    <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={30}>
+                  <PieChart>
+                    <Pie
+                      data={machineStatusData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={80}
+                      outerRadius={110}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
                       {machineStatusData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
+                        <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
                       ))}
-                    </Bar>
-                  </BarChart>
+                    </Pie>
+                    <Tooltip
+                      cursor={{ fill: 'transparent' }}
+                      contentStyle={{
+                        borderRadius: '8px',
+                        border: '1px solid #e2e8f0',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                      formatter={(value, name) => [`${value}`, name]}
+                      labelFormatter={(label) => `${label}`}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      formatter={(value, entry: any) => (
+                        <span className="ml-2 text-sm font-medium text-gray-700">
+                          {value} ({entry.payload.value})
+                        </span>
+                      )}
+                    />
+                  </PieChart>
                 </ResponsiveContainer>
               ) : (
                 <div className="flex items-center justify-center h-full text-muted-foreground">
-                  {t('charts.noMachines')}
+                  No machines registered yet
                 </div>
               )}
             </div>

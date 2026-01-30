@@ -1,8 +1,11 @@
 import { useState, useRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Search, Filter, FileText, Download, Eye, Loader2, X } from 'lucide-react'
+import { Plus, Search, Filter, FileText, Download, Eye, Loader2, X, Globe, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 import {
   Table,
   TableBody,
@@ -11,22 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { api } from '@/lib/api'
 import { useDocuments, useInvalidateDocuments, type Document, type DocumentType } from '@/lib/hooks/useDocuments'
-import { useMachines } from '@/lib/hooks/useDashboard'
-
+import { AssetSearchPicker } from '@/components/assets'
+import { api } from '@/lib/api'
 const documentTypes: { value: DocumentType; labelKey: string }[] = [
   { value: 'MANUAL', labelKey: 'types.manual' },
   { value: 'SOP', labelKey: 'types.sop' },
@@ -47,17 +39,35 @@ function formatFileSize(bytes: number | null): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+const documentLanguages: { value: string; labelKey: string }[] = [
+  { value: 'en', labelKey: 'languages.en' },
+  { value: 'ar', labelKey: 'languages.ar' },
+  { value: 'bilingual', labelKey: 'languages.bilingual' },
+]
+
+interface FormValues {
+  title: string
+  type: DocumentType
+  description: string
+  language: string
+  assetIds: string[]
+  isFactoryWide: boolean
+  appliesToChildren: boolean
+}
+
 export default function DocumentsList() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [filters, setFilters] = useState<{ machineId?: string; type?: DocumentType }>({})
-  const [machineSearch, setMachineSearch] = useState('')
   const [uploadOpen, setUploadOpen] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
-  const [formValues, setFormValues] = useState<{ title: string; type: DocumentType; machineId: string }>({
+  const [formValues, setFormValues] = useState<FormValues>({
     title: '',
     type: 'MANUAL',
-    machineId: '',
+    description: '',
+    language: 'en',
+    assetIds: [],
+    isFactoryWide: false,
+    appliesToChildren: false,
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -66,35 +76,18 @@ export default function DocumentsList() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)
   const [previewError, setPreviewError] = useState<string | null>(null)
-  const { t } = useTranslation(['documents', 'common'])
+  const { t } = useTranslation(['documents', 'common', 'assets'])
 
   // React Query - data cached for 5 minutes, instant on back navigation
   const { data: documents = [], isLoading: loading, error } = useDocuments()
   const invalidateDocuments = useInvalidateDocuments()
-
-  // Machines for upload form (also cached)
-  const { data: machines = [], isLoading: machinesLoading, error: machinesError } = useMachines()
-
-  const filteredDocs = useMemo(() =>
-    documents.filter((doc) => {
-      const matchesSearch =
-        doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
-
-      const matchesMachine = !filters.machineId || doc.machine?.id === filters.machineId
-      const matchesType = !filters.type || doc.type === filters.type
-
-      return matchesSearch && matchesMachine && matchesType
-    }),
-    [documents, searchTerm, filters]
-  )
 
   const handleDownload = async (doc: Document) => {
     try {
       const response = await api.get(`/documents/${doc.id}/file`, {
         responseType: 'blob'
       })
-
+      
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
@@ -108,8 +101,18 @@ export default function DocumentsList() {
     }
   }
 
+  const handleDelete = async (doc: Document) => {
+    if (!window.confirm(t('deleteConfirm'))) return
+    try {
+      await api.delete(`/documents/${doc.id}`)
+      await invalidateDocuments()
+    } catch (err) {
+      console.error('Failed to delete document:', err)
+    }
+  }
+
   const resetUploadState = () => {
-    setFormValues({ title: '', type: 'MANUAL', machineId: '' })
+    setFormValues({ title: '', type: 'MANUAL', description: '', language: 'en', assetIds: [], isFactoryWide: false, appliesToChildren: false })
     setSelectedFile(null)
     setUploadError(null)
     if (fileInputRef.current) {
@@ -165,11 +168,23 @@ export default function DocumentsList() {
       return
     }
 
+    // Require at least one asset or factory-wide to be selected
+    if (!formValues.isFactoryWide && formValues.assetIds.length === 0) {
+      setUploadError(t('uploadErrors.assetRequired'))
+      return
+    }
+
     const formData = new FormData()
     formData.append('title', formValues.title.trim())
     formData.append('type', formValues.type)
-    if (formValues.machineId) {
-      formData.append('machineId', formValues.machineId)
+    formData.append('language', formValues.language)
+    if (formValues.description.trim()) {
+      formData.append('description', formValues.description.trim())
+    }
+    formData.append('isFactoryWide', String(formValues.isFactoryWide))
+    formData.append('appliesToChildren', String(formValues.appliesToChildren))
+    if (formValues.assetIds.length > 0) {
+      formData.append('assetIds', JSON.stringify(formValues.assetIds))
     }
     formData.append('file', selectedFile)
 
@@ -189,7 +204,16 @@ export default function DocumentsList() {
     }
   }
 
+  const filteredDocs = useMemo(() =>
+    documents.filter((doc) => {
+      const matchesSearch =
+        doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (doc.machine?.name && doc.machine.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
+      return matchesSearch
+    }),
+    [documents, searchTerm]
+  )
 
   const canPreviewDocument = (doc?: Document | null) => {
     if (!doc) return false
@@ -301,32 +325,89 @@ export default function DocumentsList() {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">{t('form.machine')}</label>
+                <label className="text-sm font-medium">{t('form.description')}</label>
+                <Textarea
+                  value={formValues.description}
+                  onChange={(e) => setFormValues((prev) => ({ ...prev, description: e.target.value }))}
+                  placeholder={t('form.descriptionPlaceholder')}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t('form.language')}</label>
                 <select
                   className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm"
-                  value={formValues.machineId}
+                  value={formValues.language}
                   onChange={(e) =>
-                    setFormValues((prev) => ({ ...prev, machineId: e.target.value }))
+                    setFormValues((prev) => ({ ...prev, language: e.target.value }))
                   }
-                  disabled={machinesLoading || !!machinesError}
                 >
-                  <option value="">{t('form.machinePlaceholder')}</option>
-                  {machines.map((machine) => (
-                    <option key={machine.id} value={machine.id}>
-                      {machine.name}
+                  {documentLanguages.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {t(option.labelKey)}
                     </option>
                   ))}
                 </select>
-                {machinesLoading && (
-                  <p className="text-sm text-muted-foreground">{t('form.machineLoading')}</p>
-                )}
-                {!machinesLoading && machinesError && (
-                  <p className="text-sm text-destructive">{machinesError.message || t('errors.loadMachines')}</p>
-                )}
-                {!machinesLoading && !machinesError && machines.length === 0 && (
-                  <p className="text-sm text-muted-foreground">{t('form.machineEmpty')}</p>
-                )}
               </div>
+              {/* Factory-wide checkbox */}
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <Checkbox
+                  id="isFactoryWide"
+                  checked={formValues.isFactoryWide}
+                  onCheckedChange={(checked) =>
+                    setFormValues((prev) => ({ ...prev, isFactoryWide: checked === true }))
+                  }
+                />
+                <Label htmlFor="isFactoryWide" className="flex items-center gap-2 cursor-pointer">
+                  <Globe className="h-4 w-4 text-muted-foreground" />
+                  {t('form.factoryWide')}
+                </Label>
+              </div>
+              {formValues.isFactoryWide && (
+                <p className="text-sm text-muted-foreground">
+                  {t('form.factoryWideHint')}
+                </p>
+              )}
+
+              {/* Asset picker - disabled when factory-wide is selected */}
+              {!formValues.isFactoryWide && (
+                <div className="space-y-2">
+                  <AssetSearchPicker
+                    value={formValues.assetIds}
+                    onChange={(assetIds) =>
+                      setFormValues((prev) => ({ ...prev, assetIds }))
+                    }
+                    label={t('form.assets')}
+                    placeholder={t('form.assetsPlaceholder')}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t('form.assetsHint')}
+                  </p>
+                </div>
+              )}
+
+              {/* Applies to children checkbox - visible when assets are selected */}
+              {!formValues.isFactoryWide && formValues.assetIds.length > 0 && (
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                    <Checkbox
+                      id="appliesToChildren"
+                      checked={formValues.appliesToChildren}
+                      onCheckedChange={(checked) =>
+                        setFormValues((prev) => ({ ...prev, appliesToChildren: checked === true }))
+                      }
+                    />
+                    <Label htmlFor="appliesToChildren" className="cursor-pointer">
+                      {t('form.appliesToChildren')}
+                    </Label>
+                  </div>
+                  {formValues.appliesToChildren && (
+                    <p className="text-xs text-muted-foreground ms-6">
+                      {t('form.appliesToChildrenHint')}
+                    </p>
+                  )}
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="text-sm font-medium">{t('form.file')}</label>
                 <input
@@ -381,74 +462,9 @@ export default function DocumentsList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Filter className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>{t('table.type')}</DropdownMenuLabel>
-                <DropdownMenuGroup>
-                  {documentTypes.map((type) => (
-                    <DropdownMenuCheckboxItem
-                      key={type.value}
-                      checked={filters.type === type.value}
-                      onCheckedChange={(checked) => {
-                        setFilters((prev) => ({
-                          ...prev,
-                          type: checked ? type.value : undefined,
-                        }))
-                      }}
-                    >
-                      {t(type.labelKey)}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuLabel>{t('table.machine')}</DropdownMenuLabel>
-                <div className="px-2 py-1.5" onKeyDown={(e) => e.stopPropagation()}>
-                  <Input
-                    placeholder={t('searchMachinesPlaceholder')}
-                    value={machineSearch}
-                    onChange={(e) => setMachineSearch(e.target.value)}
-                    className="h-8"
-                  />
-                </div>
-                <DropdownMenuGroup className="max-h-[200px] overflow-yscroll">
-                  {machines
-                    .filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase()))
-                    .map((machine) => (
-                      <DropdownMenuCheckboxItem
-                        key={machine.id}
-                        checked={filters.machineId === machine.id}
-                        onCheckedChange={(checked) => {
-                          setFilters((prev) => ({
-                            ...prev,
-                            machineId: checked ? machine.id : undefined,
-                          }))
-                        }}
-                      >
-                        {machine.name}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                  {machines.filter((m) => m.name.toLowerCase().includes(machineSearch.toLowerCase())).length === 0 && (
-                    <div className="px-2 py-1.5 text-sm text-muted-foreground">{t('noMachinesFound')}</div>
-                  )}
-                </DropdownMenuGroup>
-                {(filters.type || filters.machineId) && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onSelect={() => setFilters({})}
-                      className="justify-center text-center"
-                    >
-                      {t('filters.clear')}
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -472,7 +488,7 @@ export default function DocumentsList() {
                   <TableHead className="w-[30px]"></TableHead>
                   <TableHead>{t('table.title')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('table.type')}</TableHead>
-                  <TableHead className="hidden md:table-cell">{t('table.machine')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('table.assets')}</TableHead>
                   <TableHead className="hidden lg:table-cell">{t('table.date')}</TableHead>
                   <TableHead className="hidden lg:table-cell">{t('table.size')}</TableHead>
                   <TableHead className="text-right">{t('table.actions')}</TableHead>
@@ -486,16 +502,36 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="font-medium">
                       <div className="flex flex-col">
-                        <span>{doc.title}</span>
-                        <span className="text-xs text-muted-foreground md:hidden">
-                          {doc.type} {' • '} {formatFileSize(doc.fileSize)}
-                        </span>
+                          <span>{doc.title}</span>
+                          <span className="text-xs text-muted-foreground md:hidden">
+                            {doc.type} • {formatFileSize(doc.fileSize)}
+                          </span>
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       <Badge variant="outline">{doc.type}</Badge>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{doc.machine?.name || '-'}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {doc.isFactoryWide ? (
+                        <Badge variant="secondary" className="gap-1">
+                          <Globe className="h-3 w-3" />
+                          {t('factoryWide')}
+                        </Badge>
+                      ) : doc.assets && doc.assets.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {doc.assets.slice(0, 2).map((da: { asset: { id: string; name: string } }) => (
+                            <Badge key={da.asset.id} variant="outline" className="text-xs">
+                              {da.asset.name}
+                            </Badge>
+                          ))}
+                          {doc.assets.length > 2 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{doc.assets.length - 2}
+                            </Badge>
+                          )}
+                        </div>
+                      ) : doc.machine?.name || '-'}
+                    </TableCell>
                     <TableCell className="hidden lg:table-cell text-muted-foreground text-sm">
                       {new Date(doc.createdAt).toLocaleDateString()}
                     </TableCell>
@@ -504,17 +540,25 @@ export default function DocumentsList() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" title={t('view')} onClick={() => handlePreview(doc)}>
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title={t('download')}
-                          onClick={() => handleDownload(doc)}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
+                          <Button variant="ghost" size="icon" title={t('view')} onClick={() => handlePreview(doc)}>
+                              <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title={t('download')}
+                            onClick={() => handleDownload(doc)}
+                          >
+                              <Download className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title={t('delete')}
+                            onClick={() => handleDelete(doc)}
+                          >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -563,9 +607,9 @@ export default function DocumentsList() {
                 <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
                   <p className="text-sm text-destructive">{previewError}</p>
                   <div className="flex gap-2">
-                    <Button onClick={() => handlePreview(previewDoc)}>{t('common:actions.retry')}</Button>
+                    <Button onClick={() => handlePreview(previewDoc)}>Retry</Button>
                     <Button variant="ghost" onClick={closePreview}>
-                      {t('common:actions.close')}
+                      Close
                     </Button>
                   </div>
                 </div>
@@ -584,10 +628,10 @@ export default function DocumentsList() {
                 previewDoc &&
                 !canPreviewDocument(previewDoc) && (
                   <div className="h-full flex flex-col items-center justify-center gap-4 text-center text-sm text-muted-foreground px-6">
-                    <p>{t('previewUnavailable')}</p>
+                    <p>Preview is unavailable for this file type. Please download it instead.</p>
                     <Button onClick={() => handleDownload(previewDoc)}>
                       <Download className="h-4 w-4 mr-2" />
-                      {t('downloadDocument')}
+                      Download document
                     </Button>
                   </div>
                 )}

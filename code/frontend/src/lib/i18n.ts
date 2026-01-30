@@ -15,6 +15,7 @@ import enUsers from '../../public/locales/en/users.json'
 import enAi from '../../public/locales/en/ai.json'
 import enAnalytics from '../../public/locales/en/analytics.json'
 import enNotFound from '../../public/locales/en/notFound.json'
+import enAssets from '../../public/locales/en/assets.json'
 import arCommon from '../../public/locales/ar/common.json'
 import arNav from '../../public/locales/ar/nav.json'
 import arAuth from '../../public/locales/ar/auth.json'
@@ -28,6 +29,7 @@ import arUsers from '../../public/locales/ar/users.json'
 import arAi from '../../public/locales/ar/ai.json'
 import arAnalytics from '../../public/locales/ar/analytics.json'
 import arNotFound from '../../public/locales/ar/notFound.json'
+import arAssets from '../../public/locales/ar/assets.json'
 
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', dir: 'ltr' },
@@ -67,6 +69,7 @@ i18n
         ai: enAi,
         analytics: enAnalytics,
         notFound: enNotFound,
+        assets: enAssets,
       },
       ar: {
         common: arCommon,
@@ -82,6 +85,7 @@ i18n
         ai: arAi,
         analytics: arAnalytics,
         notFound: arNotFound,
+        assets: arAssets,
       },
     },
     backend: {
@@ -105,6 +109,7 @@ i18n
       'ai',
       'analytics',
       'notFound',
+      'assets',
     ],
     load: 'languageOnly',
     returnEmptyString: false,

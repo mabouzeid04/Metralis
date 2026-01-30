@@ -3,13 +3,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.retrieveContext = void 0;
 const embeddings_1 = require("../embeddings");
 const vectorStore_1 = require("../vectorStore");
-const retrieveContext = async ({ question, machineId, machineType, language, limit = 5, }) => {
+const documentService_1 = require("../documentService");
+const retrieveContext = async ({ question, machineId, machineType, assetId, language, limit = 5, }) => {
     const [questionEmbedding] = await (0, embeddings_1.embedTexts)([question]);
     if (!questionEmbedding) {
         return [];
     }
+    // If assetId is provided, resolve all applicable document IDs
+    // (direct + inherited from ancestors + factory-wide) and filter by those
+    let applicableDocumentIds;
+    if (assetId) {
+        const applicableDocs = await (0, documentService_1.getDocumentsForAsset)(assetId);
+        applicableDocumentIds = applicableDocs.map((d) => d.document.id);
+    }
     const docChunks = await (0, vectorStore_1.searchSimilarChunks)(questionEmbedding, limit, {
-        machineId: machineId ?? undefined,
+        // Use asset-based document scoping when available, fall back to machineId
+        documentIds: applicableDocumentIds,
+        machineId: !applicableDocumentIds ? (machineId ?? undefined) : undefined,
         machineType: machineType ?? undefined,
         language: language ?? undefined,
     });

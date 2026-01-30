@@ -16,7 +16,9 @@ router.post("/chat", async (req, res, next) => {
       userId: req.user!.id,
       message: parsed.message,
       machineId: parsed.machineId,
+      assetId: parsed.assetId,
       conversationId: parsed.conversationId,
+      language: parsed.language,
     });
 
     return res.json({

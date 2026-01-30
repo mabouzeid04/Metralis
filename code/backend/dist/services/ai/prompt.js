@@ -1,16 +1,54 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildSystemAnalysisPrompt = exports.buildPrompt = void 0;
-const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHistory }) => {
-    const machineContext = machine
-        ? `Machine Context:
+const buildAssetContext = (asset, language) => {
+    if (!asset)
+        return "";
+    const nameAr = asset.nameTranslations?.ar;
+    const pathAr = asset.pathStringTranslations?.ar;
+    const lines = [
+        "Asset Context:",
+        `- English Name: ${asset.name}`,
+    ];
+    if (nameAr) {
+        lines.push(`- Arabic Name: ${nameAr}`);
+    }
+    lines.push(`- Full Path (EN): ${asset.pathString}`);
+    if (pathAr) {
+        lines.push(`- Full Path (AR): ${pathAr}`);
+    }
+    if (asset.code) {
+        lines.push(`- Code: ${asset.code}`);
+    }
+    if (asset.status) {
+        const statusText = asset.statusReason
+            ? `${asset.status} (${asset.statusReason})`
+            : asset.status;
+        lines.push(`- Status: ${statusText}`);
+    }
+    if (asset.criticality) {
+        lines.push(`- Criticality: ${asset.criticality}`);
+    }
+    return lines.join("\n");
+};
+const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHistory, language = "en", asset }) => {
+    // Build asset context when available (bilingual), fall back to machine context
+    let contextBlock;
+    if (asset) {
+        contextBlock = buildAssetContext(asset, language);
+    }
+    else if (machine) {
+        contextBlock = `Machine Context:
 - Name: ${machine.name}
 - Model: ${machine.model ?? "Unknown"}
 - Manufacturer: ${machine.manufacturer ?? "Unknown"}
 - Line/Area: ${machine.line ?? "N/A"}
 - Machine ID: ${machine.id}
-- Machine Type: ${machine.model ?? "Unknown"}`
-        : "Machine Context: Not specified by the user.";
+- Machine Type: ${machine.model ?? "Unknown"}`;
+    }
+    else {
+        contextBlock = "Machine Context: Not specified by the user.";
+    }
     const contextText = retrievedChunks.length > 0
         ? retrievedChunks
             .map((chunk, index) => {
@@ -35,7 +73,10 @@ const buildPrompt = ({ question, machine, retrievedChunks, maintenanceHistory })
         })
             .join("\n")
         : "No maintenance history entries were provided for this machine.";
-    return `${machineContext}
+    const languageReminder = language === "ar"
+        ? "\n- IMPORTANT: Respond entirely in Arabic (العربية). Use Arabic asset/equipment names when available."
+        : "";
+    return `${contextBlock}
 
 Maintenance History (most recent first):
 ${historyText}
@@ -50,7 +91,7 @@ Instructions:
 - Ground your answer in Machine Context, Maintenance History, and Retrieved Knowledge first; cite entries as [H#] for history and [#] for retrieved knowledge.
 - Choose the format based on intent: troubleshooting/RCA → brief summary, likely causes, stepwise actions with citations; overviews/how-it-works/dependencies/status/training → concise prose/lists with citations; honor user-specified formats (JSON/table/checklist/schema) when safe; otherwise default to concise prose.
 - If critical info is missing for risky steps, state what is missing and ask for it before prescribing hazardous actions.
-- Use background knowledge only after using provided context, and mark it as general when you do.`;
+- Use background knowledge only after using provided context, and mark it as general when you do.${languageReminder}`;
 };
 exports.buildPrompt = buildPrompt;
 const buildSystemAnalysisPrompt = (snapshot) => {

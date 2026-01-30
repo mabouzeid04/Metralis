@@ -15,7 +15,8 @@
     "upload": "Upload",
     "search": "Search",
     "filter": "Filter",
-    "delete": "Delete"
+    "delete": "Delete",
+    "print": "Print"
   },
   "states": {
     "loading": "Loading...",

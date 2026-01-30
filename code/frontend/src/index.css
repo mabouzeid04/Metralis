@@ -107,3 +107,48 @@
     padding-right: 16rem;
   }
 }
+
+/* Print styles for work order detail */
+@media print {
+  /* Hide navigation, sidebar, action buttons, and non-print elements */
+  nav,
+  .app-sidebar,
+  .app-sidebar-drawer,
+  .no-print,
+  button,
+  [role='dialog'] {
+    display: none !important;
+  }
+
+  /* Remove sidebar padding */
+  .app-main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Reset page margins */
+  @page {
+    margin: 1cm;
+  }
+
+  body {
+    font-size: 11pt;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  /* Cards should print without shadow/border */
+  [class*='card'] {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    margin-bottom: 8px !important;
+  }
+
+  /* Badges remain visible in print */
+  [class*='badge'] {
+    border: 1px solid #999 !important;
+    color: #000 !important;
+    background: #f5f5f5 !important;
+  }
+}

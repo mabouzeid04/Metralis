@@ -88,4 +88,16 @@ export declare const InsightStatus: {
     readonly DISMISSED: "DISMISSED";
 };
 export type InsightStatus = (typeof InsightStatus)[keyof typeof InsightStatus];
+export declare const AssetStatus: {
+    readonly RUNNING: "RUNNING";
+    readonly DOWN: "DOWN";
+};
+export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus];
+export declare const AssetCriticality: {
+    readonly LOW: "LOW";
+    readonly MEDIUM: "MEDIUM";
+    readonly HIGH: "HIGH";
+    readonly CRITICAL: "CRITICAL";
+};
+export type AssetCriticality = (typeof AssetCriticality)[keyof typeof AssetCriticality];
 //# sourceMappingURL=enums.d.ts.map

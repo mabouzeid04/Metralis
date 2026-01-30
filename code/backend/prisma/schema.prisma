@@ -101,6 +101,18 @@ enum InsightStatus {
   DISMISSED
 }
 
+enum AssetStatus {
+  RUNNING
+  DOWN
+}
+
+enum AssetCriticality {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 model User {
   id           String         @id @default(uuid())
   email        String         @unique
@@ -129,6 +141,75 @@ model User {
   approvals          User[]        @relation("UserApprovals")
   chatConversations  ChatConversation[]
   aiFeedback         ChatMessageFeedback[]
+
+  // Spec 2 - Role-based work order relations
+  areaLeaderWorkOrders           WorkOrder[] @relation("areaLeader")
+  maintenanceSupervisorWorkOrders WorkOrder[] @relation("maintenanceSupervisor")
+  performerWorkOrders            WorkOrder[] @relation("performer")
+  machineReceiverWorkOrders      WorkOrder[] @relation("machineReceiver")
+  responsibleEngineerWorkOrders  WorkOrder[] @relation("responsibleEngineer")
+  maintenanceEngineerWorkOrders  WorkOrder[] @relation("maintenanceEngineer")
+  maintenanceManagerWorkOrders   WorkOrder[] @relation("maintenanceManager")
+}
+
+model FactoryConfig {
+  id                     String   @id @default(uuid())
+  primaryLanguage        String   @default("en")
+  supportedLanguages     String[] @default(["en"])
+  hierarchyLevels        Json
+  defaultMaxDepth        Int      @default(3)
+  statusReasonOptions    Json
+  maintenanceDisciplines Json
+  maintenanceTypes       Json
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Asset {
+  id                     String            @id @default(uuid())
+  parentId               String?
+  parent                 Asset?            @relation("AssetHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children               Asset[]           @relation("AssetHierarchy")
+  depth                  Int               @default(0)
+  name                   String
+  nameTranslations       Json?
+  code                   String?
+  levelType              String
+  pathString             String
+  pathStringTranslations Json?
+  status                 AssetStatus?
+  statusReason           String?
+  criticality            AssetCriticality?
+  attributes             Json?
+  commissionedAt         DateTime?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  documents         DocumentAsset[]
+  workOrders        WorkOrder[]
+  chatConversations ChatConversation[]
+  incidentChunks    IncidentChunk[]
+
+  @@unique([parentId, name])
+  @@index([parentId])
+  @@index([depth])
+  @@index([levelType])
+  @@index([status])
+  @@index([name])
+}
+
+model DocumentAsset {
+  id         String   @id @default(uuid())
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  assetId    String
+  asset      Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@unique([documentId, assetId])
+  @@index([documentId])
+  @@index([assetId])
 }
 
 model Machine {
@@ -159,8 +240,10 @@ model Machine {
 model WorkOrder {
   id                String            @id @default(uuid())
   publicId          String            @unique @default(dbgenerated("upper(substr(md5(random()::text), 1, 8))"))
-  machineId         String
-  machine           Machine           @relation(fields: [machineId], references: [id])
+  machineId         String?
+  machine           Machine?          @relation(fields: [machineId], references: [id])
+  assetId           String?
+  asset             Asset?            @relation(fields: [assetId], references: [id], onDelete: SetNull)
   title             String
   descriptionRaw    String
   status            WorkOrderStatus   @default(OPEN)
@@ -182,6 +265,43 @@ model WorkOrder {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
+  // Spec 2 - Config-driven classification
+  maintenanceType       String?
+  maintenanceDisciplines String[] @default([])
+
+  // Spec 2 - Timestamps
+  equipmentStopTime    DateTime?
+  faultReportTime      DateTime?
+  repairStartTime      DateTime?
+  maintenanceStartTime DateTime?
+  maintenanceEndTime   DateTime?
+
+  // Spec 2 - Work description
+  maintenanceDescription   String?
+  correctiveAction         String?
+  notesAndRecommendations  String?
+  equipmentStatusAfter     String?
+
+  // Spec 2 - Duration calculations (computed on close)
+  maintenanceDurationMin Int?
+  downtimeDurationMin    Int?
+
+  // Spec 2 - Role-based assignments
+  areaLeaderId            String?
+  areaLeader              User?   @relation("areaLeader", fields: [areaLeaderId], references: [id])
+  maintenanceSupervisorId String?
+  maintenanceSupervisor   User?   @relation("maintenanceSupervisor", fields: [maintenanceSupervisorId], references: [id])
+  performerId             String?
+  performer               User?   @relation("performer", fields: [performerId], references: [id])
+  machineReceiverId       String?
+  machineReceiver         User?   @relation("machineReceiver", fields: [machineReceiverId], references: [id])
+  responsibleEngineerId   String?
+  responsibleEngineer     User?   @relation("responsibleEngineer", fields: [responsibleEngineerId], references: [id])
+  maintenanceEngineerId   String?
+  maintenanceEngineer     User?   @relation("maintenanceEngineer", fields: [maintenanceEngineerId], references: [id])
+  maintenanceManagerId    String?
+  maintenanceManager      User?   @relation("maintenanceManager", fields: [maintenanceManagerId], references: [id])
+
   repairActions RepairAction[]
   parts        WorkOrderPart[]
   attachments  Document[]        @relation("WorkOrderDocuments")
@@ -189,6 +309,7 @@ model WorkOrder {
 
   @@index([reportedAt])
   @@index([machineId])
+  @@index([assetId])
   @@index([assignedToId])
   @@index([status])
   @@index([priority])
@@ -264,19 +385,24 @@ model Document {
   machineType    String?
   language       String?      @default("en")
   version        String?
+  description    String?
   metadata       Json?
   uploadedById   String
   uploadedBy     User        @relation(fields: [uploadedById], references: [id])
   ingestionStatus DocumentIngestionStatus @default(PENDING)
   ingestedAt     DateTime?
   ingestionError String?
+  isFactoryWide  Boolean      @default(false)
+  appliesToChildren Boolean   @default(false)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
   chunks DocumentChunk[]
+  assets DocumentAsset[]
 
   @@index([workOrderId])
   @@index([repairActionId])
+  @@index([isFactoryWide])
 }
 
 model DocumentChunk {
@@ -304,6 +430,8 @@ model IncidentChunk {
   embedding    Unsupported("vector(1536)")
   machineId    String?
   machineType  String?
+  assetId      String?
+  asset        Asset?   @relation(fields: [assetId], references: [id], onDelete: SetNull)
   language     String?  @default("en")
   metadata     Json?
   createdAt    DateTime @default(now())
@@ -312,6 +440,7 @@ model IncidentChunk {
   @@index([workOrderId])
   @@index([machineId])
   @@index([machineType])
+  @@index([assetId])
 }
 
 model ChatConversation {
@@ -320,6 +449,8 @@ model ChatConversation {
   user          User        @relation(fields: [userId], references: [id])
   machineId     String?
   machine       Machine?    @relation(fields: [machineId], references: [id])
+  assetId       String?
+  asset         Asset?      @relation(fields: [assetId], references: [id], onDelete: SetNull)
   title         String
   summary       String?
   metadata      Json?
@@ -331,6 +462,7 @@ model ChatConversation {
 
   @@index([userId, lastMessageAt])
   @@index([machineId])
+  @@index([assetId])
 }
 
 model ChatMessage {

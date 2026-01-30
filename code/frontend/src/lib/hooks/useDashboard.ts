@@ -18,10 +18,11 @@ export interface Machine {
     updatedAt: string
 }
 
-interface MachineStatusChartData {
+export interface MachineStatusChartData {
     name: string
     value: number
     color: string
+    [key: string]: string | number
 }
 
 async function fetchDashboardStats(): Promise<DashboardStats> {

@@ -8,6 +8,21 @@ export * from './enums';
  */
 export type User = Prisma.UserModel;
 /**
+ * Model FactoryConfig
+ *
+ */
+export type FactoryConfig = Prisma.FactoryConfigModel;
+/**
+ * Model Asset
+ *
+ */
+export type Asset = Prisma.AssetModel;
+/**
+ * Model DocumentAsset
+ *
+ */
+export type DocumentAsset = Prisma.DocumentAssetModel;
+/**
  * Model Machine
  *
  */

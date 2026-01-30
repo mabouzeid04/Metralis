@@ -123,6 +123,39 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
+     * `prisma.factoryConfig`: Exposes CRUD operations for the **FactoryConfig** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more FactoryConfigs
+      * const factoryConfigs = await prisma.factoryConfig.findMany()
+      * ```
+      */
+    get factoryConfig(): Prisma.FactoryConfigDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.asset`: Exposes CRUD operations for the **Asset** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Assets
+      * const assets = await prisma.asset.findMany()
+      * ```
+      */
+    get asset(): Prisma.AssetDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.documentAsset`: Exposes CRUD operations for the **DocumentAsset** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more DocumentAssets
+      * const documentAssets = await prisma.documentAsset.findMany()
+      * ```
+      */
+    get documentAsset(): Prisma.DocumentAssetDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
      * `prisma.machine`: Exposes CRUD operations for the **Machine** model.
       * Example usage:
       * ```ts

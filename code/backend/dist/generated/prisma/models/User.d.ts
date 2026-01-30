@@ -243,6 +243,13 @@ export type UserWhereInput = {
     approvals?: Prisma.UserListRelationFilter;
     chatConversations?: Prisma.ChatConversationListRelationFilter;
     aiFeedback?: Prisma.ChatMessageFeedbackListRelationFilter;
+    areaLeaderWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    performerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    machineReceiverWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -271,6 +278,13 @@ export type UserOrderByWithRelationInput = {
     approvals?: Prisma.UserOrderByRelationAggregateInput;
     chatConversations?: Prisma.ChatConversationOrderByRelationAggregateInput;
     aiFeedback?: Prisma.ChatMessageFeedbackOrderByRelationAggregateInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    performerWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -302,6 +316,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     approvals?: Prisma.UserListRelationFilter;
     chatConversations?: Prisma.ChatConversationListRelationFilter;
     aiFeedback?: Prisma.ChatMessageFeedbackListRelationFilter;
+    areaLeaderWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    performerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    machineReceiverWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderListRelationFilter;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderListRelationFilter;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -375,6 +396,13 @@ export type UserCreateInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateInput = {
     id?: string;
@@ -402,6 +430,13 @@ export type UserUncheckedCreateInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -429,6 +464,13 @@ export type UserUpdateInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -456,6 +498,13 @@ export type UserUncheckedUpdateInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserCreateManyInput = {
     id?: string;
@@ -671,6 +720,41 @@ export type UserCreateNestedOneWithoutAssignedWorkOrdersInput = {
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedWorkOrdersInput;
     connect?: Prisma.UserWhereUniqueInput;
 };
+export type UserCreateNestedOneWithoutAreaLeaderWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedCreateWithoutAreaLeaderWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAreaLeaderWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutMaintenanceSupervisorWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceSupervisorWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceSupervisorWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutPerformerWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutPerformerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutPerformerWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutMachineReceiverWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMachineReceiverWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMachineReceiverWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutResponsibleEngineerWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutResponsibleEngineerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutResponsibleEngineerWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutMaintenanceEngineerWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceEngineerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceEngineerWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserCreateNestedOneWithoutMaintenanceManagerWorkOrdersInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceManagerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceManagerWorkOrdersInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
 export type UserUpdateOneRequiredWithoutReportedWorkOrdersNestedInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutReportedWorkOrdersInput, Prisma.UserUncheckedCreateWithoutReportedWorkOrdersInput>;
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportedWorkOrdersInput;
@@ -686,6 +770,69 @@ export type UserUpdateOneWithoutAssignedWorkOrdersNestedInput = {
     delete?: Prisma.UserWhereInput | boolean;
     connect?: Prisma.UserWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAssignedWorkOrdersInput, Prisma.UserUpdateWithoutAssignedWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutAssignedWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutAreaLeaderWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedCreateWithoutAreaLeaderWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutAreaLeaderWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutAreaLeaderWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAreaLeaderWorkOrdersInput, Prisma.UserUpdateWithoutAreaLeaderWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutAreaLeaderWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutMaintenanceSupervisorWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceSupervisorWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceSupervisorWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutMaintenanceSupervisorWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUpdateWithoutMaintenanceSupervisorWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutMaintenanceSupervisorWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutPerformerWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutPerformerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutPerformerWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutPerformerWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPerformerWorkOrdersInput, Prisma.UserUpdateWithoutPerformerWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutPerformerWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutMachineReceiverWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMachineReceiverWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMachineReceiverWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutMachineReceiverWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMachineReceiverWorkOrdersInput, Prisma.UserUpdateWithoutMachineReceiverWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutMachineReceiverWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutResponsibleEngineerWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutResponsibleEngineerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutResponsibleEngineerWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutResponsibleEngineerWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUpdateWithoutResponsibleEngineerWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutResponsibleEngineerWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutMaintenanceEngineerWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceEngineerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceEngineerWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutMaintenanceEngineerWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUpdateWithoutMaintenanceEngineerWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutMaintenanceEngineerWorkOrdersInput>;
+};
+export type UserUpdateOneWithoutMaintenanceManagerWorkOrdersNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceManagerWorkOrdersInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMaintenanceManagerWorkOrdersInput;
+    upsert?: Prisma.UserUpsertWithoutMaintenanceManagerWorkOrdersInput;
+    disconnect?: Prisma.UserWhereInput | boolean;
+    delete?: Prisma.UserWhereInput | boolean;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUpdateWithoutMaintenanceManagerWorkOrdersInput>, Prisma.UserUncheckedUpdateWithoutMaintenanceManagerWorkOrdersInput>;
 };
 export type UserCreateNestedOneWithoutRepairActionsInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutRepairActionsInput, Prisma.UserUncheckedCreateWithoutRepairActionsInput>;
@@ -760,6 +907,13 @@ export type UserCreateWithoutApprovalsInput = {
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutApprovalsInput = {
     id?: string;
@@ -786,6 +940,13 @@ export type UserUncheckedCreateWithoutApprovalsInput = {
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutApprovalsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -816,6 +977,13 @@ export type UserCreateWithoutApprovedByInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutApprovedByInput = {
     id?: string;
@@ -842,6 +1010,13 @@ export type UserUncheckedCreateWithoutApprovedByInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutApprovedByInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -885,6 +1060,13 @@ export type UserUpdateWithoutApprovalsInput = {
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutApprovalsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -911,6 +1093,13 @@ export type UserUncheckedUpdateWithoutApprovalsInput = {
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUpsertWithWhereUniqueWithoutApprovedByInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -973,6 +1162,13 @@ export type UserCreateWithoutReportedWorkOrdersInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutReportedWorkOrdersInput = {
     id?: string;
@@ -999,6 +1195,13 @@ export type UserUncheckedCreateWithoutReportedWorkOrdersInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutReportedWorkOrdersInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1029,6 +1232,13 @@ export type UserCreateWithoutAssignedWorkOrdersInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutAssignedWorkOrdersInput = {
     id?: string;
@@ -1055,10 +1265,507 @@ export type UserUncheckedCreateWithoutAssignedWorkOrdersInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutAssignedWorkOrdersInput = {
     where: Prisma.UserWhereUniqueInput;
     create: Prisma.XOR<Prisma.UserCreateWithoutAssignedWorkOrdersInput, Prisma.UserUncheckedCreateWithoutAssignedWorkOrdersInput>;
+};
+export type UserCreateWithoutAreaLeaderWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutAreaLeaderWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutAreaLeaderWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedCreateWithoutAreaLeaderWorkOrdersInput>;
+};
+export type UserCreateWithoutMaintenanceSupervisorWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutMaintenanceSupervisorWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutMaintenanceSupervisorWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceSupervisorWorkOrdersInput>;
+};
+export type UserCreateWithoutPerformerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutPerformerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutPerformerWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutPerformerWorkOrdersInput>;
+};
+export type UserCreateWithoutMachineReceiverWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutMachineReceiverWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutMachineReceiverWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMachineReceiverWorkOrdersInput>;
+};
+export type UserCreateWithoutResponsibleEngineerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutResponsibleEngineerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutResponsibleEngineerWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutResponsibleEngineerWorkOrdersInput>;
+};
+export type UserCreateWithoutMaintenanceEngineerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserUncheckedCreateWithoutMaintenanceEngineerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
+};
+export type UserCreateOrConnectWithoutMaintenanceEngineerWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceEngineerWorkOrdersInput>;
+};
+export type UserCreateWithoutMaintenanceManagerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    approvedBy?: Prisma.UserCreateNestedOneWithoutApprovalsInput;
+    reportedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+};
+export type UserUncheckedCreateWithoutMaintenanceManagerWorkOrdersInput = {
+    id?: string;
+    email: string;
+    passwordHash: string;
+    name: string;
+    role?: $Enums.UserRole;
+    status?: $Enums.UserStatus;
+    active?: boolean;
+    lastLoginAt?: Date | string | null;
+    approvedById?: string | null;
+    approvedAt?: Date | string | null;
+    rejectedAt?: Date | string | null;
+    rejectionReason?: string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: string | null;
+    assignmentWhatsappOptIn?: boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutReportedByInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAssignedToInput;
+    repairActions?: Prisma.RepairActionUncheckedCreateNestedManyWithoutPerformedByInput;
+    documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
+    approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
+    chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+};
+export type UserCreateOrConnectWithoutMaintenanceManagerWorkOrdersInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceManagerWorkOrdersInput>;
 };
 export type UserUpsertWithoutReportedWorkOrdersInput = {
     update: Prisma.XOR<Prisma.UserUpdateWithoutReportedWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutReportedWorkOrdersInput>;
@@ -1094,6 +1801,13 @@ export type UserUpdateWithoutReportedWorkOrdersInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutReportedWorkOrdersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1120,6 +1834,13 @@ export type UserUncheckedUpdateWithoutReportedWorkOrdersInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUpsertWithoutAssignedWorkOrdersInput = {
     update: Prisma.XOR<Prisma.UserUpdateWithoutAssignedWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutAssignedWorkOrdersInput>;
@@ -1155,6 +1876,13 @@ export type UserUpdateWithoutAssignedWorkOrdersInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutAssignedWorkOrdersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1181,6 +1909,538 @@ export type UserUncheckedUpdateWithoutAssignedWorkOrdersInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutAreaLeaderWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutAreaLeaderWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedCreateWithoutAreaLeaderWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutAreaLeaderWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutAreaLeaderWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutAreaLeaderWorkOrdersInput>;
+};
+export type UserUpdateWithoutAreaLeaderWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutAreaLeaderWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutMaintenanceSupervisorWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceSupervisorWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceSupervisorWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutMaintenanceSupervisorWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceSupervisorWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceSupervisorWorkOrdersInput>;
+};
+export type UserUpdateWithoutMaintenanceSupervisorWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutMaintenanceSupervisorWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutPerformerWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutPerformerWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutPerformerWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutPerformerWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutPerformerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutPerformerWorkOrdersInput>;
+};
+export type UserUpdateWithoutPerformerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutPerformerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutMachineReceiverWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMachineReceiverWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMachineReceiverWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutMachineReceiverWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutMachineReceiverWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMachineReceiverWorkOrdersInput>;
+};
+export type UserUpdateWithoutMachineReceiverWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutMachineReceiverWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutResponsibleEngineerWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutResponsibleEngineerWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutResponsibleEngineerWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutResponsibleEngineerWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutResponsibleEngineerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutResponsibleEngineerWorkOrdersInput>;
+};
+export type UserUpdateWithoutResponsibleEngineerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutResponsibleEngineerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutMaintenanceEngineerWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceEngineerWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceEngineerWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutMaintenanceEngineerWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceEngineerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceEngineerWorkOrdersInput>;
+};
+export type UserUpdateWithoutMaintenanceEngineerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUncheckedUpdateWithoutMaintenanceEngineerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
+};
+export type UserUpsertWithoutMaintenanceManagerWorkOrdersInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceManagerWorkOrdersInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedCreateWithoutMaintenanceManagerWorkOrdersInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutMaintenanceManagerWorkOrdersInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutMaintenanceManagerWorkOrdersInput, Prisma.UserUncheckedUpdateWithoutMaintenanceManagerWorkOrdersInput>;
+};
+export type UserUpdateWithoutMaintenanceManagerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    approvedBy?: Prisma.UserUpdateOneWithoutApprovalsNestedInput;
+    reportedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+};
+export type UserUncheckedUpdateWithoutMaintenanceManagerWorkOrdersInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    passwordHash?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole;
+    status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
+    rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    preferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assignmentWhatsappOptIn?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    reportedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutReportedByNestedInput;
+    assignedWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAssignedToNestedInput;
+    repairActions?: Prisma.RepairActionUncheckedUpdateManyWithoutPerformedByNestedInput;
+    documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
+    approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
+    chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
 };
 export type UserCreateWithoutRepairActionsInput = {
     id?: string;
@@ -1207,6 +2467,13 @@ export type UserCreateWithoutRepairActionsInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutRepairActionsInput = {
     id?: string;
@@ -1233,6 +2500,13 @@ export type UserUncheckedCreateWithoutRepairActionsInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutRepairActionsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1272,6 +2546,13 @@ export type UserUpdateWithoutRepairActionsInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutRepairActionsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1298,6 +2579,13 @@ export type UserUncheckedUpdateWithoutRepairActionsInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserCreateWithoutDocumentsInput = {
     id?: string;
@@ -1324,6 +2612,13 @@ export type UserCreateWithoutDocumentsInput = {
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutDocumentsInput = {
     id?: string;
@@ -1350,6 +2645,13 @@ export type UserUncheckedCreateWithoutDocumentsInput = {
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutDocumentsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1389,6 +2691,13 @@ export type UserUpdateWithoutDocumentsInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutDocumentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1415,6 +2724,13 @@ export type UserUncheckedUpdateWithoutDocumentsInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserCreateWithoutChatConversationsInput = {
     id?: string;
@@ -1441,6 +2757,13 @@ export type UserCreateWithoutChatConversationsInput = {
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     aiFeedback?: Prisma.ChatMessageFeedbackCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutChatConversationsInput = {
     id?: string;
@@ -1467,6 +2790,13 @@ export type UserUncheckedCreateWithoutChatConversationsInput = {
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutChatConversationsInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1506,6 +2836,13 @@ export type UserUpdateWithoutChatConversationsInput = {
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutChatConversationsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1532,6 +2869,13 @@ export type UserUncheckedUpdateWithoutChatConversationsInput = {
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserCreateWithoutAiFeedbackInput = {
     id?: string;
@@ -1558,6 +2902,13 @@ export type UserCreateWithoutAiFeedbackInput = {
     documents?: Prisma.DocumentCreateNestedManyWithoutUploadedByInput;
     approvals?: Prisma.UserCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserUncheckedCreateWithoutAiFeedbackInput = {
     id?: string;
@@ -1584,6 +2935,13 @@ export type UserUncheckedCreateWithoutAiFeedbackInput = {
     documents?: Prisma.DocumentUncheckedCreateNestedManyWithoutUploadedByInput;
     approvals?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput;
     chatConversations?: Prisma.ChatConversationUncheckedCreateNestedManyWithoutUserInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutAreaLeaderInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceSupervisorInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutPerformerInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMachineReceiverInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutResponsibleEngineerInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceEngineerInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedCreateNestedManyWithoutMaintenanceManagerInput;
 };
 export type UserCreateOrConnectWithoutAiFeedbackInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -1623,6 +2981,13 @@ export type UserUpdateWithoutAiFeedbackInput = {
     documents?: Prisma.DocumentUpdateManyWithoutUploadedByNestedInput;
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutAiFeedbackInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1649,6 +3014,13 @@ export type UserUncheckedUpdateWithoutAiFeedbackInput = {
     documents?: Prisma.DocumentUncheckedUpdateManyWithoutUploadedByNestedInput;
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserCreateManyApprovedByInput = {
     id?: string;
@@ -1694,6 +3066,13 @@ export type UserUpdateWithoutApprovedByInput = {
     approvals?: Prisma.UserUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateWithoutApprovedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1720,6 +3099,13 @@ export type UserUncheckedUpdateWithoutApprovedByInput = {
     approvals?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput;
     chatConversations?: Prisma.ChatConversationUncheckedUpdateManyWithoutUserNestedInput;
     aiFeedback?: Prisma.ChatMessageFeedbackUncheckedUpdateManyWithoutUserNestedInput;
+    areaLeaderWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutAreaLeaderNestedInput;
+    maintenanceSupervisorWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceSupervisorNestedInput;
+    performerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutPerformerNestedInput;
+    machineReceiverWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMachineReceiverNestedInput;
+    responsibleEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutResponsibleEngineerNestedInput;
+    maintenanceEngineerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceEngineerNestedInput;
+    maintenanceManagerWorkOrders?: Prisma.WorkOrderUncheckedUpdateManyWithoutMaintenanceManagerNestedInput;
 };
 export type UserUncheckedUpdateManyWithoutApprovedByInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -1751,6 +3137,13 @@ export type UserCountOutputType = {
     approvals: number;
     chatConversations: number;
     aiFeedback: number;
+    areaLeaderWorkOrders: number;
+    maintenanceSupervisorWorkOrders: number;
+    performerWorkOrders: number;
+    machineReceiverWorkOrders: number;
+    responsibleEngineerWorkOrders: number;
+    maintenanceEngineerWorkOrders: number;
+    maintenanceManagerWorkOrders: number;
 };
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     reportedWorkOrders?: boolean | UserCountOutputTypeCountReportedWorkOrdersArgs;
@@ -1760,6 +3153,13 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
     approvals?: boolean | UserCountOutputTypeCountApprovalsArgs;
     chatConversations?: boolean | UserCountOutputTypeCountChatConversationsArgs;
     aiFeedback?: boolean | UserCountOutputTypeCountAiFeedbackArgs;
+    areaLeaderWorkOrders?: boolean | UserCountOutputTypeCountAreaLeaderWorkOrdersArgs;
+    maintenanceSupervisorWorkOrders?: boolean | UserCountOutputTypeCountMaintenanceSupervisorWorkOrdersArgs;
+    performerWorkOrders?: boolean | UserCountOutputTypeCountPerformerWorkOrdersArgs;
+    machineReceiverWorkOrders?: boolean | UserCountOutputTypeCountMachineReceiverWorkOrdersArgs;
+    responsibleEngineerWorkOrders?: boolean | UserCountOutputTypeCountResponsibleEngineerWorkOrdersArgs;
+    maintenanceEngineerWorkOrders?: boolean | UserCountOutputTypeCountMaintenanceEngineerWorkOrdersArgs;
+    maintenanceManagerWorkOrders?: boolean | UserCountOutputTypeCountMaintenanceManagerWorkOrdersArgs;
 };
 /**
  * UserCountOutputType without action
@@ -1812,6 +3212,48 @@ export type UserCountOutputTypeCountChatConversationsArgs<ExtArgs extends runtim
 export type UserCountOutputTypeCountAiFeedbackArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.ChatMessageFeedbackWhereInput;
 };
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAreaLeaderWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMaintenanceSupervisorWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPerformerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMachineReceiverWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountResponsibleEngineerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMaintenanceEngineerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMaintenanceManagerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.WorkOrderWhereInput;
+};
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     email?: boolean;
@@ -1839,6 +3281,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     approvals?: boolean | Prisma.User$approvalsArgs<ExtArgs>;
     chatConversations?: boolean | Prisma.User$chatConversationsArgs<ExtArgs>;
     aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>;
+    areaLeaderWorkOrders?: boolean | Prisma.User$areaLeaderWorkOrdersArgs<ExtArgs>;
+    maintenanceSupervisorWorkOrders?: boolean | Prisma.User$maintenanceSupervisorWorkOrdersArgs<ExtArgs>;
+    performerWorkOrders?: boolean | Prisma.User$performerWorkOrdersArgs<ExtArgs>;
+    machineReceiverWorkOrders?: boolean | Prisma.User$machineReceiverWorkOrdersArgs<ExtArgs>;
+    responsibleEngineerWorkOrders?: boolean | Prisma.User$responsibleEngineerWorkOrdersArgs<ExtArgs>;
+    maintenanceEngineerWorkOrders?: boolean | Prisma.User$maintenanceEngineerWorkOrdersArgs<ExtArgs>;
+    maintenanceManagerWorkOrders?: boolean | Prisma.User$maintenanceManagerWorkOrdersArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1913,6 +3362,13 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     approvals?: boolean | Prisma.User$approvalsArgs<ExtArgs>;
     chatConversations?: boolean | Prisma.User$chatConversationsArgs<ExtArgs>;
     aiFeedback?: boolean | Prisma.User$aiFeedbackArgs<ExtArgs>;
+    areaLeaderWorkOrders?: boolean | Prisma.User$areaLeaderWorkOrdersArgs<ExtArgs>;
+    maintenanceSupervisorWorkOrders?: boolean | Prisma.User$maintenanceSupervisorWorkOrdersArgs<ExtArgs>;
+    performerWorkOrders?: boolean | Prisma.User$performerWorkOrdersArgs<ExtArgs>;
+    machineReceiverWorkOrders?: boolean | Prisma.User$machineReceiverWorkOrdersArgs<ExtArgs>;
+    responsibleEngineerWorkOrders?: boolean | Prisma.User$responsibleEngineerWorkOrdersArgs<ExtArgs>;
+    maintenanceEngineerWorkOrders?: boolean | Prisma.User$maintenanceEngineerWorkOrdersArgs<ExtArgs>;
+    maintenanceManagerWorkOrders?: boolean | Prisma.User$maintenanceManagerWorkOrdersArgs<ExtArgs>;
     _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1932,6 +3388,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
         approvals: Prisma.$UserPayload<ExtArgs>[];
         chatConversations: Prisma.$ChatConversationPayload<ExtArgs>[];
         aiFeedback: Prisma.$ChatMessageFeedbackPayload<ExtArgs>[];
+        areaLeaderWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        maintenanceSupervisorWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        performerWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        machineReceiverWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        responsibleEngineerWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        maintenanceEngineerWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
+        maintenanceManagerWorkOrders: Prisma.$WorkOrderPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -2289,6 +3752,13 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
     approvals<T extends Prisma.User$approvalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     chatConversations<T extends Prisma.User$chatConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$chatConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     aiFeedback<T extends Prisma.User$aiFeedbackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChatMessageFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    areaLeaderWorkOrders<T extends Prisma.User$areaLeaderWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$areaLeaderWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    maintenanceSupervisorWorkOrders<T extends Prisma.User$maintenanceSupervisorWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$maintenanceSupervisorWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    performerWorkOrders<T extends Prisma.User$performerWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$performerWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    machineReceiverWorkOrders<T extends Prisma.User$machineReceiverWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$machineReceiverWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    responsibleEngineerWorkOrders<T extends Prisma.User$responsibleEngineerWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$responsibleEngineerWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    maintenanceEngineerWorkOrders<T extends Prisma.User$maintenanceEngineerWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$maintenanceEngineerWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    maintenanceManagerWorkOrders<T extends Prisma.User$maintenanceManagerWorkOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$maintenanceManagerWorkOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2888,6 +4358,167 @@ export type User$aiFeedbackArgs<ExtArgs extends runtime.Types.Extensions.Interna
     take?: number;
     skip?: number;
     distinct?: Prisma.ChatMessageFeedbackScalarFieldEnum | Prisma.ChatMessageFeedbackScalarFieldEnum[];
+};
+/**
+ * User.areaLeaderWorkOrders
+ */
+export type User$areaLeaderWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.maintenanceSupervisorWorkOrders
+ */
+export type User$maintenanceSupervisorWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.performerWorkOrders
+ */
+export type User$performerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.machineReceiverWorkOrders
+ */
+export type User$machineReceiverWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.responsibleEngineerWorkOrders
+ */
+export type User$responsibleEngineerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.maintenanceEngineerWorkOrders
+ */
+export type User$maintenanceEngineerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
+};
+/**
+ * User.maintenanceManagerWorkOrders
+ */
+export type User$maintenanceManagerWorkOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WorkOrder
+     */
+    select?: Prisma.WorkOrderSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the WorkOrder
+     */
+    omit?: Prisma.WorkOrderOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.WorkOrderInclude<ExtArgs> | null;
+    where?: Prisma.WorkOrderWhereInput;
+    orderBy?: Prisma.WorkOrderOrderByWithRelationInput | Prisma.WorkOrderOrderByWithRelationInput[];
+    cursor?: Prisma.WorkOrderWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.WorkOrderScalarFieldEnum | Prisma.WorkOrderScalarFieldEnum[];
 };
 /**
  * User without action

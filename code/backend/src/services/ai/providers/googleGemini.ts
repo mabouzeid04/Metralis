@@ -1,15 +1,17 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { env } from "../../../config/env";
 import type { GenerateParams, GenerateResult, LLMProvider } from "../types";
-import { SYSTEM_PROMPT } from "./systemPrompt";
+import { buildSystemPrompt } from "./systemPrompt";
 
 export class GoogleGeminiProvider implements LLMProvider {
-  private model = new GoogleGenerativeAI(env.ai.gemini.apiKey).getGenerativeModel({
-    model: env.ai.gemini.model,
-    systemInstruction: SYSTEM_PROMPT,
-  });
+  private client = new GoogleGenerativeAI(env.ai.gemini.apiKey);
 
   async generate(params: GenerateParams): Promise<GenerateResult> {
+    const model = this.client.getGenerativeModel({
+      model: env.ai.gemini.model,
+      systemInstruction: buildSystemPrompt(params.language),
+    });
+
     const contents = [
       ...params.history.map((message) => ({
         role: message.role === "ASSISTANT" ? "model" : "user",
@@ -21,7 +23,7 @@ export class GoogleGeminiProvider implements LLMProvider {
       },
     ];
 
-    const result = await this.model.generateContent({
+    const result = await model.generateContent({
       contents,
       generationConfig: {
         temperature: params.temperature,

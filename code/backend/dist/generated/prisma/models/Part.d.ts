@@ -484,13 +484,6 @@ export type NullableDecimalFieldUpdateOperationsInput = {
     multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string;
     divide?: runtime.Decimal | runtime.DecimalJsLike | number | string;
 };
-export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
 export type PartCreateNestedOneWithoutWorkOrdersInput = {
     create?: Prisma.XOR<Prisma.PartCreateWithoutWorkOrdersInput, Prisma.PartUncheckedCreateWithoutWorkOrdersInput>;
     connectOrCreate?: Prisma.PartCreateOrConnectWithoutWorkOrdersInput;

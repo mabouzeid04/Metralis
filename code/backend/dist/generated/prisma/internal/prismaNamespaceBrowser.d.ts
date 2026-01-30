@@ -42,6 +42,9 @@ export declare const AnyNull: {
 };
 export declare const ModelName: {
     readonly User: "User";
+    readonly FactoryConfig: "FactoryConfig";
+    readonly Asset: "Asset";
+    readonly DocumentAsset: "DocumentAsset";
     readonly Machine: "Machine";
     readonly WorkOrder: "WorkOrder";
     readonly RepairAction: "RepairAction";
@@ -84,6 +87,46 @@ export declare const UserScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
+export declare const FactoryConfigScalarFieldEnum: {
+    readonly id: "id";
+    readonly primaryLanguage: "primaryLanguage";
+    readonly supportedLanguages: "supportedLanguages";
+    readonly hierarchyLevels: "hierarchyLevels";
+    readonly defaultMaxDepth: "defaultMaxDepth";
+    readonly statusReasonOptions: "statusReasonOptions";
+    readonly maintenanceDisciplines: "maintenanceDisciplines";
+    readonly maintenanceTypes: "maintenanceTypes";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type FactoryConfigScalarFieldEnum = (typeof FactoryConfigScalarFieldEnum)[keyof typeof FactoryConfigScalarFieldEnum];
+export declare const AssetScalarFieldEnum: {
+    readonly id: "id";
+    readonly parentId: "parentId";
+    readonly depth: "depth";
+    readonly name: "name";
+    readonly nameTranslations: "nameTranslations";
+    readonly code: "code";
+    readonly levelType: "levelType";
+    readonly pathString: "pathString";
+    readonly pathStringTranslations: "pathStringTranslations";
+    readonly status: "status";
+    readonly statusReason: "statusReason";
+    readonly criticality: "criticality";
+    readonly attributes: "attributes";
+    readonly commissionedAt: "commissionedAt";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum];
+export declare const DocumentAssetScalarFieldEnum: {
+    readonly id: "id";
+    readonly documentId: "documentId";
+    readonly assetId: "assetId";
+    readonly isPrimary: "isPrimary";
+    readonly createdAt: "createdAt";
+};
+export type DocumentAssetScalarFieldEnum = (typeof DocumentAssetScalarFieldEnum)[keyof typeof DocumentAssetScalarFieldEnum];
 export declare const MachineScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
@@ -106,6 +149,7 @@ export declare const WorkOrderScalarFieldEnum: {
     readonly id: "id";
     readonly publicId: "publicId";
     readonly machineId: "machineId";
+    readonly assetId: "assetId";
     readonly title: "title";
     readonly descriptionRaw: "descriptionRaw";
     readonly status: "status";
@@ -124,6 +168,26 @@ export declare const WorkOrderScalarFieldEnum: {
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
+    readonly maintenanceType: "maintenanceType";
+    readonly maintenanceDisciplines: "maintenanceDisciplines";
+    readonly equipmentStopTime: "equipmentStopTime";
+    readonly faultReportTime: "faultReportTime";
+    readonly repairStartTime: "repairStartTime";
+    readonly maintenanceStartTime: "maintenanceStartTime";
+    readonly maintenanceEndTime: "maintenanceEndTime";
+    readonly maintenanceDescription: "maintenanceDescription";
+    readonly correctiveAction: "correctiveAction";
+    readonly notesAndRecommendations: "notesAndRecommendations";
+    readonly equipmentStatusAfter: "equipmentStatusAfter";
+    readonly maintenanceDurationMin: "maintenanceDurationMin";
+    readonly downtimeDurationMin: "downtimeDurationMin";
+    readonly areaLeaderId: "areaLeaderId";
+    readonly maintenanceSupervisorId: "maintenanceSupervisorId";
+    readonly performerId: "performerId";
+    readonly machineReceiverId: "machineReceiverId";
+    readonly responsibleEngineerId: "responsibleEngineerId";
+    readonly maintenanceEngineerId: "maintenanceEngineerId";
+    readonly maintenanceManagerId: "maintenanceManagerId";
 };
 export type WorkOrderScalarFieldEnum = (typeof WorkOrderScalarFieldEnum)[keyof typeof WorkOrderScalarFieldEnum];
 export declare const RepairActionScalarFieldEnum: {
@@ -179,11 +243,14 @@ export declare const DocumentScalarFieldEnum: {
     readonly machineType: "machineType";
     readonly language: "language";
     readonly version: "version";
+    readonly description: "description";
     readonly metadata: "metadata";
     readonly uploadedById: "uploadedById";
     readonly ingestionStatus: "ingestionStatus";
     readonly ingestedAt: "ingestedAt";
     readonly ingestionError: "ingestionError";
+    readonly isFactoryWide: "isFactoryWide";
+    readonly appliesToChildren: "appliesToChildren";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -206,6 +273,7 @@ export declare const IncidentChunkScalarFieldEnum: {
     readonly tokens: "tokens";
     readonly machineId: "machineId";
     readonly machineType: "machineType";
+    readonly assetId: "assetId";
     readonly language: "language";
     readonly metadata: "metadata";
     readonly createdAt: "createdAt";
@@ -215,6 +283,7 @@ export declare const ChatConversationScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";
     readonly machineId: "machineId";
+    readonly assetId: "assetId";
     readonly title: "title";
     readonly summary: "summary";
     readonly metadata: "metadata";
@@ -274,6 +343,15 @@ export declare const NullableJsonNullValueInput: {
     };
 };
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
+export declare const JsonNullValueInput: {
+    readonly JsonNull: {
+        "__#private@#private": any;
+        _getNamespace(): string;
+        _getName(): string;
+        toString(): string;
+    };
+};
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";

@@ -7,20 +7,26 @@ const auth_1 = require("../middleware/auth");
 const router = (0, express_1.Router)();
 const machineSchema = zod_1.z.object({
     name: zod_1.z.string().min(1),
-    code: zod_1.z.string().optional(),
-    category: zod_1.z.string().optional(),
-    line: zod_1.z.string().optional(),
-    area: zod_1.z.string().optional(),
-    manufacturer: zod_1.z.string().optional(),
-    model: zod_1.z.string().optional(),
-    serialNumber: zod_1.z.string().optional(),
-    commissionedAt: zod_1.z.string().datetime().optional(),
+    code: zod_1.z.string().nullable().optional(),
+    category: zod_1.z.string().nullable().optional(),
+    line: zod_1.z.string().nullable().optional(),
+    area: zod_1.z.string().nullable().optional(),
+    manufacturer: zod_1.z.string().nullable().optional(),
+    model: zod_1.z.string().nullable().optional(),
+    serialNumber: zod_1.z.string().nullable().optional(),
+    commissionedAt: zod_1.z.union([zod_1.z.string().datetime(), zod_1.z.null()]).optional().transform((val) => val === null ? undefined : val),
     status: zod_1.z.enum(["RUNNING", "DOWN", "MAINTENANCE", "RETIRED"]).optional(),
     criticality: zod_1.z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
 });
 router.use(auth_1.requireAuth);
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
+    const { status } = req.query;
+    const where = {};
+    if (status && typeof status === 'string') {
+        where.status = status;
+    }
     const machines = await prisma_1.prisma.machine.findMany({
+        where,
         orderBy: { name: "asc" },
     });
     return res.json({ data: machines });

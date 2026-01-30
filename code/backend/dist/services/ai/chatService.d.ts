@@ -1,6 +1,6 @@
 import type { AiFeedbackValue, ChatConversation, ChatMessageRole } from "../../generated/prisma/client";
 import type { Citation, RetrievedChunk } from "./types";
-export declare const ensureConversation: (userId: string, conversationId?: string, machineId?: string) => Promise<{
+export declare const ensureConversation: (userId: string, conversationId?: string, machineId?: string, assetId?: string) => Promise<{
     conversation: ChatConversation & {
         machine: {
             id: string;
@@ -38,6 +38,7 @@ export declare const getConversationDetail: (userId: string, conversationId: str
         createdAt: Date;
         updatedAt: Date;
         machineId: string | null;
+        assetId: string | null;
         title: string;
         summary: string | null;
         lastMessageAt: Date;
@@ -60,8 +61,10 @@ type HandleChatParams = {
     message: string;
     conversationId?: string | undefined;
     machineId?: string | undefined;
+    assetId?: string | undefined;
+    language?: "en" | "ar";
 };
-export declare const handleChatMessage: ({ userId, message, conversationId, machineId }: HandleChatParams) => Promise<{
+export declare const handleChatMessage: ({ userId, message, conversationId, machineId, assetId: inputAssetId, language }: HandleChatParams) => Promise<{
     conversation: {
         machine: {
             id: string;
@@ -75,6 +78,7 @@ export declare const handleChatMessage: ({ userId, message, conversationId, mach
         createdAt: Date;
         updatedAt: Date;
         machineId: string | null;
+        assetId: string | null;
         title: string;
         summary: string | null;
         lastMessageAt: Date;

@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { InsightCard, type InsightCategory, type InsightPriority } from '@/components/analytics/InsightCard'
 import { api } from '@/lib/api'
 import { useTranslation } from 'react-i18next'
+import MaintenanceAnalytics from './MaintenanceAnalytics'
 
 type AnalyticsStats = {
     totalAiQueries: number
@@ -82,7 +83,7 @@ export default function AdminAnalytics() {
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ['analytics', 'stats'],
         queryFn: fetchAnalyticsStats,
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60 * 5,
     })
 
     const { data: insights = [], isLoading: insightsLoading } = useQuery({
@@ -185,97 +186,106 @@ export default function AdminAnalytics() {
     }
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex flex-col gap-1">
-                <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
-                <p className="text-muted-foreground">{t('subtitle')}</p>
-            </div>
+        <div className="space-y-10">
+            {/* Maintenance Analytics Dashboard */}
+            <MaintenanceAnalytics />
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {metrics.map((metric, i) => (
-                    <Card key={i} className="hover:shadow-md transition-shadow relative overflow-hidden group">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                {metric.title}
-                            </CardTitle>
-                            <metric.icon className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-baseline gap-2">
-                                <div className="text-2xl font-bold">{statsLoading ? '...' : metric.value}</div>
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                {metric.description}
-                            </p>
+            {/* Divider */}
+            <div className="border-t" />
 
-                            <div className="mt-4 pt-4 border-t text-xs text-muted-foreground">
-                                {metric.footer}
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
+            {/* AI Insights Section (existing) */}
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="p-2 bg-primary/10 rounded-full">
-                            <Zap className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-semibold">{t('commandCenter.title')}</h2>
-                            <p className="text-sm text-muted-foreground">{t('commandCenter.description')}</p>
-                        </div>
-                    </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => generateMutation.mutate()}
-                        disabled={generateMutation.isPending}
-                    >
-                        <RefreshCw className={`w-4 h-4 mr-2 ${generateMutation.isPending ? 'animate-spin' : ''}`} />
-{t('insights.generate')}
-                    </Button>
+                <div className="flex flex-col gap-1">
+                    <h2 className="text-3xl font-bold tracking-tight">{t('title')}</h2>
+                    <p className="text-muted-foreground">{t('subtitle')}</p>
                 </div>
 
-                <div className="grid gap-4">
-                    {insightsLoading ? (
-                        <div className="text-center py-8 text-muted-foreground">{t('insights.loading')}</div>
-                    ) : activeInsights.length === 0 ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                            {t('insights.empty')}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    {metrics.map((metric, i) => (
+                        <Card key={i} className="hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    {metric.title}
+                                </CardTitle>
+                                <metric.icon className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-baseline gap-2">
+                                    <div className="text-2xl font-bold">{statsLoading ? '...' : metric.value}</div>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    {metric.description}
+                                </p>
+
+                                <div className="mt-4 pt-4 border-t text-xs text-muted-foreground">
+                                    {metric.footer}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 bg-primary/10 rounded-full">
+                                <Zap className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-semibold">{t('commandCenter.title')}</h2>
+                                <p className="text-sm text-muted-foreground">{t('commandCenter.description')}</p>
+                            </div>
                         </div>
-                    ) : (
-                        activeInsights.map((insight) => (
-                            <InsightCard
-                                key={insight.id}
-                                category={categoryMap[insight.category]}
-                                title={insight.title}
-                                priority={priorityMap[insight.priority]}
-                                description={insight.content}
-                                evidence={getEvidenceFromMetadata(insight)}
-                                primaryActionLabel={getPrimaryAction(insight.category)}
-                                onPrimaryAction={() => {
-                                    switch (insight.category) {
-                                        case 'MAINTENANCE':
-                                            navigate('/work-orders')
-                                            break
-                                        case 'INVENTORY':
-                                            navigate('/parts')
-                                            break
-                                        case 'DOCUMENTATION':
-                                            navigate('/documents')
-                                            break
-                                        default:
-                                            console.log('Primary action', insight.id)
-                                    }
-                                }}
-                                onViewEvidence={() => console.log('View evidence', insight.id)}
-                                onDismiss={() => dismissMutation.mutate({ id: insight.id, status: 'DISMISSED' })}
-                                primaryActionDisabled={insight.category === 'TRAINING'}
-                            />
-                        ))
-                    )}
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => generateMutation.mutate()}
+                            disabled={generateMutation.isPending}
+                        >
+                            <RefreshCw className={`w-4 h-4 mr-2 ${generateMutation.isPending ? 'animate-spin' : ''}`} />
+{t('insights.generate')}
+                        </Button>
+                    </div>
+
+                    <div className="grid gap-4">
+                        {insightsLoading ? (
+                            <div className="text-center py-8 text-muted-foreground">{t('insights.loading')}</div>
+                        ) : activeInsights.length === 0 ? (
+                            <div className="text-center py-8 text-muted-foreground">
+                                {t('insights.empty')}
+                            </div>
+                        ) : (
+                            activeInsights.map((insight) => (
+                                <InsightCard
+                                    key={insight.id}
+                                    category={categoryMap[insight.category]}
+                                    title={insight.title}
+                                    priority={priorityMap[insight.priority]}
+                                    description={insight.content}
+                                    evidence={getEvidenceFromMetadata(insight)}
+                                    primaryActionLabel={getPrimaryAction(insight.category)}
+                                    onPrimaryAction={() => {
+                                        switch (insight.category) {
+                                            case 'MAINTENANCE':
+                                                navigate('/work-orders')
+                                                break
+                                            case 'INVENTORY':
+                                                navigate('/parts')
+                                                break
+                                            case 'DOCUMENTATION':
+                                                navigate('/documents')
+                                                break
+                                            default:
+                                                console.log('Primary action', insight.id)
+                                        }
+                                    }}
+                                    onViewEvidence={() => console.log('View evidence', insight.id)}
+                                    onDismiss={() => dismissMutation.mutate({ id: insight.id, status: 'DISMISSED' })}
+                                    primaryActionDisabled={insight.category === 'TRAINING'}
+                                />
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

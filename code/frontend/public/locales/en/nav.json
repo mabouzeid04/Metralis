@@ -1,6 +1,7 @@
 {
   "dashboard": "Dashboard",
   "machines": "Machines",
+  "assets": "Assets",
   "workOrders": "Work Orders",
   "parts": "Parts",
   "documents": "Documents",
@@ -14,5 +15,6 @@
   "accessManagement": "Access Management",
   "adminAnalytics": "Admin Analytics"
 }
+
 
 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Plus, Search, Filter, Loader2, ServerOff } from 'lucide-react'
@@ -12,27 +12,54 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { useMachines } from '@/lib/hooks/useDashboard'
+import { useMachines, type MachineFilters } from '@/lib/hooks/useMachines'
 import { useAuth } from '@/contexts/AuthContext'
 
 export default function MachinesList() {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [filters, setFilters] = useState<MachineFilters>({})
   const { user } = useAuth()
   const isAdmin = user?.role === 'ADMIN'
   const { t } = useTranslation(['machines', 'common'])
 
-  // React Query - data cached for 5 minutes, instant on back navigation
-  const { data: machines = [], isLoading: loading, error } = useMachines()
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
-  const filteredMachines = useMemo(() =>
-    machines.filter(machine =>
-      machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (machine.code && machine.code.toLowerCase().includes(searchTerm.toLowerCase()))
-    ),
-    [machines, searchTerm]
-  )
+  // React Query - data cached for 5 minutes, instant on back navigation
+  const { data, isLoading: loading, error } = useMachines({ ...filters, q: debouncedSearch || undefined })
+  const machines = useMemo(() => data?.data || [], [data])
+
+  // Client-side filtering for immediate search feedback
+  const filteredMachines = useMemo(() => {
+    if (!searchInput || searchInput === debouncedSearch) {
+      return machines
+    }
+    // While debounce is pending, filter client-side for instant feedback
+    const search = searchInput.toLowerCase()
+    return machines.filter((machine) => {
+      const name = machine.name.toLowerCase()
+      const code = machine.code?.toLowerCase() || ''
+      return name.includes(search) || code.includes(search)
+    })
+  }, [machines, searchInput, debouncedSearch])
 
   if (loading) {
     return (
@@ -80,13 +107,47 @@ export default function MachinesList() {
               <Input
                 placeholder={t('searchPlaceholder')}
                 className="pl-9"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Filter className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{t('filters.status')}</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {['RUNNING', 'MAINTENANCE', 'DOWN', 'RETIRED'].map((status) => (
+                    <DropdownMenuCheckboxItem
+                      key={status}
+                      checked={filters.status === status}
+                      onCheckedChange={(checked) => {
+                        setFilters((prev) => ({
+                          ...prev,
+                          status: checked ? status : undefined,
+                        }))
+                      }}
+                    >
+                      {status.replace('_', ' ')}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuGroup>
+                {filters.status && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onSelect={() => setFilters({})}
+                      className="justify-center text-center"
+                    >
+                      {t('common:filters.clear')}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -95,9 +156,9 @@ export default function MachinesList() {
               <ServerOff className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold">{t('emptyTitle')}</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? t('emptySearchHint') : t('emptyCreateHint')}
+                {searchInput ? t('emptySearchHint') : t('emptyCreateHint')}
               </p>
-              {!searchTerm && (
+              {!searchInput && (
                 isAdmin ? (
                   <Button asChild>
                     <Link to="/machines/new">

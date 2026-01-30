@@ -15,6 +15,8 @@ const search_1 = __importDefault(require("./search"));
 const profile_1 = __importDefault(require("./profile"));
 const ai_1 = __importDefault(require("./ai"));
 const analytics_1 = __importDefault(require("./analytics"));
+const assets_1 = __importDefault(require("./assets"));
+const factoryConfig_1 = __importDefault(require("./factoryConfig"));
 const router = (0, express_1.Router)();
 router.use("/auth", auth_1.default);
 router.use("/machines", machines_1.default);
@@ -27,5 +29,7 @@ router.use("/search", search_1.default);
 router.use("/profile", profile_1.default);
 router.use("/ai", ai_1.default);
 router.use("/analytics", analytics_1.default);
+router.use("/assets", assets_1.default);
+router.use("/factory-config", factoryConfig_1.default);
 exports.default = router;
 //# sourceMappingURL=index.js.map

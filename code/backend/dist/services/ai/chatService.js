@@ -97,7 +97,7 @@ const formatHistory = (messages) => messages.map((msg) => ({
     role: msg.role,
     content: msg.content,
 }));
-const ensureConversation = async (userId, conversationId, machineId) => {
+const ensureConversation = async (userId, conversationId, machineId, assetId) => {
     if (conversationId) {
         const conversation = await prisma_1.prisma.chatConversation.findFirst({
             where: { id: conversationId, userId },
@@ -116,6 +116,7 @@ const ensureConversation = async (userId, conversationId, machineId) => {
         data: {
             userId,
             machineId: machineId ?? null,
+            assetId: assetId ?? null,
             title: "Metralis AI Chat",
         },
         include: {
@@ -172,12 +173,20 @@ const getConversationDetail = async (userId, conversationId) => {
     };
 };
 exports.getConversationDetail = getConversationDetail;
-const handleChatMessage = async ({ userId, message, conversationId, machineId }) => {
-    const { conversation, isNew } = await (0, exports.ensureConversation)(userId, conversationId, machineId);
+const handleChatMessage = async ({ userId, message, conversationId, machineId, assetId: inputAssetId, language = "en" }) => {
+    const { conversation, isNew } = await (0, exports.ensureConversation)(userId, conversationId, machineId, inputAssetId);
     const targetMachineId = conversation.machineId ?? machineId;
-    const maintenanceHistory = targetMachineId
+    // Resolve asset ID early so we can use it for maintenance history lookup
+    const assetId = conversation.assetId ?? inputAssetId ?? undefined;
+    // Query maintenance history by machineId (legacy) and/or assetId (new)
+    const historyOrConditions = [];
+    if (targetMachineId)
+        historyOrConditions.push({ machineId: targetMachineId });
+    if (assetId)
+        historyOrConditions.push({ assetId });
+    const maintenanceHistory = historyOrConditions.length > 0
         ? await prisma_1.prisma.workOrder.findMany({
-            where: { machineId: targetMachineId },
+            where: { OR: historyOrConditions },
             orderBy: { reportedAt: "desc" },
             take: 15,
             select: {
@@ -204,28 +213,64 @@ const handleChatMessage = async ({ userId, message, conversationId, machineId })
             });
         }
     }
+    // Bind asset to conversation if not already bound
+    if (!conversation.assetId && assetId) {
+        await prisma_1.prisma.chatConversation.update({
+            where: { id: conversation.id },
+            data: { assetId },
+        });
+    }
     const history = await prisma_1.prisma.chatMessage.findMany({
         where: { conversationId: conversation.id },
         orderBy: { createdAt: "asc" },
         take: HISTORY_LIMIT,
         select: { role: true, content: true },
     });
+    let asset = null;
+    if (assetId) {
+        const raw = await prisma_1.prisma.asset.findUnique({
+            where: { id: assetId },
+            select: {
+                id: true,
+                name: true,
+                nameTranslations: true,
+                code: true,
+                pathString: true,
+                pathStringTranslations: true,
+                status: true,
+                statusReason: true,
+                criticality: true,
+            },
+        });
+        if (raw) {
+            asset = {
+                ...raw,
+                nameTranslations: raw.nameTranslations,
+                pathStringTranslations: raw.pathStringTranslations,
+            };
+        }
+    }
     const retrievedChunks = await (0, retrieval_1.retrieveContext)({
         question: message,
         machineId: conversation.machineId ?? machineId,
         machineType: conversation.machine?.model ?? undefined,
+        assetId,
+        language,
     });
     const prompt = (0, prompt_1.buildPrompt)({
         question: message,
         machine: conversation.machine,
         retrievedChunks,
         maintenanceHistory,
+        language,
+        asset,
     });
     const llmResponse = await (0, provider_1.generateChatLLMResponse)({
         history: formatHistory(history),
         prompt,
         temperature: env_1.env.ai.temperature,
         maxTokens: env_1.env.ai.maxTokens,
+        language,
     });
     const citations = mapCitations(retrievedChunks);
     const structuredOutput = parseStructuredOutput(llmResponse.text);

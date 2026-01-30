@@ -1,0 +1,120 @@
+{
+  "title": "الأصول",
+  "subtitle": "إدارة التسلسل الهرمي لأصول المصنع",
+  "addRoot": "إضافة ماكينة",
+  "addChild": "إضافة فرعي",
+  "searchPlaceholder": "البحث بالاسم أو الكود...",
+  "emptyTitle": "لا توجد أصول",
+  "emptyHint": "ابدأ بإضافة أول ماكينة.",
+  "emptySearchHint": "لا توجد أصول تطابق معايير البحث.",
+  "adminsOnly": "مطلوب صلاحية المسؤول",
+  "view": "عرض",
+  "hierarchy": {
+    "machine": "الماكينة",
+    "group": "المجموعة",
+    "component": "المكون",
+    "subComponent": "المكون الفرعي"
+  },
+  "status": {
+    "running": "يعمل",
+    "down": "متوقف",
+    "operational": "يعمل",
+    "standby": "في وضع الاستعداد",
+    "breakdown": "عطل",
+    "maintenance": "صيانة مجدولة",
+    "waitingParts": "في انتظار قطع الغيار",
+    "underObservation": "تحت المراقبة",
+    "underRepair": "تحت الإصلاح"
+  },
+  "criticality": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "critical": "حرج"
+  },
+  "picker": {
+    "label": "اختر الأصل",
+    "placeholder": "اختر الماكينة ثم المستوى الفرعي اختياريًا",
+    "search": "ابحث في الأصول...",
+    "noMatches": "لم يتم العثور على نتائج",
+    "noItems": "لا توجد عناصر متاحة",
+    "loading": "جاري التحميل...",
+    "clearAll": "مسح الكل",
+    "hint": "اكتب حرفين على الأقل للبحث",
+    "allSelected": "جميع النتائج محددة بالفعل",
+    "maxReached": "تم الوصول للحد الأقصى للتحديدات ({{max}})"
+  },
+  "form": {
+    "name": "الاسم (إنجليزي)",
+    "nameAr": "الاسم (عربي)",
+    "nameTranslation": "الاسم ({{language}})",
+    "code": "الكود",
+    "codePlaceholder": "مثال: D1G02",
+    "parent": "الأصل الرئيسي",
+    "parentPlaceholder": "اختر الأصل الرئيسي (اتركه فارغاً للجذر)",
+    "levelType": "مستوى الأصل",
+    "status": "الحالة",
+    "statusReason": "سبب الحالة",
+    "criticality": "الأهمية",
+    "commissionedAt": "تاريخ التشغيل",
+    "back": "العودة إلى الأصول",
+    "createTitle": "إضافة أصل",
+    "createDescription": "إضافة أصل جديد إلى التسلسل الهرمي للمصنع.",
+    "editTitle": "تعديل الأصل",
+    "editDescription": "تحديث بيانات الأصل.",
+    "save": "حفظ الأصل",
+    "saving": "جاري الحفظ...",
+    "cancel": "إلغاء"
+  },
+  "detail": {
+    "overview": "نظرة عامة",
+    "children": "الأصول الفرعية",
+    "noChildren": "لا توجد أصول فرعية",
+    "recentWorkOrders": "أوامر العمل الأخيرة",
+    "noWorkOrders": "لا توجد أوامر عمل لهذا الأصل",
+    "documents": "المستندات",
+    "noDocuments": "لا توجد مستندات مرتبطة",
+    "code": "الكود",
+    "level": "المستوى",
+    "criticality": "الأهمية",
+    "status": "الحالة",
+    "statusReason": "السبب",
+    "commissioned": "تاريخ التشغيل",
+    "updated": "آخر تحديث",
+    "notAvailable": "غير متاح",
+    "notFound": "الأصل غير موجود",
+    "path": "المسار"
+  },
+  "actions": {
+    "create": "إنشاء أصل",
+    "edit": "تعديل الأصل",
+    "delete": "حذف الأصل",
+    "addChild": "إضافة أصل فرعي",
+    "viewDetails": "عرض التفاصيل",
+    "createWorkOrder": "إنشاء طلب صيانة",
+    "viewDocuments": "عرض المستندات",
+    "linkDocument": "ربط مستند",
+    "unlinkDocument": "إلغاء ربط المستند"
+  },
+  "messages": {
+    "created": "تم إنشاء الأصل بنجاح",
+    "updated": "تم تحديث الأصل بنجاح",
+    "deleted": "تم حذف الأصل بنجاح",
+    "createError": "فشل في إنشاء الأصل",
+    "updateError": "فشل في تحديث الأصل",
+    "deleteError": "فشل في حذف الأصل",
+    "deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذا الأصل؟ سيتم أيضًا حذف جميع الأصول الفرعية."
+  },
+  "filters": {
+    "status": "الحالة",
+    "level": "المستوى",
+    "criticality": "الأهمية",
+    "all": "الكل"
+  },
+  "tree": {
+    "expand": "توسيع",
+    "collapse": "طي",
+    "noAssets": "لا توجد أصول",
+    "addRoot": "إضافة ماكينة"
+  }
+}

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard,
-  Settings,
+  Network,
   Wrench,
   FileText,
   Package,
@@ -24,7 +24,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   const navItems = [
     { to: '/', icon: LayoutDashboard, label: t('dashboard') },
-    { to: '/machines', icon: Settings, label: t('machines') },
+    { to: '/assets', icon: Network, label: t('assets') },
     { to: '/work-orders', icon: Wrench, label: t('workOrders') },
     { to: '/parts', icon: Package, label: t('parts') },
     { to: '/documents', icon: FileText, label: t('documents') },

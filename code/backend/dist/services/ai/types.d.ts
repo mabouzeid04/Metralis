@@ -30,6 +30,7 @@ export type GenerateParams = {
     prompt: string;
     temperature: number;
     maxTokens: number;
+    language?: "en" | "ar";
 };
 export type GenerateResult = {
     text: string;

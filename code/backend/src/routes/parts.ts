@@ -95,6 +95,17 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    await prisma.part.delete({
+      where: { id: req.params.id },
+    });
+    return res.status(204).send();
+  } catch {
+    return res.status(404).json({ error: { message: "Part not found" } });
+  }
+});
+
 export default router;
 
 

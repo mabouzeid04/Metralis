@@ -21,7 +21,7 @@ type AIChatContextValue = {
   fetchConversations: () => Promise<void>
   selectConversation: (conversationId: string) => Promise<void>
   startNewConversation: () => void
-  sendMessage: (input: { message: string; machineId?: string }) => Promise<void>
+  sendMessage: (input: { message: string; machineId?: string; assetId?: string; language?: 'en' | 'ar' }) => Promise<void>
   submitFeedback: (messageId: string, value: AiFeedbackValue) => Promise<void>
 }
 
@@ -62,7 +62,7 @@ export const AIChatProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   const sendMessage = useCallback(
-    async ({ message, machineId }: { message: string; machineId?: string }) => {
+    async ({ message, machineId, assetId, language }: { message: string; machineId?: string; assetId?: string; language?: 'en' | 'ar' }) => {
       if (!message.trim()) {
         return
       }
@@ -79,7 +79,9 @@ export const AIChatProvider = ({ children }: { children: ReactNode }) => {
         const response = await sendChatMessage({
           message,
           machineId: machineId || undefined,
+          assetId: assetId || undefined,
           conversationId: currentConversationId,
+          language,
         })
         setCurrentConversationId(response.conversationId)
         setCurrentConversation((prev) => ({

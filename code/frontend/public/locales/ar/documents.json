@@ -4,6 +4,7 @@
   "upload": "رفع مستند",
   "uploadTitle": "رفع مستند",
   "uploadSubtitle": "يدعم ملفات PDF أو Word حتى 25 ميغابايت.",
+  "factoryWide": "على مستوى المصنع",
   "form": {
     "title": "العنوان",
     "titlePlaceholder": "دليل الآلة (بالإنجليزية)",
@@ -12,6 +13,16 @@
     "machinePlaceholder": "اختر آلة (اختياري)",
     "machineLoading": "جاري تحميل الآلات...",
     "machineEmpty": "لا توجد آلات",
+    "description": "الوصف",
+    "descriptionPlaceholder": "وصف مختصر لمحتويات المستند",
+    "language": "اللغة",
+    "assets": "الأصول",
+    "assetsPlaceholder": "ابحث واختر الأصول...",
+    "assetsHint": "سيكون المستند متاحاً للأصول المحددة وجميع الأصول الفرعية التابعة لها",
+    "factoryWide": "تطبيق على كامل المصنع",
+    "factoryWideHint": "سيكون هذا المستند متاحاً لجميع الأصول في المصنع",
+    "appliesToChildren": "تطبيق على الأصول الفرعية",
+    "appliesToChildrenHint": "سيكون هذا المستند متاحاً أيضاً لجميع الأصول الفرعية التابعة للأصول المحددة",
     "file": "الملف",
     "chooseFile": "اختر ملفاً",
     "noFile": "لم يتم اختيار ملف",
@@ -21,6 +32,7 @@
     "unsupported": "يُسمح فقط بملفات PDF أو DOC أو DOCX.",
     "titleRequired": "العنوان مطلوب.",
     "fileRequired": "يرجى اختيار ملف PDF أو DOCX للرفع.",
+    "assetRequired": "يرجى اختيار أصل واحد على الأقل أو تحديد على مستوى المصنع.",
     "failed": "فشل رفع المستند. حاول مرة أخرى."
   },
   "searchPlaceholder": "ابحث عن المستندات...",
@@ -29,9 +41,21 @@
   "emptyCreateHint": "ابدأ برفع أول مستند لك",
   "view": "عرض",
   "download": "تنزيل",
+  "delete": "حذف",
+  "deleteConfirm": "هل أنت متأكد من حذف هذا المستند؟ لا يمكن التراجع عن هذا الإجراء.",
   "close": "إغلاق",
   "previewing": "جاري المعاينة",
   "loadingPreview": "جارٍ تحميل المعاينة...",
+  "languages": {
+    "en": "الإنجليزية",
+    "ar": "العربية",
+    "bilingual": "ثنائي اللغة"
+  },
+  "source": {
+    "direct": "مباشر",
+    "inherited": "موروث",
+    "factoryWide": "على مستوى المصنع"
+  },
   "types": {
     "manual": "دليل",
     "sop": "إجراء تشغيلي",
@@ -43,6 +67,7 @@
     "size": "الحجم",
     "date": "التاريخ",
     "machine": "الآلة",
+    "assets": "الأصول",
     "type": "النوع",
     "title": "العنوان"
   },

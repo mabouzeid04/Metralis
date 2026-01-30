@@ -1,4 +1,7 @@
 export type * from './models/User';
+export type * from './models/FactoryConfig';
+export type * from './models/Asset';
+export type * from './models/DocumentAsset';
 export type * from './models/Machine';
 export type * from './models/WorkOrder';
 export type * from './models/RepairAction';

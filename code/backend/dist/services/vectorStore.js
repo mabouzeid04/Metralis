@@ -35,6 +35,12 @@ const searchSimilarChunks = async (embedding, limit, filter) => {
         values.push(filter.documentId);
         paramIndex += 1;
     }
+    if (filter?.documentIds && filter.documentIds.length > 0) {
+        const placeholders = filter.documentIds.map((_, i) => `$${paramIndex + i}`);
+        filters.push(`dc."documentId" IN (${placeholders.join(", ")})`);
+        values.push(...filter.documentIds);
+        paramIndex += filter.documentIds.length;
+    }
     if (filter?.machineId) {
         filters.push(`dc."metadata"->>'machineId' = $${paramIndex}`);
         values.push(filter.machineId);

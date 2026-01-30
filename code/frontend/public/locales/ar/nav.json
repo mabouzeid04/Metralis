@@ -1,6 +1,7 @@
 {
   "dashboard": "لوحة التحكم",
   "machines": "الآلات",
+  "assets": "الأصول",
   "workOrders": "أوامر العمل",
   "parts": "قطع الغيار",
   "documents": "المستندات",

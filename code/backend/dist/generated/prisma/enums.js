@@ -9,7 +9,7 @@
 * 🟢 You can import this file directly.
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.InsightStatus = exports.InsightPriority = exports.InsightCategory = exports.AiFeedbackValue = exports.ChatMessageRole = exports.DocumentIngestionStatus = exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserStatus = exports.UserRole = void 0;
+exports.AssetCriticality = exports.AssetStatus = exports.InsightStatus = exports.InsightPriority = exports.InsightCategory = exports.AiFeedbackValue = exports.ChatMessageRole = exports.DocumentIngestionStatus = exports.DocumentType = exports.WorkOrderPriority = exports.WorkOrderType = exports.WorkOrderStatus = exports.MachineCriticality = exports.MachineStatus = exports.UserStatus = exports.UserRole = void 0;
 exports.UserRole = {
     ADMIN: 'ADMIN',
     TECHNICIAN: 'TECHNICIAN'
@@ -85,5 +85,15 @@ exports.InsightStatus = {
     REVIEWED: 'REVIEWED',
     ACTIONED: 'ACTIONED',
     DISMISSED: 'DISMISSED'
+};
+exports.AssetStatus = {
+    RUNNING: 'RUNNING',
+    DOWN: 'DOWN'
+};
+exports.AssetCriticality = {
+    LOW: 'LOW',
+    MEDIUM: 'MEDIUM',
+    HIGH: 'HIGH',
+    CRITICAL: 'CRITICAL'
 };
 //# sourceMappingURL=enums.js.map

@@ -15,7 +15,8 @@
     "upload": "رفع",
     "search": "بحث",
     "filter": "تصفية",
-    "delete": "حذف"
+    "delete": "حذف",
+    "print": "طباعة"
   },
   "states": {
     "loading": "جارٍ التحميل...",

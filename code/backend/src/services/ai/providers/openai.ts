@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { env } from "../../../config/env";
 import type { GenerateParams, GenerateResult, LLMProvider } from "../types";
-import { SYSTEM_PROMPT } from "./systemPrompt";
+import { buildSystemPrompt } from "./systemPrompt";
 
 export class OpenAIProvider implements LLMProvider {
   private client = new OpenAI({ apiKey: env.ai.openai.apiKey });
@@ -16,7 +16,7 @@ export class OpenAIProvider implements LLMProvider {
     );
 
     const messages: ChatCompletionMessageParam[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: buildSystemPrompt(params.language) },
       ...historyMessages,
       { role: "user", content: params.prompt },
     ];

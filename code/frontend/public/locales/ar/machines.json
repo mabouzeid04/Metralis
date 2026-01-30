@@ -7,6 +7,10 @@
   "emptyTitle": "لا توجد آلات",
   "emptySearchHint": "جرّب مصطلح بحث آخر",
   "emptyCreateHint": "ابدأ بإضافة أول آلة",
+  "filters": {
+    "status": "الحالة",
+    "clear": "مسح"
+  },
   "table": {
     "status": "الحالة",
     "name": "الاسم",

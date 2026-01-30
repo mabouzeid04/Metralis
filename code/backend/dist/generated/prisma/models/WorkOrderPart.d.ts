@@ -377,13 +377,6 @@ export type WorkOrderPartUncheckedUpdateManyWithoutPartNestedInput = {
     updateMany?: Prisma.WorkOrderPartUpdateManyWithWhereWithoutPartInput | Prisma.WorkOrderPartUpdateManyWithWhereWithoutPartInput[];
     deleteMany?: Prisma.WorkOrderPartScalarWhereInput | Prisma.WorkOrderPartScalarWhereInput[];
 };
-export type IntFieldUpdateOperationsInput = {
-    set?: number;
-    increment?: number;
-    decrement?: number;
-    multiply?: number;
-    divide?: number;
-};
 export type WorkOrderPartCreateWithoutWorkOrderInput = {
     id?: string;
     quantity?: number;

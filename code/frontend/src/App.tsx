@@ -8,6 +8,10 @@ import MachinesList from '@/pages/machines/MachinesList'
 import CreateMachine from '@/pages/machines/CreateMachine'
 import MachineDetail from '@/pages/machines/MachineDetail'
 import EditMachine from '@/pages/machines/EditMachine'
+import AssetsList from '@/pages/assets/AssetsList'
+import CreateAsset from '@/pages/assets/CreateAsset'
+import AssetDetail from '@/pages/assets/AssetDetail'
+import EditAsset from '@/pages/assets/EditAsset'
 import WorkOrdersList from '@/pages/work-orders/WorkOrdersList'
 import CreateWorkOrder from '@/pages/work-orders/CreateWorkOrder'
 import WorkOrderDetail from '@/pages/work-orders/WorkOrderDetail'
@@ -35,6 +39,24 @@ function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute><AIChatProvider><AppLayout /></AIChatProvider></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/assets" element={<AssetsList />} />
+          <Route
+            path="/assets/new"
+            element={
+              <AdminRoute>
+                <CreateAsset />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/assets/:id/edit"
+            element={
+              <AdminRoute>
+                <EditAsset />
+              </AdminRoute>
+            }
+          />
+          <Route path="/assets/:id" element={<AssetDetail />} />
           <Route path="/machines" element={<MachinesList />} />
           <Route
             path="/machines/new"

@@ -9,6 +9,7 @@ export type DocumentChunkRecord = {
 export declare const replaceDocumentChunks: (documentId: string, chunks: DocumentChunkRecord[]) => Promise<void>;
 export type SimilarChunkFilter = {
     documentId?: string | undefined;
+    documentIds?: string[] | undefined;
     machineId?: string | undefined;
     machineType?: string | undefined;
     language?: string | undefined;

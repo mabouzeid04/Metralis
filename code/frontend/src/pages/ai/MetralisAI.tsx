@@ -8,36 +8,16 @@ import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { useAIChat } from '@/contexts/AIChatContext'
-import { api } from '@/lib/api'
 import type { ConversationSummary, StructuredAiResponse, AiFeedbackValue, ChatMessage } from '@/lib/aiClient'
-import { History, Loader2, Send, X, Sparkles, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, ThumbsDown, Lightbulb, ChevronDown, Search, Check } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
+import { History, Loader2, Send, X, Sparkles, Bot as BotIcon, AlertTriangle, ClipboardCheck, Target, ThumbsUp, ThumbsDown, Lightbulb } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-
-type MachineOption = {
-  id: string
-  name: string
-  model?: string | null
-}
-
-const formatMachineLabel = (machine: { name: string; model?: string | null }) => {
-  const name = machine.name?.trim()
-  const model = machine.model?.trim()
-  if (name && model && model.toLowerCase() !== name.toLowerCase()) {
-    return `${name} • ${model}`
-  }
-  return name
-}
+import { AssetPicker } from '@/components/assets/AssetPicker'
+import { type Asset, getAssetTranslatedName, getAssetTranslatedPath } from '@/lib/hooks/useAssets'
 
 const MetralisAI = () => {
   const navigate = useNavigate()
-  const { t } = useTranslation('ai')
+  const { t, i18n } = useTranslation('ai')
+  const currentLanguage = i18n.language
   const {
     conversations,
     messages,
@@ -53,10 +33,8 @@ const MetralisAI = () => {
   } = useAIChat()
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [machines, setMachines] = useState<MachineOption[]>([])
-  const [loadingMachines, setLoadingMachines] = useState(false)
-  const [machineId, setMachineId] = useState('')
-  const [machineSearch, setMachineSearch] = useState('')
+  const [assetId, setAssetId] = useState<string | null>(null)
+  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
   const [input, setInput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
@@ -70,21 +48,8 @@ const MetralisAI = () => {
   const prevMessagesLengthRef = useRef(messages.length)
 
   useEffect(() => {
-    const load = async () => {
-      setLoadingMachines(true)
-      try {
-        const { data } = await api.get<{ data: MachineOption[] }>('/machines')
-        setMachines(data.data)
-      } catch (err) {
-        console.error(err)
-        setError(t('error'))
-      } finally {
-        setLoadingMachines(false)
-      }
-    }
-    load()
     fetchConversations()
-  }, [fetchConversations, t])
+  }, [fetchConversations])
 
   // Only load conversation from URL on initial mount
   useEffect(() => {
@@ -152,17 +117,17 @@ const MetralisAI = () => {
     }
   }, [messages, isSending])
 
-  const activeMachineId = useMemo(() => currentConversation?.machineId ?? currentConversation?.machine?.id ?? '', [currentConversation])
+  // The active asset ID: from conversation binding or user selection
+  const activeAssetId = useMemo(() => currentConversation?.assetId ?? null, [currentConversation])
+  const effectiveAssetId = activeAssetId || assetId
 
-  const selectedMachineId = activeMachineId || machineId
+  // Disable asset picker when conversation is already bound to an asset
+  const assetPickerDisabled = Boolean(activeAssetId)
 
-  const selectedMachine = useMemo(() => machines.find((m) => m.id === selectedMachineId), [machines, selectedMachineId])
-
-  const filteredMachines = useMemo(() => {
-    if (!machineSearch) return machines
-    const lower = machineSearch.toLowerCase()
-    return machines.filter((m) => m.name.toLowerCase().includes(lower) || m.model?.toLowerCase().includes(lower))
-  }, [machines, machineSearch])
+  const handleAssetChange = (newAssetId: string | null, asset: Asset | null) => {
+    setAssetId(newAssetId)
+    setSelectedAsset(asset)
+  }
 
   const handleSend = async () => {
     if (!input.trim()) return
@@ -172,7 +137,8 @@ const MetralisAI = () => {
     try {
       await sendMessage({
         message: messageToSend,
-        machineId: activeMachineId || machineId || undefined,
+        assetId: effectiveAssetId || undefined,
+        language: (currentLanguage === 'ar' ? 'ar' : 'en') as 'en' | 'ar',
       })
     } catch (err) {
       console.error(err)
@@ -191,7 +157,8 @@ const MetralisAI = () => {
       next.set('conversationId', conversation.id)
       setSearchParams(next, { replace: true })
       setShowHistory(false)
-      setMachineId('')
+      setAssetId(null)
+      setSelectedAsset(null)
     } catch (err) {
       console.error(err)
       setHistoryError(t('historyPanel.loadError', { defaultValue: 'Unable to open chat. Please try again.' }))
@@ -201,7 +168,8 @@ const MetralisAI = () => {
 
   const handleStartNew = () => {
     startNewConversation()
-    setMachineId('')
+    setAssetId(null)
+    setSelectedAsset(null)
     setShowHistory(false)
     setInput('')
     setHistoryError(null)
@@ -210,8 +178,6 @@ const MetralisAI = () => {
     next.delete('conversationId')
     setSearchParams(next, { replace: true })
   }
-
-  const machineDisabled = Boolean(activeMachineId)
 
   const feedbackOptions: Array<{ value: AiFeedbackValue; label: string; Icon: LucideIcon }> = [
     { value: 'HELPFUL', label: t('feedback.helpful', { defaultValue: 'Helpful' }), Icon: ThumbsUp },
@@ -270,17 +236,7 @@ const MetralisAI = () => {
   }
 
   const handleCreateWorkOrderShortcut = () => {
-    if (selectedMachineId) {
-      navigate(`/work-orders/new?machine=${selectedMachineId}`)
-    } else {
-      navigate('/work-orders/new')
-    }
-  }
-
-  const handleViewMachineShortcut = () => {
-    if (selectedMachineId) {
-      navigate(`/machines/${selectedMachineId}`)
-    }
+    navigate('/work-orders/new')
   }
 
   const renderCitationBadge = (citations?: number[]) => {
@@ -385,9 +341,6 @@ const MetralisAI = () => {
           <Button size="sm" variant="outline" onClick={handleCreateWorkOrderShortcut}>
             {t('structured.createWorkOrder')}
           </Button>
-          <Button size="sm" variant="ghost" onClick={handleViewMachineShortcut} disabled={!selectedMachineId}>
-            {t('structured.viewMachine')}
-          </Button>
           <Button size="sm" variant="ghost" onClick={() => navigate('/work-orders')}>
             {t('structured.logRepair')}
           </Button>
@@ -429,6 +382,17 @@ const MetralisAI = () => {
   }
 
   const tips = useMemo(() => t('active.tips', { returnObjects: true }) as string[], [t])
+
+  // Display text for the selected asset in the sidebar
+  const assetDisplayName = useMemo(() => {
+    if (!selectedAsset) return null
+    return getAssetTranslatedName(selectedAsset, currentLanguage, 'en')
+  }, [selectedAsset, currentLanguage])
+
+  const assetDisplayPath = useMemo(() => {
+    if (!selectedAsset) return null
+    return getAssetTranslatedPath(selectedAsset, currentLanguage, 'en')
+  }, [selectedAsset, currentLanguage])
 
   return (
     <div className="relative flex h-[calc(100vh-6rem)] flex-col gap-4 overflow-hidden">
@@ -474,9 +438,9 @@ const MetralisAI = () => {
               >
                 <p className="text-sm font-medium text-foreground">{conversation.title}</p>
                 {conversation.machine ? (
-                  <p className="text-xs text-muted-foreground">{formatMachineLabel(conversation.machine)}</p>
+                  <p className="text-xs text-muted-foreground">{conversation.machine.name}</p>
                 ) : (
-                  <p className="text-xs text-muted-foreground">{t('historyPanel.noMachine')}</p>
+                  <p className="text-xs text-muted-foreground">{t('historyPanel.noAsset')}</p>
                 )}
                 <p className="text-xs text-muted-foreground line-clamp-1 mt-1">
                   {conversation.lastMessagePreview ?? t('historyPanel.noMessages')}
@@ -503,53 +467,14 @@ const MetralisAI = () => {
           {/* Vertical Divider */}
           <div className="hidden h-8 w-px bg-border sm:block" />
 
-          {/* Modern Machine Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                className="w-[280px] justify-between text-left font-normal"
-                disabled={machineDisabled || loadingMachines}
-              >
-                {selectedMachine ? (
-                  <span className="truncate">{formatMachineLabel(selectedMachine)}</span>
-                ) : (
-                  <span className="text-muted-foreground">{t('selectMachine', { defaultValue: 'Select context (optional)' })}</span>
-                )}
-                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[280px] p-0" align="start">
-              <div className="flex items-center border-b px-3">
-                <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                <Input
-                  className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-0 focus-visible:ring-0 px-0 shadow-none"
-                  placeholder="Search machines..."
-                  value={machineSearch}
-                  onChange={(e) => setMachineSearch(e.target.value)}
-                />
-              </div>
-              <div className="max-h-[300px] overflow-y-auto p-1">
-                <DropdownMenuItem onSelect={() => setMachineId('')} className="cursor-pointer">
-                  <span className="font-medium text-muted-foreground">No machine context</span>
-                </DropdownMenuItem>
-                {filteredMachines.map((machine) => (
-                  <DropdownMenuItem
-                    key={machine.id}
-                    onSelect={() => setMachineId(machine.id)}
-                    className="cursor-pointer"
-                  >
-                    <span>{formatMachineLabel(machine)}</span>
-                    {selectedMachineId === machine.id && <Check className="ml-auto h-4 w-4 opacity-50" />}
-                  </DropdownMenuItem>
-                ))}
-                {filteredMachines.length === 0 && (
-                  <div className="p-4 text-center text-sm text-muted-foreground">{t('noMachinesFound')}</div>
-                )}
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Asset Picker - replaces machine selector */}
+          <AssetPicker
+            value={effectiveAssetId}
+            onChange={handleAssetChange}
+            disabled={assetPickerDisabled}
+            placeholder={t('selectAsset', { defaultValue: 'Select an asset for specific help' })}
+            className="w-[320px]"
+          />
         </div>
 
         <div className="flex gap-2">
@@ -579,10 +504,9 @@ const MetralisAI = () => {
                 </div>
                 <h3 className="mb-2 text-xl font-semibold">{t('welcomeTitle', { defaultValue: 'How can I help you?' })}</h3>
 
-                {/* Quick suggestions could go here */}
-                {!selectedMachineId && (
+                {!effectiveAssetId && (
                   <div className="text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full border border-border/50">
-                    {t('machineTip')}
+                    {t('assetTip', { defaultValue: 'Tip: Select an asset for specific maintenance context' })}
                   </div>
                 )}
               </div>
@@ -612,7 +536,7 @@ const MetralisAI = () => {
                                       : `/documents/${citation.documentId}`;
                                   return (
                                     <li key={citation.chunkId} className="flex items-start gap-1.5">
-                                      <span className="mt-0.5">•</span>
+                                      <span className="mt-0.5">&bull;</span>
                                       <span>
                                         <a href={href} className="text-primary underline decoration-primary/30 hover:decoration-primary underline-offset-2 transition-all">
                                           {citation.documentTitle ?? citation.documentId}
@@ -718,18 +642,16 @@ const MetralisAI = () => {
             </div>
           </Card>
 
-          {selectedMachine && (
+          {selectedAsset && (
             <Card className="p-4 border-muted">
-              <div className="text-xs font-medium uppercase text-muted-foreground mb-2">Context</div>
-              <div className="font-medium">{selectedMachine.name}</div>
-              {selectedMachine.model && <div className="text-sm text-muted-foreground">{selectedMachine.model}</div>}
-              <Button
-                variant="link"
-                className="px-0 h-auto mt-2 text-xs"
-                onClick={handleViewMachineShortcut}
-              >
-                View Machine Details &rarr;
-              </Button>
+              <div className="text-xs font-medium uppercase text-muted-foreground mb-2">{t('assetContext', { defaultValue: 'Asset Context' })}</div>
+              <div className="font-medium">{assetDisplayName}</div>
+              {assetDisplayPath && assetDisplayPath !== assetDisplayName && (
+                <div className="text-sm text-muted-foreground mt-1">{assetDisplayPath}</div>
+              )}
+              {selectedAsset.code && (
+                <div className="text-xs text-muted-foreground mt-1">{selectedAsset.code}</div>
+              )}
             </Card>
           )}
         </div>
@@ -739,4 +661,3 @@ const MetralisAI = () => {
 }
 
 export default MetralisAI
-

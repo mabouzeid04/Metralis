@@ -28,6 +28,7 @@ export type IncidentChunkMinAggregateOutputType = {
     tokens: number | null;
     machineId: string | null;
     machineType: string | null;
+    assetId: string | null;
     language: string | null;
     createdAt: Date | null;
 };
@@ -39,6 +40,7 @@ export type IncidentChunkMaxAggregateOutputType = {
     tokens: number | null;
     machineId: string | null;
     machineType: string | null;
+    assetId: string | null;
     language: string | null;
     createdAt: Date | null;
 };
@@ -50,6 +52,7 @@ export type IncidentChunkCountAggregateOutputType = {
     tokens: number;
     machineId: number;
     machineType: number;
+    assetId: number;
     language: number;
     metadata: number;
     createdAt: number;
@@ -71,6 +74,7 @@ export type IncidentChunkMinAggregateInputType = {
     tokens?: true;
     machineId?: true;
     machineType?: true;
+    assetId?: true;
     language?: true;
     createdAt?: true;
 };
@@ -82,6 +86,7 @@ export type IncidentChunkMaxAggregateInputType = {
     tokens?: true;
     machineId?: true;
     machineType?: true;
+    assetId?: true;
     language?: true;
     createdAt?: true;
 };
@@ -93,6 +98,7 @@ export type IncidentChunkCountAggregateInputType = {
     tokens?: true;
     machineId?: true;
     machineType?: true;
+    assetId?: true;
     language?: true;
     metadata?: true;
     createdAt?: true;
@@ -182,6 +188,7 @@ export type IncidentChunkGroupByOutputType = {
     tokens: number;
     machineId: string | null;
     machineType: string | null;
+    assetId: string | null;
     language: string | null;
     metadata: runtime.JsonValue | null;
     createdAt: Date;
@@ -205,10 +212,12 @@ export type IncidentChunkWhereInput = {
     tokens?: Prisma.IntFilter<"IncidentChunk"> | number;
     machineId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     machineType?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     language?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"IncidentChunk">;
     createdAt?: Prisma.DateTimeFilter<"IncidentChunk"> | Date | string;
     workOrder?: Prisma.XOR<Prisma.WorkOrderScalarRelationFilter, Prisma.WorkOrderWhereInput>;
+    asset?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null;
 };
 export type IncidentChunkOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -218,10 +227,12 @@ export type IncidentChunkOrderByWithRelationInput = {
     tokens?: Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineType?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assetId?: Prisma.SortOrderInput | Prisma.SortOrder;
     language?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     workOrder?: Prisma.WorkOrderOrderByWithRelationInput;
+    asset?: Prisma.AssetOrderByWithRelationInput;
 };
 export type IncidentChunkWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -235,10 +246,12 @@ export type IncidentChunkWhereUniqueInput = Prisma.AtLeast<{
     tokens?: Prisma.IntFilter<"IncidentChunk"> | number;
     machineId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     machineType?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     language?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"IncidentChunk">;
     createdAt?: Prisma.DateTimeFilter<"IncidentChunk"> | Date | string;
     workOrder?: Prisma.XOR<Prisma.WorkOrderScalarRelationFilter, Prisma.WorkOrderWhereInput>;
+    asset?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null;
 }, "id" | "workOrderId_chunkIndex">;
 export type IncidentChunkOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -248,6 +261,7 @@ export type IncidentChunkOrderByWithAggregationInput = {
     tokens?: Prisma.SortOrder;
     machineId?: Prisma.SortOrderInput | Prisma.SortOrder;
     machineType?: Prisma.SortOrderInput | Prisma.SortOrder;
+    assetId?: Prisma.SortOrderInput | Prisma.SortOrder;
     language?: Prisma.SortOrderInput | Prisma.SortOrder;
     metadata?: Prisma.SortOrderInput | Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
@@ -268,6 +282,7 @@ export type IncidentChunkScalarWhereWithAggregatesInput = {
     tokens?: Prisma.IntWithAggregatesFilter<"IncidentChunk"> | number;
     machineId?: Prisma.StringNullableWithAggregatesFilter<"IncidentChunk"> | string | null;
     machineType?: Prisma.StringNullableWithAggregatesFilter<"IncidentChunk"> | string | null;
+    assetId?: Prisma.StringNullableWithAggregatesFilter<"IncidentChunk"> | string | null;
     language?: Prisma.StringNullableWithAggregatesFilter<"IncidentChunk"> | string | null;
     metadata?: Prisma.JsonNullableWithAggregatesFilter<"IncidentChunk">;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"IncidentChunk"> | Date | string;
@@ -283,6 +298,7 @@ export type IncidentChunkUpdateInput = {
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     workOrder?: Prisma.WorkOrderUpdateOneRequiredWithoutIncidentChunksNestedInput;
+    asset?: Prisma.AssetUpdateOneWithoutIncidentChunksNestedInput;
 };
 export type IncidentChunkUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -292,6 +308,7 @@ export type IncidentChunkUncheckedUpdateInput = {
     tokens?: Prisma.IntFieldUpdateOperationsInput | number;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -315,6 +332,7 @@ export type IncidentChunkUncheckedUpdateManyInput = {
     tokens?: Prisma.IntFieldUpdateOperationsInput | number;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -339,6 +357,7 @@ export type IncidentChunkCountOrderByAggregateInput = {
     tokens?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     metadata?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
@@ -355,6 +374,7 @@ export type IncidentChunkMaxOrderByAggregateInput = {
     tokens?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
 };
@@ -366,12 +386,37 @@ export type IncidentChunkMinOrderByAggregateInput = {
     tokens?: Prisma.SortOrder;
     machineId?: Prisma.SortOrder;
     machineType?: Prisma.SortOrder;
+    assetId?: Prisma.SortOrder;
     language?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
 };
 export type IncidentChunkSumOrderByAggregateInput = {
     chunkIndex?: Prisma.SortOrder;
     tokens?: Prisma.SortOrder;
+};
+export type IncidentChunkCreateNestedManyWithoutAssetInput = {
+    connect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+};
+export type IncidentChunkUncheckedCreateNestedManyWithoutAssetInput = {
+    connect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+};
+export type IncidentChunkUpdateManyWithoutAssetNestedInput = {
+    set?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    disconnect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    delete?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    connect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    update?: Prisma.IncidentChunkUpdateWithWhereUniqueWithoutAssetInput | Prisma.IncidentChunkUpdateWithWhereUniqueWithoutAssetInput[];
+    updateMany?: Prisma.IncidentChunkUpdateManyWithWhereWithoutAssetInput | Prisma.IncidentChunkUpdateManyWithWhereWithoutAssetInput[];
+    deleteMany?: Prisma.IncidentChunkScalarWhereInput | Prisma.IncidentChunkScalarWhereInput[];
+};
+export type IncidentChunkUncheckedUpdateManyWithoutAssetNestedInput = {
+    set?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    disconnect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    delete?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    connect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
+    update?: Prisma.IncidentChunkUpdateWithWhereUniqueWithoutAssetInput | Prisma.IncidentChunkUpdateWithWhereUniqueWithoutAssetInput[];
+    updateMany?: Prisma.IncidentChunkUpdateManyWithWhereWithoutAssetInput | Prisma.IncidentChunkUpdateManyWithWhereWithoutAssetInput[];
+    deleteMany?: Prisma.IncidentChunkScalarWhereInput | Prisma.IncidentChunkScalarWhereInput[];
 };
 export type IncidentChunkCreateNestedManyWithoutWorkOrderInput = {
     connect?: Prisma.IncidentChunkWhereUniqueInput | Prisma.IncidentChunkWhereUniqueInput[];
@@ -397,13 +442,13 @@ export type IncidentChunkUncheckedUpdateManyWithoutWorkOrderNestedInput = {
     updateMany?: Prisma.IncidentChunkUpdateManyWithWhereWithoutWorkOrderInput | Prisma.IncidentChunkUpdateManyWithWhereWithoutWorkOrderInput[];
     deleteMany?: Prisma.IncidentChunkScalarWhereInput | Prisma.IncidentChunkScalarWhereInput[];
 };
-export type IncidentChunkUpdateWithWhereUniqueWithoutWorkOrderInput = {
+export type IncidentChunkUpdateWithWhereUniqueWithoutAssetInput = {
     where: Prisma.IncidentChunkWhereUniqueInput;
-    data: Prisma.XOR<Prisma.IncidentChunkUpdateWithoutWorkOrderInput, Prisma.IncidentChunkUncheckedUpdateWithoutWorkOrderInput>;
+    data: Prisma.XOR<Prisma.IncidentChunkUpdateWithoutAssetInput, Prisma.IncidentChunkUncheckedUpdateWithoutAssetInput>;
 };
-export type IncidentChunkUpdateManyWithWhereWithoutWorkOrderInput = {
+export type IncidentChunkUpdateManyWithWhereWithoutAssetInput = {
     where: Prisma.IncidentChunkScalarWhereInput;
-    data: Prisma.XOR<Prisma.IncidentChunkUpdateManyMutationInput, Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderInput>;
+    data: Prisma.XOR<Prisma.IncidentChunkUpdateManyMutationInput, Prisma.IncidentChunkUncheckedUpdateManyWithoutAssetInput>;
 };
 export type IncidentChunkScalarWhereInput = {
     AND?: Prisma.IncidentChunkScalarWhereInput | Prisma.IncidentChunkScalarWhereInput[];
@@ -416,9 +461,54 @@ export type IncidentChunkScalarWhereInput = {
     tokens?: Prisma.IntFilter<"IncidentChunk"> | number;
     machineId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     machineType?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
+    assetId?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     language?: Prisma.StringNullableFilter<"IncidentChunk"> | string | null;
     metadata?: Prisma.JsonNullableFilter<"IncidentChunk">;
     createdAt?: Prisma.DateTimeFilter<"IncidentChunk"> | Date | string;
+};
+export type IncidentChunkUpdateWithWhereUniqueWithoutWorkOrderInput = {
+    where: Prisma.IncidentChunkWhereUniqueInput;
+    data: Prisma.XOR<Prisma.IncidentChunkUpdateWithoutWorkOrderInput, Prisma.IncidentChunkUncheckedUpdateWithoutWorkOrderInput>;
+};
+export type IncidentChunkUpdateManyWithWhereWithoutWorkOrderInput = {
+    where: Prisma.IncidentChunkScalarWhereInput;
+    data: Prisma.XOR<Prisma.IncidentChunkUpdateManyMutationInput, Prisma.IncidentChunkUncheckedUpdateManyWithoutWorkOrderInput>;
+};
+export type IncidentChunkUpdateWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    chunkIndex?: Prisma.IntFieldUpdateOperationsInput | number;
+    content?: Prisma.StringFieldUpdateOperationsInput | string;
+    tokens?: Prisma.IntFieldUpdateOperationsInput | number;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    workOrder?: Prisma.WorkOrderUpdateOneRequiredWithoutIncidentChunksNestedInput;
+};
+export type IncidentChunkUncheckedUpdateWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    workOrderId?: Prisma.StringFieldUpdateOperationsInput | string;
+    chunkIndex?: Prisma.IntFieldUpdateOperationsInput | number;
+    content?: Prisma.StringFieldUpdateOperationsInput | string;
+    tokens?: Prisma.IntFieldUpdateOperationsInput | number;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type IncidentChunkUncheckedUpdateManyWithoutAssetInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    workOrderId?: Prisma.StringFieldUpdateOperationsInput | string;
+    chunkIndex?: Prisma.IntFieldUpdateOperationsInput | number;
+    content?: Prisma.StringFieldUpdateOperationsInput | string;
+    tokens?: Prisma.IntFieldUpdateOperationsInput | number;
+    machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type IncidentChunkUpdateWithoutWorkOrderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -430,6 +520,7 @@ export type IncidentChunkUpdateWithoutWorkOrderInput = {
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    asset?: Prisma.AssetUpdateOneWithoutIncidentChunksNestedInput;
 };
 export type IncidentChunkUncheckedUpdateWithoutWorkOrderInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -438,6 +529,7 @@ export type IncidentChunkUncheckedUpdateWithoutWorkOrderInput = {
     tokens?: Prisma.IntFieldUpdateOperationsInput | number;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -449,6 +541,7 @@ export type IncidentChunkUncheckedUpdateManyWithoutWorkOrderInput = {
     tokens?: Prisma.IntFieldUpdateOperationsInput | number;
     machineId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     machineType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    assetId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -461,10 +554,12 @@ export type IncidentChunkSelect<ExtArgs extends runtime.Types.Extensions.Interna
     tokens?: boolean;
     machineId?: boolean;
     machineType?: boolean;
+    assetId?: boolean;
     language?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
+    asset?: boolean | Prisma.IncidentChunk$assetArgs<ExtArgs>;
 }, ExtArgs["result"]["incidentChunk"]>;
 export type IncidentChunkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -474,10 +569,12 @@ export type IncidentChunkSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
     tokens?: boolean;
     machineId?: boolean;
     machineType?: boolean;
+    assetId?: boolean;
     language?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
+    asset?: boolean | Prisma.IncidentChunk$assetArgs<ExtArgs>;
 }, ExtArgs["result"]["incidentChunk"]>;
 export type IncidentChunkSelectScalar = {
     id?: boolean;
@@ -487,21 +584,25 @@ export type IncidentChunkSelectScalar = {
     tokens?: boolean;
     machineId?: boolean;
     machineType?: boolean;
+    assetId?: boolean;
     language?: boolean;
     metadata?: boolean;
     createdAt?: boolean;
 };
-export type IncidentChunkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workOrderId" | "chunkIndex" | "content" | "tokens" | "machineId" | "machineType" | "language" | "metadata" | "createdAt", ExtArgs["result"]["incidentChunk"]>;
+export type IncidentChunkOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "workOrderId" | "chunkIndex" | "content" | "tokens" | "machineId" | "machineType" | "assetId" | "language" | "metadata" | "createdAt", ExtArgs["result"]["incidentChunk"]>;
 export type IncidentChunkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
+    asset?: boolean | Prisma.IncidentChunk$assetArgs<ExtArgs>;
 };
 export type IncidentChunkIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     workOrder?: boolean | Prisma.WorkOrderDefaultArgs<ExtArgs>;
+    asset?: boolean | Prisma.IncidentChunk$assetArgs<ExtArgs>;
 };
 export type $IncidentChunkPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "IncidentChunk";
     objects: {
         workOrder: Prisma.$WorkOrderPayload<ExtArgs>;
+        asset: Prisma.$AssetPayload<ExtArgs> | null;
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -511,6 +612,7 @@ export type $IncidentChunkPayload<ExtArgs extends runtime.Types.Extensions.Inter
         tokens: number;
         machineId: string | null;
         machineType: string | null;
+        assetId: string | null;
         language: string | null;
         metadata: runtime.JsonValue | null;
         createdAt: Date;
@@ -777,6 +879,7 @@ export interface IncidentChunkDelegate<ExtArgs extends runtime.Types.Extensions.
 export interface Prisma__IncidentChunkClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     workOrder<T extends Prisma.WorkOrderDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorkOrderDefaultArgs<ExtArgs>>): Prisma.Prisma__WorkOrderClient<runtime.Types.Result.GetResult<Prisma.$WorkOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    asset<T extends Prisma.IncidentChunk$assetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.IncidentChunk$assetArgs<ExtArgs>>): Prisma.Prisma__AssetClient<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -809,6 +912,7 @@ export interface IncidentChunkFieldRefs {
     readonly tokens: Prisma.FieldRef<"IncidentChunk", 'Int'>;
     readonly machineId: Prisma.FieldRef<"IncidentChunk", 'String'>;
     readonly machineType: Prisma.FieldRef<"IncidentChunk", 'String'>;
+    readonly assetId: Prisma.FieldRef<"IncidentChunk", 'String'>;
     readonly language: Prisma.FieldRef<"IncidentChunk", 'String'>;
     readonly metadata: Prisma.FieldRef<"IncidentChunk", 'Json'>;
     readonly createdAt: Prisma.FieldRef<"IncidentChunk", 'DateTime'>;
@@ -1107,6 +1211,24 @@ export type IncidentChunkDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
      * Limit how many IncidentChunks to delete.
      */
     limit?: number;
+};
+/**
+ * IncidentChunk.asset
+ */
+export type IncidentChunk$assetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Asset
+     */
+    select?: Prisma.AssetSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the Asset
+     */
+    omit?: Prisma.AssetOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.AssetInclude<ExtArgs> | null;
+    where?: Prisma.AssetWhereInput;
 };
 /**
  * IncidentChunk without action

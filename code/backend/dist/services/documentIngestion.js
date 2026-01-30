@@ -8,7 +8,12 @@ const textChunker_1 = require("../utils/textChunker");
 const embeddings_1 = require("./embeddings");
 const vectorStore_1 = require("./vectorStore");
 const ingestDocument = async (documentId) => {
-    const document = await prisma_1.prisma.document.findUnique({ where: { id: documentId } });
+    const document = await prisma_1.prisma.document.findUnique({
+        where: { id: documentId },
+        include: {
+            assets: { select: { assetId: true } },
+        },
+    });
     if (!document) {
         throw new Error("Document not found");
     }
@@ -30,6 +35,8 @@ const ingestDocument = async (documentId) => {
         if (embeddings.length !== chunkContents.length) {
             throw new Error("Embedding service returned mismatched chunk count");
         }
+        // Collect linked asset IDs for metadata
+        const assetIds = document.assets.map((a) => a.assetId);
         const chunkRecords = chunkContents.map((content, idx) => {
             const embedding = embeddings[idx];
             if (!embedding) {
@@ -49,6 +56,8 @@ const ingestDocument = async (documentId) => {
                     documentType: document.type,
                     language: document.language,
                     version: document.version,
+                    isFactoryWide: document.isFactoryWide,
+                    assetIds,
                 },
             };
         });

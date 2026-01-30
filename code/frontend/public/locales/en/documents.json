@@ -4,14 +4,25 @@
   "upload": "Upload Document",
   "uploadTitle": "Upload a document",
   "uploadSubtitle": "Supports PDF or Word files up to 25MB.",
+  "factoryWide": "Factory-wide",
   "form": {
     "title": "Title",
     "titlePlaceholder": "Machine manual (English)",
     "type": "Document type",
+    "description": "Description",
+    "descriptionPlaceholder": "Brief description of the document contents",
+    "language": "Language",
     "machine": "Machine",
     "machinePlaceholder": "Select a machine (optional)",
     "machineLoading": "Loading machines...",
     "machineEmpty": "No machines found",
+    "assets": "Assets",
+    "assetsPlaceholder": "Search and select assets...",
+    "assetsHint": "Document will be available for selected assets and all their descendants",
+    "factoryWide": "Apply to entire factory",
+    "factoryWideHint": "This document will be available for all assets in the factory",
+    "appliesToChildren": "Apply to child assets",
+    "appliesToChildrenHint": "This document will also be available for all descendants of the selected assets",
     "file": "File",
     "chooseFile": "Choose file",
     "noFile": "No file selected",
@@ -21,6 +32,7 @@
     "unsupported": "Only PDF, DOC, or DOCX files are supported.",
     "titleRequired": "Title is required.",
     "fileRequired": "Please select a PDF or DOCX file to upload.",
+    "assetRequired": "Please select at least one asset or mark as factory-wide.",
     "failed": "Failed to upload document. Please try again."
   },
   "searchPlaceholder": "Search documents...",
@@ -33,9 +45,21 @@
   "emptyCreateHint": "Get started by uploading your first document",
   "view": "View",
   "download": "Download",
+  "delete": "Delete",
+  "deleteConfirm": "Are you sure you want to delete this document? This action cannot be undone.",
   "close": "Close",
   "previewing": "Previewing",
   "loadingPreview": "Loading preview...",
+  "languages": {
+    "en": "English",
+    "ar": "Arabic",
+    "bilingual": "Bilingual"
+  },
+  "source": {
+    "direct": "Direct",
+    "inherited": "Inherited",
+    "factoryWide": "Factory-wide"
+  },
   "types": {
     "manual": "Manual",
     "sop": "SOP",
@@ -47,6 +71,7 @@
     "size": "Size",
     "date": "Date",
     "machine": "Machine",
+    "assets": "Assets",
     "type": "Type",
     "title": "Title"
   },

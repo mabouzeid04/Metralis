@@ -10,6 +10,8 @@ import searchRoutes from "./search";
 import profileRoutes from "./profile";
 import aiRoutes from "./ai";
 import analyticsRoutes from "./analytics";
+import assetRoutes from "./assets";
+import factoryConfigRoutes from "./factoryConfig";
 
 const router = Router();
 
@@ -24,6 +26,8 @@ router.use("/search", searchRoutes);
 router.use("/profile", profileRoutes);
 router.use("/ai", aiRoutes);
 router.use("/analytics", analyticsRoutes);
+router.use("/assets", assetRoutes);
+router.use("/factory-config", factoryConfigRoutes);
 
 export default router;
 

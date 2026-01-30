@@ -8,22 +8,30 @@ const router = Router();
 
 const machineSchema = z.object({
   name: z.string().min(1),
-  code: z.string().optional(),
-  category: z.string().optional(),
-  line: z.string().optional(),
-  area: z.string().optional(),
-  manufacturer: z.string().optional(),
-  model: z.string().optional(),
-  serialNumber: z.string().optional(),
-  commissionedAt: z.string().datetime().optional(),
+  code: z.string().nullable().optional(),
+  category: z.string().nullable().optional(),
+  line: z.string().nullable().optional(),
+  area: z.string().nullable().optional(),
+  manufacturer: z.string().nullable().optional(),
+  model: z.string().nullable().optional(),
+  serialNumber: z.string().nullable().optional(),
+  commissionedAt: z.union([z.string().datetime(), z.null()]).optional().transform((val) => val === null ? undefined : val),
   status: z.enum(["RUNNING", "DOWN", "MAINTENANCE", "RETIRED"]).optional(),
   criticality: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
 });
 
 router.use(requireAuth);
 
-router.get("/", async (_req, res) => {
+router.get("/", async (req, res) => {
+  const { status } = req.query;
+
+  const where: Prisma.MachineWhereInput = {};
+  if (status && typeof status === 'string') {
+    where.status = status as Prisma.EnumMachineStatusFilter;
+  }
+
   const machines = await prisma.machine.findMany({
+    where,
     orderBy: { name: "asc" },
   });
   return res.json({ data: machines });

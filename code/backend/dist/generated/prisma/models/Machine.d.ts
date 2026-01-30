@@ -482,10 +482,6 @@ export type MachineMinOrderByAggregateInput = {
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
-export type MachineScalarRelationFilter = {
-    is?: Prisma.MachineWhereInput;
-    isNot?: Prisma.MachineWhereInput;
-};
 export type MachineNullableScalarRelationFilter = {
     is?: Prisma.MachineWhereInput | null;
     isNot?: Prisma.MachineWhereInput | null;
@@ -501,10 +497,12 @@ export type MachineCreateNestedOneWithoutWorkOrdersInput = {
     connectOrCreate?: Prisma.MachineCreateOrConnectWithoutWorkOrdersInput;
     connect?: Prisma.MachineWhereUniqueInput;
 };
-export type MachineUpdateOneRequiredWithoutWorkOrdersNestedInput = {
+export type MachineUpdateOneWithoutWorkOrdersNestedInput = {
     create?: Prisma.XOR<Prisma.MachineCreateWithoutWorkOrdersInput, Prisma.MachineUncheckedCreateWithoutWorkOrdersInput>;
     connectOrCreate?: Prisma.MachineCreateOrConnectWithoutWorkOrdersInput;
     upsert?: Prisma.MachineUpsertWithoutWorkOrdersInput;
+    disconnect?: Prisma.MachineWhereInput | boolean;
+    delete?: Prisma.MachineWhereInput | boolean;
     connect?: Prisma.MachineWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.MachineUpdateToOneWithWhereWithoutWorkOrdersInput, Prisma.MachineUpdateWithoutWorkOrdersInput>, Prisma.MachineUncheckedUpdateWithoutWorkOrdersInput>;
 };

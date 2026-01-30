@@ -84,14 +84,14 @@ const collectSystemSnapshot = async () => {
         },
     });
     // Get machine names for recurring failures
-    const machineIds = [...new Set(failureModeGroups.map((g) => g.machineId))];
+    const machineIds = [...new Set(failureModeGroups.map((g) => g.machineId).filter((id) => id !== null))];
     const machines = await prisma_1.prisma.machine.findMany({
         where: { id: { in: machineIds } },
         select: { id: true, name: true },
     });
     const machineNameMap = new Map(machines.map((m) => [m.id, m.name]));
     const recurringFailures = failureModeGroups.map((g) => ({
-        machineName: machineNameMap.get(g.machineId) ?? "Unknown Machine",
+        machineName: g.machineId ? (machineNameMap.get(g.machineId) ?? "Unknown Machine") : "Unknown Machine",
         failureMode: g.failureMode ?? "Unknown",
         count: g._count.id,
     }));
@@ -145,8 +145,8 @@ const collectSystemSnapshot = async () => {
         recentWorkOrders: recentWorkOrders.map((wo) => ({
             id: wo.id,
             title: wo.title,
-            machineId: wo.machineId,
-            machineName: wo.machine.name,
+            ...(wo.machineId && { machineId: wo.machineId }),
+            machineName: wo.machine?.name ?? "Unknown Machine",
             type: wo.type,
             status: wo.status,
             rootCause: wo.rootCause,

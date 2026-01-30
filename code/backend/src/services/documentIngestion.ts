@@ -6,7 +6,12 @@ import { embedTexts } from "./embeddings";
 import { replaceDocumentChunks } from "./vectorStore";
 
 export const ingestDocument = async (documentId: string) => {
-  const document = await prisma.document.findUnique({ where: { id: documentId } });
+  const document = await prisma.document.findUnique({
+    where: { id: documentId },
+    include: {
+      assets: { select: { assetId: true } },
+    },
+  });
   if (!document) {
     throw new Error("Document not found");
   }
@@ -36,6 +41,9 @@ export const ingestDocument = async (documentId: string) => {
       throw new Error("Embedding service returned mismatched chunk count");
     }
 
+    // Collect linked asset IDs for metadata
+    const assetIds = document.assets.map((a) => a.assetId);
+
     const chunkRecords = chunkContents.map((content, idx) => {
       const embedding = embeddings[idx];
       if (!embedding) {
@@ -55,6 +63,8 @@ export const ingestDocument = async (documentId: string) => {
           documentType: document.type,
           language: document.language,
           version: document.version,
+          isFactoryWide: document.isFactoryWide,
+          assetIds,
         },
       };
     });

@@ -1,6 +1,8 @@
 {
   "title": "تحليلات المسؤول",
   "subtitle": "صحة النظام ومقاييس الأداء والرؤى المعتمدة على الذكاء الاصطناعي.",
+  "maintenanceTitle": "تحليلات الصيانة",
+  "maintenanceSubtitle": "مؤشرات الأداء الرئيسية والاتجاهات والتقسيمات لأداء الصيانة.",
   "metrics": {
     "aiQueries": {
       "title": "استعلامات الذكاء الاصطناعي (7 أيام)",
@@ -52,5 +54,55 @@
     "minutes": "د",
     "hours": "س",
     "days": "ي"
+  },
+  "filters": {
+    "dateRange": "النطاق الزمني",
+    "asset": "الأصل",
+    "maintenanceType": "نوع الصيانة",
+    "includeChildren": "تضمين الأصول الفرعية",
+    "allAssets": "جميع الأصول",
+    "allTypes": "جميع الأنواع"
+  },
+  "presets": {
+    "7d": "آخر 7 أيام",
+    "30d": "آخر 30 يوم",
+    "90d": "آخر 90 يوم",
+    "12m": "آخر 12 شهر",
+    "ytd": "منذ بداية السنة",
+    "custom": "نطاق مخصص"
+  },
+  "kpis": {
+    "totalWorkOrders": "إجمالي أوامر العمل",
+    "openWorkOrders": "أوامر العمل المفتوحة",
+    "avgMttr": "متوسط وقت الإصلاح",
+    "totalDowntime": "إجمالي التوقف",
+    "mtbf": "متوسط الوقت بين الأعطال"
+  },
+  "charts": {
+    "workOrdersOverTime": "أوامر العمل عبر الزمن",
+    "byStatus": "حسب الحالة",
+    "byType": "حسب نوع الصيانة",
+    "byDiscipline": "حسب التخصص",
+    "topFailingAssets": "الأصول الأكثر عطلاً",
+    "noData": "لا توجد بيانات متاحة للفترة المحددة."
+  },
+  "table": {
+    "asset": "الأصل",
+    "workOrders": "أوامر العمل",
+    "downtime": "التوقف",
+    "avgMttr": "متوسط وقت الإصلاح",
+    "assetsBreakdown": "تقسيم الأصول"
+  },
+  "export": {
+    "button": "تصدير",
+    "csv": "تصدير CSV",
+    "excel": "تصدير Excel"
+  },
+  "units": {
+    "minutes": "د",
+    "hours": "س"
+  },
+  "comparison": {
+    "vsPrevious": "مقارنة بالفترة السابقة"
   }
 }
