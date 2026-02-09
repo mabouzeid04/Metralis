@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import {
   LayoutDashboard,
   Network,
@@ -34,7 +34,9 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <aside className={cn("w-64 bg-background h-full flex flex-col", document.dir === 'rtl' ? 'border-l' : 'border-r', className)}>
       <div className="p-6 h-16 flex items-center justify-center border-b">
-        <img src="/metralis-logo.png" alt="Metralis" className="h-10" />
+        <Link to="/" className="transition-opacity hover:opacity-80">
+          <img src="/metralis-logo.png" alt="Metralis" className="h-10" />
+        </Link>
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
